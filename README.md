@@ -2,6 +2,6 @@
 ## Team 58
 
 ### Team Members:
-- Student1 99100000
-- Student2 99100000
-- Student3 99100000
+- Marzie Afshar 99105237
+- Ali Taghipour 99101332
+- Bardia Rezaei Kalantari 99170456
