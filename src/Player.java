@@ -12,6 +12,7 @@ public class Player {
     private Board board;
 //    private int rank;
 //    something
+//    somthingelse
     private ArrayList<Deck> decks;  //These are NOT the deck that is being used in the game
     private ArrayList<Card> hand;
 
