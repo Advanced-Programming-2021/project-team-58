@@ -1,0 +1,31 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Deck {
+    private static ArrayList<Deck> allDecks;
+    private static HashMap<Player, Deck> playersAndTheirActivatedDeck;
+    private String deckName;
+    private ArrayList<Card> mainDeck;
+    private ArrayList<Card> sideDeck;
+
+    public Deck(String deckName, String playerName) {
+        setDeckName(deckName);
+        Player.getPlayerByUsername(playerName).addDeckToAllDecks(this);
+        allDecks.add(this);
+    }
+
+    public void setDeckName(String deckName) {
+        this.deckName = deckName;
+    }
+
+    public String getDeckName() {
+        return deckName;
+    }
+
+    public static Deck getDeckByName(String deckName) {
+        for (Deck deck : allDecks)
+            if (deck.getDeckName().equals(deckName))
+                return deck;
+        return null;
+    }
+}
