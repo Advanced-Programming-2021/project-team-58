@@ -2,30 +2,33 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Deck {
-    private static ArrayList<Deck> allDecks;
-    private static HashMap<Player, Deck> playersAndTheirActivatedDeck;
-    private String deckName;
     private ArrayList<Card> mainDeck;
     private ArrayList<Card> sideDeck;
+    private static ArrayList<Card> allDecks;
+    private String deckName;
+    private HashMap<Player,Deck> playersAndTheirActivatedDeck;
 
     public Deck(String deckName, String playerName) {
-        setDeckName(deckName);
-        Player.getPlayerByUsername(playerName).addDeckToAllDecks(this);
-        allDecks.add(this);
+        this.deckName = deckName;
+    }
+    public String getDeckName() {
+        return deckName;
     }
 
     public void setDeckName(String deckName) {
         this.deckName = deckName;
     }
 
-    public String getDeckName() {
-        return deckName;
+    public Deck getDeckByName(String deckName){
+
     }
 
-    public static Deck getDeckByName(String deckName) {
-        for (Deck deck : allDecks)
-            if (deck.getDeckName().equals(deckName))
-                return deck;
-        return null;
+    public ArrayList<Card> getMainDeck(){
+        return this.mainDeck;
     }
+
+    public ArrayList<Card> getSideDeck() {
+        return sideDeck;
+    }
+
 }
