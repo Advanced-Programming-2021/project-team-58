@@ -33,7 +33,7 @@ public class Card {
 
     public Card getCardByName(String cardName) {
         for (Card allCard : allCards) {
-            if (allCard.getCardName()==(cardName)) return allCard;
+            if (allCard.getCardName() == (cardName)) return allCard;
         }
         return null;
     }
