@@ -10,6 +10,7 @@ public class Player {
     private int LP;
     private int money;
     private Board board;
+
     private ArrayList<Deck> decks;  //These are NOT the deck that is being used in the game
     private ArrayList<Card> hand;
 
