@@ -10,6 +10,8 @@ public class Game {
     private Position selectedPosition;
     private int round;
 
+    //dhgjdd
+
     public Game(int round , Player player1 , Player player2){
         this.setRound(round);
         this.setPlayer1(player1);
