@@ -11,8 +11,4 @@ public class DeckMenu {
     public static void showAllDecks(){
 
     }
-
-    public void setActivatedDeck(Deck deck){
-
-    }
 }
