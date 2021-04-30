@@ -3,6 +3,4 @@ project-team-58 created by GitHub Classroom
 
 Team Members:
 
-Marzie Afshar & 
-Ali Taphipour & 
-Bardia Rezaei Kalantari
+Bardia Rezaei kalantari & Ali Taphipour & Marzie Afshar
