@@ -10,7 +10,7 @@ public class Board {
         return monsterCards;
     }
 
-    public ArrayList<Position> getSpellCard() {
+    public ArrayList<Position> getSpellCards() {
         return spellCard;
     }
     public void createMonsterCardPosition(){
