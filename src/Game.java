@@ -5,9 +5,15 @@ public class Game {
     private Player turnOfPlayer;
     private Card selectedCard;
     private int round;
+<<<<<<< HEAD
 public static void run(){
 
 }
+=======
+    public static void run(){
+
+    }
+>>>>>>> df7a2b4 (test game)
     public Game(int round,Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
@@ -109,4 +115,8 @@ public static void run(){
     public void showCard(){
 
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> df7a2b4 (test game)
