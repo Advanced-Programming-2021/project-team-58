@@ -2,7 +2,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class loginMenu {
+public class LoginMenu {
     private static Player loggedInPlayer;
 
     public static Player getLoggedInPlayer() {
