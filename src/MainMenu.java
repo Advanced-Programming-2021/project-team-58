@@ -13,8 +13,8 @@ public class MainMenu {
             else if (input.trim().matches("^(?i)(menu[ ]+show-current)$"))
                 showMenuName();
             else if (input.trim().matches("^(?i)(user[ ]+logout)$"))
-                printProperRespondForLogOut();
-            break;
+            {printProperRespondForLogOut();break;}
+            else System.out.println("invalid command");
         }
         LoginMenu.run(); //Navigating to the login menu at last
     }
