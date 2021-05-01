@@ -105,4 +105,11 @@ public class Player {
     public void addCardToHand(Card card) {
         this.hand.add(card);
     }
+
+    public static boolean isNicknameExists(String nickname){
+        for (Player player : allPlayers)
+            if (player.getNickname().equals(nickname))
+                return true;
+        return false;
+    }
 }
