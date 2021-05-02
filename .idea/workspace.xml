@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cbddc830-0963-4f07-8182-65b595e8caad" name="Default Changelist" comment="new" />
+    <list default="true" id="cbddc830-0963-4f07-8182-65b595e8caad" name="Default Changelist" comment="set player money in constructor">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Login.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainMenu.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,12 +25,32 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ATest/src" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <module name="TheMainProject" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -37,6 +61,10 @@
       <option name="presentableId" value="Default" />
       <updated>1619802313091</updated>
       <workItem from="1619802315683" duration="467000" />
+      <workItem from="1619891447644" duration="117000" />
+      <workItem from="1619891728423" duration="9666000" />
+      <workItem from="1619946705716" duration="322000" />
+      <workItem from="1619961436726" duration="5401000" />
     </task>
     <task id="LOCAL-00001" summary="new">
       <created>1619802375945</created>
@@ -45,7 +73,42 @@
       <option name="project" value="LOCAL" />
       <updated>1619802375945</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="add src">
+      <created>1619821316855</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1619821316855</updated>
+    </task>
+    <task id="LOCAL-00003" summary="add src">
+      <created>1619821404767</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1619821404767</updated>
+    </task>
+    <task id="LOCAL-00004" summary="add MainMenu and change the name of &quot;loginMenu&quot; to &quot;LoginMenu&quot; :)">
+      <created>1619902234802</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1619902234802</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add some small things">
+      <created>1619903001426</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1619903001426</updated>
+    </task>
+    <task id="LOCAL-00006" summary="set player money in constructor">
+      <created>1619968184513</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1619968184513</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -65,6 +128,10 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="new" />
-    <option name="LAST_COMMIT_MESSAGE" value="new" />
+    <MESSAGE value="add src" />
+    <MESSAGE value="add MainMenu and change the name of &quot;loginMenu&quot; to &quot;LoginMenu&quot; :)" />
+    <MESSAGE value="add some small things" />
+    <MESSAGE value="set player money in constructor" />
+    <option name="LAST_COMMIT_MESSAGE" value="set player money in constructor" />
   </component>
 </project>
