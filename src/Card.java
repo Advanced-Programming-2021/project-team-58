@@ -31,7 +31,7 @@ public class Card {
         this.cardNumber = cardNumber;
     }
 
-    public Card getCardByName(String cardName) {
+    public static Card getCardByName(String cardName) {
         for (Card allCard : allCards) {
             if (allCard.getCardName() == (cardName)) return allCard;
         }
