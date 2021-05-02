@@ -22,6 +22,10 @@ public class Deck {
         return deckName;
     }
 
+    public static void addDeckToAllDecks(String deckName, String playerName){
+        allDecks.add(new Deck(deckName,playerName));
+    }
+
     public static Deck getDeckByName(String deckName) {
         for (Deck deck : allDecks)
             if (deck.getDeckName().equals(deckName))
