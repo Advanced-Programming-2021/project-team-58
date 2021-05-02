@@ -16,6 +16,7 @@ public class Player {
     public Player(String username, String password) {
         setUsername(username);
         setPassword(password);
+        setMoney(100000);
         board = new Board();
         allPlayers.add(this);
     }
@@ -77,6 +78,8 @@ public class Player {
     public void decreaseMoney(int money) {
         this.money -= money;
     }
+
+    public void setMoney(int money) { this.money = money;}
 
     public int getMoney() {
         return this.money;
