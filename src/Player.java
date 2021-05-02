@@ -97,12 +97,15 @@ public class Player {
         return this.hand;
     }
 
+    public int getScore() { return score; }
+
     public static Player getPlayerByUsername(String userName) {
         for (Player player : allPlayers)
             if (player.getUsername().equals(userName))
                 return player;
         return null;
     }
+
     public void addDeckToAllDecks(Deck deck){this.decks.add(deck);}
 
     public void addCardToHand(Card card) {
@@ -114,5 +117,9 @@ public class Player {
             if (player.getNickname().equals(nickname))
                 return true;
         return false;
+    }
+
+    public static ArrayList<Player> getAllPlayers() {
+        return allPlayers;
     }
 }
