@@ -9,7 +9,7 @@ public class MainMenu {
 
         while (!(input = scanner.nextLine()).equals("menu exit")) {
 
-            if (input.trim().matches("^(?i)(menu[ ]+enter[ ]+([\\w]+))$")) //doesn't contain duel and scoreboard menu
+            if (input.trim().matches("^(?i)(menu[ ]+enter[ ]+([\\w]+))$")) //doesn't contain duel & scoreboard menu
                 enterAMenu(getCommandMatcher(input, "^(?i)(menu[ ]+enter[ ]+([\\w]+))$"));
             else if (input.trim().matches("^(?i)(menu[ ]+show-current)$"))
                 showMenuName();
@@ -32,12 +32,14 @@ public class MainMenu {
                 Shop.run();
             else if (menuName.matches("^(?i)(deck([ -_]*menu)?)$"))
                 DeckMenu.run();
+            else if (menuName.matches("^(?i)((import[ -_/]*export|export[ -_/]*import)([ ]*menu)?)$"))
+                Import_ExportMenu.run();
             else System.out.println("The entered menu does not exist\n" +
                         "Or you should use some other commands to navigate to those menus\n" +
                         "E.g. if you want to go to ScoreBoard Menu you'd rather enter:\n" +
                         "\"scoreboard show\"\n" +
                         "Or if you want to go to Duel Menu you'd rather start a game by:\n" +
-                        "\"duel new <opponent's username> rounds <an odd number>\"");
+                        "\"duel new <opponent's username> rounds <1/3>\"");
         }
     }
 

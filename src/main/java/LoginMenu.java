@@ -9,7 +9,7 @@ public class LoginMenu {
         return loggedInPlayer;
     }
 
-    public void setLoggedInPlayer(Player player) {
+    public static void setLoggedInPlayer(Player player) {
         loggedInPlayer = player;
     }
 
@@ -91,7 +91,7 @@ public class LoginMenu {
         }
     }
 
-    public void logInPlayer(String username, String password) {
+    public static void logInPlayer(String username, String password) {
         if (Player.getPlayerByUsername(username) == null) {
             System.out.println("Username and password didn’t match!");
         } else {
@@ -106,7 +106,7 @@ public class LoginMenu {
         }
     }
 
-    public void registerPlayer(String username, String password, String nickname) {
+    public static void registerPlayer(String username, String password, String nickname) {
         if (Player.getPlayerByUsername(username) != null) {
             System.out.println("user with username " + username + "already exists");
         } else {
