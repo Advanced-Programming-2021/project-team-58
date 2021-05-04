@@ -7,6 +7,9 @@
     <groupId>org.example</groupId>
 <<<<<<< HEAD
     <artifactId>TheMainProjectWithMaven</artifactId>
+=======
+    <artifactId>newAp</artifactId>
+>>>>>>> a789946 (asdasd)
     <version>1.0-SNAPSHOT</version>
 
     <properties>
