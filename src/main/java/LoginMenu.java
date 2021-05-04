@@ -67,10 +67,12 @@ public class LoginMenu {
             if (matchLogin1.find()) {
                 LoginMenu.logInPlayer(matchLogin1.group(1), matchLogin1.group(2));
                 n = 1;
+                MainMenu.run();
             }
             if(matchLogin2.find()) {
                 LoginMenu.logInPlayer(matchLogin2.group(2), matchLogin2.group(1));
                 n = 1;
+                MainMenu.run();
             }
 
 
