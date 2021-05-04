@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Player {
-    private static ArrayList<Player> allPlayers;
+    private static ArrayList<Player> allPlayers = new ArrayList<>();
     private String username;
     private String password;
     private String nickname;
