@@ -6,7 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+<<<<<<< HEAD
         <module name="TheMainProjectWithMaven" />
+=======
+        <module name="new test" />
+>>>>>>> a15b5e2 (hgjfw)
       </profile>
     </annotationProcessing>
   </component>
