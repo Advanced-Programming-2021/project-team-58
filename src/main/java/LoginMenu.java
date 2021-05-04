@@ -21,7 +21,7 @@ public class LoginMenu {
     public static void run() {
         Scanner scan = new Scanner(System.in);
         String input = "";
-        int n;
+        int n =0;
         while (!input.equals("menu exit")) {
             n = 0;
             input = scan.nextLine();
@@ -63,16 +63,16 @@ public class LoginMenu {
                 n = 1;
             }
 
-            if (matchLogin1.find() || matchLogin2.find()) {
-                if (matchLogin1.find()) {
-                    logInPlayer(matchLogin1.group(1), matchLogin1.group(2));
-                    MainMenu.run();
-                } else {
-                    logInPlayer(matchLogin2.group(2), matchLogin2.group(1));
-                    MainMenu.run();
-                }
+
+            if (matchLogin1.find()) {
+                LoginMenu.logInPlayer(matchLogin1.group(1), matchLogin1.group(2));
                 n = 1;
             }
+            if(matchLogin2.find()) {
+                LoginMenu.logInPlayer(matchLogin2.group(2), matchLogin2.group(1));
+                n = 1;
+            }
+
 
             if (matchChangeMenu.find()) {
                 System.out.println("please login first");
@@ -110,7 +110,7 @@ public class LoginMenu {
 
     public static void registerPlayer(String username, String password, String nickname) {
         if (Player.getPlayerByUsername(username) != null) {
-            System.out.println("user with username " + username + "already exists");
+            System.out.println("user with username " + username + " already exists");
         } else {
             if (Player.isNicknameExists(nickname)) {
                 System.out.println("user with nickname " + nickname + " already exists");
@@ -121,14 +121,5 @@ public class LoginMenu {
             }
         }
     }
-
 }
-
-
-
-
-
-
-
-
 
