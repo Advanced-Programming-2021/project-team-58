@@ -66,8 +66,10 @@ public class LoginMenu {
             if (matchLogin1.find() || matchLogin2.find()) {
                 if (matchLogin1.find()) {
                     logInPlayer(matchLogin1.group(1), matchLogin1.group(2));
+                    MainMenu.run();
                 } else {
                     logInPlayer(matchLogin2.group(2), matchLogin2.group(1));
+                    MainMenu.run();
                 }
                 n = 1;
             }

@@ -3,24 +3,11 @@ public class Game {
     private Player player2;
     private Phase phase;
     private Player turnOfPlayer;
-    private Card selectedCard;
-    private int round;
-//<<<<<<< HEAD
-//    public static void run(){
-//
-//    }
-//=======
-//    public static void run(){
-//
-//    }
-//>>>>>>>
-//
-//    df7a2b4(test game)
-
-    public Game(int round, Player player1, Player player2) {
-        this.player1 = player1;
-        this.player2 = player2;
-        this.round = round;
+    private Position selectedPosition;
+    public Game( Player player1, Player player2) {
+        setPlayer1(player1);
+        setPlayer2(player2);
+        setPlayersLp();
     }
 
     public Player getPlayer1() {
@@ -39,16 +26,9 @@ public class Game {
         this.player2 = player2;
     }
 
-    public int getRound() {
-        return round;
-    }
-
-    public void setRound(int round) {
-        this.round = round;
-    }
-
     public void setPlayersLp() {
-
+        player1.setLP(8000);
+        player2.setLP(8000);
     }
 
     public void draw(Player turnOfPlayer) {
@@ -143,8 +123,4 @@ public class Game {
 
     }
 }
-//<<<<<<< HEAD
-//}
-//=======
-//        }
-//        >>>>>>> df7a2b4 (test game)
+

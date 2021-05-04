@@ -53,7 +53,9 @@ public class MainMenu {
 
     public static void startAGame(Matcher matcher) {
         if (matcher.find()) {
-
+            int round;
+            Player player2;
+//            DuelMenu.run(LoginMenu.getLoggedInPlayer(), player2, round);
         }
     }
 
