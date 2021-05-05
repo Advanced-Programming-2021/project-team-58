@@ -2,14 +2,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Deck {
-    private static ArrayList<Deck> allDecks;
-    private static HashMap<Player, Deck> playersAndTheirActivatedDeck;
+    private static ArrayList<Deck> allDecks = new ArrayList<Deck>();
+    private static HashMap<Player, Deck> playersAndTheirActivatedDeck = new HashMap<Player, Deck>();
     private String deckName;
+    private ArrayList<Card> allCards = new ArrayList<Card>();
     private ArrayList<Card> mainDeck = new ArrayList<Card>();
     private ArrayList<Card> sideDeck = new ArrayList<Card>();
-    private int deckSize;
-    private int mainDeckSize;
-    private int sideDeckSize;
+    private HashMap<Card,Integer> cardsAndTheirAmountInThisDeck = new HashMap<Card, Integer>();
 
     public Deck(String deckName, String playerName) {
         setDeckName(deckName);
@@ -26,58 +25,39 @@ public class Deck {
     }
 
     public int getDeckSize() {
-        return this.deckSize;
+        return this.allCards.size();
     }
 
-    public void increaseDeckSize(int howMany) {
-        this.deckSize += howMany;
-    }
-
-    public void decreaseDeckSize(int howMany) {
-        this.deckSize -= howMany;
-    }
     public int getMainDeckSize() {
-        return this.mainDeckSize;
-    }
-
-    public void increaseMainDeckSize(int howMany) {
-        this.mainDeckSize += howMany;
-    }
-
-    public void decreaseMainDeckSize(int howMany) {
-        this.mainDeckSize -= howMany;
+        return this.mainDeck.size();
     }
 
     public int getSideDeckSize() {
-        return this.sideDeckSize;
-    }
-
-    public void increaseSideDeckSize(int howMany) {
-        this.sideDeckSize += howMany;
-    }
-
-    public void decreaseSideDeckSize(int howMany) {
-        this.sideDeckSize -= howMany;
+        return this.sideDeck.size();
     }
 
     public void addCardToMainDeck(Card card) {
         this.mainDeck.add(card);
-        increaseMainDeckSize(1);
+        this.allCards.add(card);
+        increaseNumOfCardInDeck(card,1);
     }
 
     public void removeCardFromMainDeck(Card card) {
         this.mainDeck.remove(card);
-        decreaseMainDeckSize(1);
+        this.allCards.remove(card);
+        decreaseNumOfCardInDeck(card,1);
     }
 
     public void addCardToSideDeck(Card card) {
         this.sideDeck.add(card);
-        increaseSideDeckSize(1);
+        this.allCards.add(card);
+        increaseNumOfCardInDeck(card,1);
     }
 
     public void removeCardFromSideDeck(Card card) {
         this.sideDeck.remove(card);
-        decreaseSideDeckSize(1);
+        this.allCards.remove(card);
+        decreaseNumOfCardInDeck(card,1);
     }
 
     public static void addDeckToAllDecks(String deckName, String playerName) {
@@ -94,13 +74,29 @@ public class Deck {
                 return deck;
         return null;
     }
-    //dsf
+
     public ArrayList<Card> getMainDeck() {
         return mainDeck;
     }
 
     public ArrayList<Card> getSideDeck() {
         return sideDeck;
+    }
+
+    public int getNumOfCardInDeck(Card card) {
+        return cardsAndTheirAmountInThisDeck.get(card);
+    }
+
+    public void increaseNumOfCardInDeck(Card card,int howMany) {
+        int theExistingNum = cardsAndTheirAmountInThisDeck.get(card);
+        cardsAndTheirAmountInThisDeck.remove(card);
+        cardsAndTheirAmountInThisDeck.put(card,theExistingNum+howMany);
+    }
+
+    public void decreaseNumOfCardInDeck(Card card, int howMany) {
+        int theExistingNum = cardsAndTheirAmountInThisDeck.get(card);
+        cardsAndTheirAmountInThisDeck.remove(card);
+        cardsAndTheirAmountInThisDeck.put(card,theExistingNum-howMany);
     }
 
 
