@@ -2,8 +2,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Deck {
-    private static ArrayList<Deck> allDecks = new ArrayList<Deck>();
-    private static HashMap<Player, Deck> playersAndTheirActivatedDeck = new HashMap<Player, Deck>();
+    private static ArrayList<Deck> allDecks;
+    private static HashMap<Player, Deck> playersAndTheirActivatedDeck;
     private String deckName;
     private ArrayList<Card> mainDeck = new ArrayList<Card>();
     private ArrayList<Card> sideDeck = new ArrayList<Card>();
@@ -84,7 +84,7 @@ public class Deck {
         allDecks.add(new Deck(deckName, playerName));
     }
 
-    public static void removeDeckFromAllDecks(String deckName) {
+    public static void removeDeckFromAllDecks(String deckName){
         allDecks.remove(getDeckByName(deckName));
     }
 
@@ -94,4 +94,14 @@ public class Deck {
                 return deck;
         return null;
     }
+    //dsf
+    public ArrayList<Card> getMainDeck() {
+        return mainDeck;
+    }
+
+    public ArrayList<Card> getSideDeck() {
+        return sideDeck;
+    }
+
+
 }
