@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Game {
     private Player player1;
     private Player player2;
@@ -31,12 +33,15 @@ public class Game {
         player2.setLP(8000);
     }
 
-    public void draw(Player turnOfPlayer) {
-
+    public void draw() {
+        int mainDeckSize = turnOfPlayer.getActiveDeck().getMainDeck().size();
+        Random rand = new Random();
+        int index = rand.nextInt(mainDeckSize);
+        turnOfPlayer.addCardToHand(turnOfPlayer.getActiveDeck().getMainDeck().get(index));
     }
 
     public void surrender() {
-
+        turnOfPlayer.setLP(0);
     }
 
     public void showBoard() {
