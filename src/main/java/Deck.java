@@ -25,6 +25,7 @@ public class Deck {
     public static void addDeckToAllDecks(String deckName, String playerName){
         allDecks.add(new Deck(deckName,playerName));
     }
+
     public static void removeDeckFromAllDecks(String deckName){
         allDecks.remove(getDeckByName(deckName));
     }
@@ -34,5 +35,21 @@ public class Deck {
             if (deck.getDeckName().equals(deckName))
                 return deck;
         return null;
+    }
+
+    public ArrayList<Card> getMainDeck() {
+        return mainDeck;
+    }
+
+    public ArrayList<Card> getSideDeck() {
+        return sideDeck;
+    }
+
+    public void addCardToMainDeck(Card card){
+        mainDeck.add (card);
+    }
+
+    public void addCardToSideDeck(Card card){
+        sideDeck.add (card);
     }
 }
