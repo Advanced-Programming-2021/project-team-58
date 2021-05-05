@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Player {
-    private static ArrayList<Player> allPlayers = new ArrayList<>();
+    private static ArrayList<Player> allPlayers = new ArrayList<Player>();
     private String username;
     private String password;
     private String nickname;
@@ -10,8 +10,8 @@ public class Player {
     private int LP;
     private int money;
     private Board board;
-    private ArrayList<Deck> decks;  //These are NOT the deck that is being used in the game
-    private ArrayList<Card> hand;
+    private ArrayList<Deck> decks = new ArrayList<Deck>();  //These are NOT the deck that is being used in the game
+    private ArrayList<Card> hand = new ArrayList<Card>();
 
     public Player(String username, String password) {
         setUsername(username);
