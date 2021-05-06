@@ -24,6 +24,12 @@ public class DeckMenu {
                 addCardToMainDeck(getCommandMatcher(input, "^(?i)(deck add-card (--.+) (--.+))$"));
             else if (input.trim().matches("^(?i)(deck add-card (--.+) (--.+) (--.+))$"))
                 addCardToSideDeck(getCommandMatcher(input, "^(?i)(deck add-card (--.+) (--.+) (--.+))$"));
+            else if (input.trim().matches("^(?i)(deck rm-card (--.+) (--.+))$"))
+                removeCardFromMainDeck(getCommandMatcher(input, "^(?i)(deck rm-card (--.+) (--.+))$"));
+            else if (input.trim().matches("^(?i)(deck rm-card (--.+) (--.+) (--.+))$"))
+                removeCardFromSideDeck(getCommandMatcher(input, "^(?i)(deck rm-card (--.+) (--.+) (--.+))$"));
+            else if (input.trim().matches("^(?i)(deck show --all)$"))
+                showAllDecks();
 
         }
         MainMenu.run(); //Navigating to MainMenu at last
@@ -75,84 +81,146 @@ public class DeckMenu {
 
     private static void addCardToMainDeck(Matcher matcher) {
         if (matcher.find()) {
-            Matcher matcher1;
-            String cardName = null;
-            String deckName = null;
+            String cardName = findCardName(matcher);
+            String deckName = findDeckName(matcher);
 
-            for (int i = 2; i <= matcher.groupCount(); i++) {
-                if (matcher.group(i).matches("^(?i)(--card (.+))$")) {
-                    matcher1 = getCommandMatcher(matcher.group(i), "^(?i)(--card (.*))$");
-                    if (matcher1.find())
-                        cardName = matcher1.group(2);
-                }
-                if (matcher.group(i).matches("^(?i)(--deck (.+))$")) {
-                    matcher1 = getCommandMatcher(matcher.group(i), "^(?i)(--deck (.*))$");
-                    if (matcher1.find())
-                        deckName = matcher1.group(2);
-                }
-            }
-            if (cardName != null && deckName != null){
-                if (Card.getCardByName(cardName)==null)
-                    System.out.println("card with name "+cardName+" does not exist");
+            if (cardName != null && deckName != null) {
+                if (Card.getCardByName(cardName) == null)
+                    System.out.println("card with name " + cardName + " does not exist");
                 else if (Deck.getDeckByName(deckName) == null)
-                    System.out.println("deck with name "+deckName+" does not exist");
-                else if (Deck.getDeckByName(deckName).getMainDeckSize()==60)
+                    System.out.println("deck with name " + deckName + " does not exist");
+                else if (Deck.getDeckByName(deckName).getMainDeckSize() == 60)
                     System.out.println("main deck is full");
-                else if (Deck.getDeckByName(deckName).getNumOfCardInDeck(Card.getCardByName(cardName))==3)
-                    System.out.println("there are already three cards with name "+cardName+" in deck "+deckName);
+                else if (Deck.getDeckByName(deckName).getNumOfCardInDeck(Card.getCardByName(cardName)) == 3)
+                    System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
                 else {
                     Deck.getDeckByName(deckName).addCardToMainDeck(Card.getCardByName(cardName));
                     System.out.println("card added to deck successfully");
                 }
-            }
+            } else System.out.println("invalid command");
         }
     }
 
     private static void addCardToSideDeck(Matcher matcher) {
         if (matcher.find()) {
+            String cardName = findCardName(matcher);
+            String deckName = findDeckName(matcher);
+            boolean isInSideDeck = isInSideDeck(matcher);
+
+            if (cardName != null && deckName != null && isInSideDeck) {
+                if (Card.getCardByName(cardName) == null)
+                    System.out.println("card with name " + cardName + " does not exist");
+                else if (Deck.getDeckByName(deckName) == null)
+                    System.out.println("deck with name " + deckName + " does not exist");
+                else if (Deck.getDeckByName(deckName).getSideDeckSize() == 15)
+                    System.out.println("side deck is full");
+                else if (Deck.getDeckByName(deckName).getNumOfCardInDeck(Card.getCardByName(cardName)) == 3)
+                    System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
+                else {
+                    Deck.getDeckByName(deckName).addCardToSideDeck(Card.getCardByName(cardName));
+                    System.out.println("card added to deck successfully");
+                }
+            } else System.out.println("invalid command");
+        }
+    }
+
+
+    public static void removeCardFromMainDeck(Matcher matcher) {
+        if (matcher.find()) {
+            String cardName = findCardName(matcher);
+            String deckName = findDeckName(matcher);
+            if (cardName != null && deckName != null) {
+                if (Deck.getDeckByName(deckName) == null)
+                    System.out.println("deck with name " + deckName + " does not exist");
+                else {
+                    Card card = Card.getCardByName(cardName);
+                    boolean isInMainDeckExists = Deck.getDeckByName(deckName).getMainDeck().contains(card);
+                    if (card == null || !isInMainDeckExists)
+                        System.out.println("card with name " + cardName + " does not exist in main deck");
+                    else {
+                        Deck.getDeckByName(deckName).removeCardFromMainDeck(Card.getCardByName(cardName));
+                        System.out.println("card removed form deck successfully");
+                    }
+                }
+            } else System.out.println("invalid command");
+        }
+    }
+
+    public static void removeCardFromSideDeck(Matcher matcher) {
+        if (matcher.find()) {
+            String cardName = findCardName(matcher);
+            String deckName = findDeckName(matcher);
+            boolean isInSideDeck = isInSideDeck(matcher);
+            if (cardName != null && deckName != null && isInSideDeck) {
+                if (Deck.getDeckByName(deckName) == null)
+                    System.out.println("deck with name " + deckName + " does not exist");
+                else {
+                    Card card = Card.getCardByName(cardName);
+                    boolean isInSideDeckExists = Deck.getDeckByName(deckName).getSideDeck().contains(card);
+                    if (card == null || !isInSideDeckExists)
+                        System.out.println("card with name " + cardName + " does not exist in side deck");
+                    else {
+                        Deck.getDeckByName(deckName).removeCardFromSideDeck(card);
+                        System.out.println("card removed form deck successfully");
+                    }
+                }
+            } else System.out.println("invalid command");
+        }
+    }
+
+    public static void showAllDecks() {
+        System.out.println("Decks:");
+        System.out.println("Active deck:");
+        if (LoginMenu.getLoggedInPlayer().getActiveDeck() != null) {
+            String activeDeckName = LoginMenu.getLoggedInPlayer().getActiveDeck().getDeckName();
+            int mainDeckSize = LoginMenu.getLoggedInPlayer().getActiveDeck().getMainDeckSize();
+            int sideDeckSize = LoginMenu.getLoggedInPlayer().getActiveDeck().getSideDeckSize();
+            if (mainDeckSize >= 40 && mainDeckSize <= 60 && sideDeckSize <= 15)
+                System.out.println(activeDeckName+": main deck " +mainDeckSize+", side deck " +sideDeckSize+", valid");
+            else System.out.println(activeDeckName+": main deck " +mainDeckSize+", side deck " +sideDeckSize+", invalid");
+        }
+        System.out.println("Other decks:");
+
+    }
+
+    private static String findCardName(Matcher matcher) {
+        String cardName = null;
+        if (matcher.find()) {
             Matcher matcher1;
-            String cardName = null;
-            String deckName = null;
-            boolean isInSideDeck = false;
             for (int i = 2; i <= matcher.groupCount(); i++) {
                 if (matcher.group(i).matches("^(?i)(--card (.+))$")) {
                     matcher1 = getCommandMatcher(matcher.group(i), "^(?i)(--card (.*))$");
                     if (matcher1.find())
                         cardName = matcher1.group(2);
                 }
+            }
+        }
+        return cardName;
+    }
+
+    private static String findDeckName(Matcher matcher) {
+        String deckName = null;
+        if (matcher.find()) {
+            Matcher matcher1;
+            for (int i = 2; i <= matcher.groupCount(); i++) {
                 if (matcher.group(i).matches("^(?i)(--deck (.+))$")) {
-                    matcher1 = getCommandMatcher(matcher.group(i), "^(?i)(--deck (.*))$");
+                    matcher1 = getCommandMatcher(matcher.group(i), "^(?i)(--deck (.+))$");
                     if (matcher1.find())
                         deckName = matcher1.group(2);
                 }
+            }
+        }
+        return deckName;
+    }
+
+    private static boolean isInSideDeck(Matcher matcher) {
+        boolean isInSideDeck = false;
+        if (matcher.find()) {
+            for (int i = 2; i <= matcher.groupCount(); i++)
                 if (matcher.group(i).matches("^(?i)(--side)$"))
                     isInSideDeck = true;
-            }
-            if (cardName != null && deckName != null && isInSideDeck){
-                if (Card.getCardByName(cardName)==null)
-                    System.out.println("card with name "+cardName+" does not exist");
-                else if (Deck.getDeckByName(deckName) == null)
-                    System.out.println("deck with name "+deckName+" does not exist");
-                else if (Deck.getDeckByName(deckName).getSideDeckSize()==15)
-                    System.out.println("side deck is full");
-                else if (Deck.getDeckByName(deckName).getNumOfCardInDeck(Card.getCardByName(cardName))==3)
-                    System.out.println("there are already three cards with name "+cardName+" in deck "+deckName);
-                else {
-                    Deck.getDeckByName(deckName).addCardToSideDeck(Card.getCardByName(cardName));
-                    System.out.println("card added to deck successfully");
-                }
-            }
-            else System.out.println("invalid command");
         }
-    }
-
-
-    public static void removeCardFromDeck(String cardName, String deckType, String deckName) {
-
-    }
-
-    public static void showAllDecks() {
-
+        return isInSideDeck;
     }
 
     private static Matcher getCommandMatcher(String input, String regex) {
