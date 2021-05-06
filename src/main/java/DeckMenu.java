@@ -1,3 +1,7 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -175,11 +179,22 @@ public class DeckMenu {
             String activeDeckName = LoginMenu.getLoggedInPlayer().getActiveDeck().getDeckName();
             int mainDeckSize = LoginMenu.getLoggedInPlayer().getActiveDeck().getMainDeckSize();
             int sideDeckSize = LoginMenu.getLoggedInPlayer().getActiveDeck().getSideDeckSize();
-            if (mainDeckSize >= 40 && mainDeckSize <= 60 && sideDeckSize <= 15)
-                System.out.println(activeDeckName+": main deck " +mainDeckSize+", side deck " +sideDeckSize+", valid");
-            else System.out.println(activeDeckName+": main deck " +mainDeckSize+", side deck " +sideDeckSize+", invalid");
+            if (Deck.getDeckByName(activeDeckName).isValid())
+                System.out.println(activeDeckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", valid");
+            else
+                System.out.println(activeDeckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", invalid");
         }
         System.out.println("Other decks:");
+        ArrayList<Deck> decks = LoginMenu.getLoggedInPlayer().getDecks();
+        Collections.sort(decks);
+        for (int i = 0; i < decks.size(); i++) {
+            String deckName = decks.get(i).getDeckName();
+            int mainDeckSize = decks.get(i).getMainDeckSize();
+            int sideDeckSize = decks.get(i).getSideDeckSize();
+            if (decks.get(i).isValid())
+            System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", valid");
+            else System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", invalid");
+        }
 
     }
 
