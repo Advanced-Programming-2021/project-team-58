@@ -1,11 +1,12 @@
 import java.util.ArrayList;
 
-abstract public class Card {
+abstract public class Card implements Comparable<Card>{
 
     private String cardName;
     private String cardDescription;
     private int cardNumber;
-    private static ArrayList<Card> allCards = new ArrayList<>();
+    private static ArrayList<Card> allCards = new ArrayList<Card>();
+//    private static ArrayList<Card> allAvailableCards = new ArrayList<Card>();
 
     public String getCardName() {
         return cardName;
@@ -39,4 +40,9 @@ abstract public class Card {
     }
 
     abstract public void showCard();
+
+    public int compareTo(Card anotherCard) {
+        return this.getCardName().compareTo(anotherCard.getCardName());
+    }
+
 }

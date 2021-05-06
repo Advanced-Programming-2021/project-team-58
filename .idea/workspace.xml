@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cbddc830-0963-4f07-8182-65b595e8caad" name="Default Changelist" comment="add run">
+    <list default="true" id="cbddc830-0963-4f07-8182-65b595e8caad" name="Default Changelist" comment="add compareTo and isValid method">
+      <change afterPath="$PROJECT_DIR$/.idea/TheMainProjectWithMaven.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/LoginMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LoginMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/DeckMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DeckMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/DuelMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/DuelMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/MainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MainMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ProfileMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ProfileMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,7 +22,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="ProjectId" id="1rtjWJSPsVMbyG5R92iL3lcL2l9" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -27,9 +32,10 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../ATest/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -70,6 +76,11 @@
       <workItem from="1619891728423" duration="9666000" />
       <workItem from="1619946705716" duration="322000" />
       <workItem from="1619961436726" duration="11363000" />
+      <workItem from="1620154100094" duration="2320000" />
+      <workItem from="1620210318539" duration="6917000" />
+      <workItem from="1620293626933" duration="7121000" />
+      <workItem from="1620311697567" duration="190000" />
+      <workItem from="1620313547472" duration="6378000" />
     </task>
     <task id="LOCAL-00001" summary="new">
       <created>1619802375945</created>
@@ -134,7 +145,70 @@
       <option name="project" value="LOCAL" />
       <updated>1620140530099</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="instantiate ArrayList">
+      <created>1620146605295</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1620146605295</updated>
+    </task>
+    <task id="LOCAL-00011" summary="add run to ScoreboardMenu.java">
+      <created>1620147910697</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1620147910697</updated>
+    </task>
+    <task id="LOCAL-00012" summary="add some necessary methods to Deck.java">
+      <created>1620214958190</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1620214958190</updated>
+    </task>
+    <task id="LOCAL-00013" summary="remove some unnecessary methods">
+      <created>1620217336099</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1620217336099</updated>
+    </task>
+    <task id="LOCAL-00014" summary="add some methods to DeckMenu.java(incomplete)">
+      <created>1620217951646</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1620217951646</updated>
+    </task>
+    <task id="LOCAL-00015" summary="add some small things to Player.java">
+      <created>1620218355275</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1620218355275</updated>
+    </task>
+    <task id="LOCAL-00016" summary="contain some other commands in DeckMenu.java">
+      <created>1620297898934</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1620297898934</updated>
+    </task>
+    <task id="LOCAL-00017" summary="add showAllDecks method">
+      <created>1620314106652</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1620314106652</updated>
+    </task>
+    <task id="LOCAL-00018" summary="add compareTo and isValid method">
+      <created>1620314210365</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1620314210365</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,6 +235,16 @@
     <MESSAGE value="add startGame method" />
     <MESSAGE value="add addDeckToAllDecks method to Deck.java" />
     <MESSAGE value="add run" />
-    <option name="LAST_COMMIT_MESSAGE" value="add run" />
+    <MESSAGE value="instantiate ArrayList" />
+    <MESSAGE value="add run to ScoreboardMenu.java" />
+    <MESSAGE value="add some necessary methods to Deck.java" />
+    <MESSAGE value="remove some unnecessary methods" />
+    <MESSAGE value="add some methods to DeckMenu.java(incomplete)" />
+    <MESSAGE value="add some small things to Player.java" />
+    <MESSAGE value="contain some other commands in DeckMenu.java" />
+    <MESSAGE value="add deckShow method" />
+    <MESSAGE value="add showAllDecks method" />
+    <MESSAGE value="add compareTo and isValid method" />
+    <option name="LAST_COMMIT_MESSAGE" value="add compareTo and isValid method" />
   </component>
 </project>

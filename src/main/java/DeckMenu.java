@@ -1,7 +1,5 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,16 +22,20 @@ public class DeckMenu {
                 deleteDeck(getCommandMatcher(input, "^(?i)(deck[ ]+delete[ ]+(\\w+))$"));
             else if (input.trim().matches("^(?i)(deck[ ]+set[ -_]+activate[ ]+(\\w+))$"))
                 setActivatedDeck(getCommandMatcher(input, "^(?i)(deck[ ]+set[ -_]+activate[ ]+(\\w+))$"));
-            else if (input.trim().matches("^(?i)(deck add-card (--.+) (--.+))$"))
-                addCardToMainDeck(getCommandMatcher(input, "^(?i)(deck add-card (--.+) (--.+))$"));
             else if (input.trim().matches("^(?i)(deck add-card (--.+) (--.+) (--.+))$"))
                 addCardToSideDeck(getCommandMatcher(input, "^(?i)(deck add-card (--.+) (--.+) (--.+))$"));
-            else if (input.trim().matches("^(?i)(deck rm-card (--.+) (--.+))$"))
-                removeCardFromMainDeck(getCommandMatcher(input, "^(?i)(deck rm-card (--.+) (--.+))$"));
+            else if (input.trim().matches("^(?i)(deck add-card (--.+) (--.+))$"))
+                addCardToMainDeck(getCommandMatcher(input, "^(?i)(deck add-card (--.+) (--.+))$"));
             else if (input.trim().matches("^(?i)(deck rm-card (--.+) (--.+) (--.+))$"))
                 removeCardFromSideDeck(getCommandMatcher(input, "^(?i)(deck rm-card (--.+) (--.+) (--.+))$"));
+            else if (input.trim().matches("^(?i)(deck rm-card (--.+) (--.+))$"))
+                removeCardFromMainDeck(getCommandMatcher(input, "^(?i)(deck rm-card (--.+) (--.+))$"));
             else if (input.trim().matches("^(?i)(deck show --all)$"))
                 showAllDecks();
+            else if (input.trim().matches("^(?i)(dech show (.+) (.+) (.+))$"))
+                showSideDeck(getCommandMatcher(input, "^(?i)(deck show (.+) (.+) (.+)$"));
+            else if (input.trim().matches("^(?i)(deck show --deck-name (.+))$"))
+                showMainDeck(getCommandMatcher(input, "^$(?i)(deck show --deck-name (.+))"));
 
         }
         MainMenu.run(); //Navigating to MainMenu at last
@@ -192,8 +194,9 @@ public class DeckMenu {
             int mainDeckSize = decks.get(i).getMainDeckSize();
             int sideDeckSize = decks.get(i).getSideDeckSize();
             if (decks.get(i).isValid())
-            System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", valid");
-            else System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", invalid");
+                System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", valid");
+            else
+                System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", invalid");
         }
 
     }
@@ -217,7 +220,7 @@ public class DeckMenu {
         String deckName = null;
         if (matcher.find()) {
             Matcher matcher1;
-            for (int i = 2; i <= matcher.groupCount(); i++) {
+            for (int i = 1; i <= matcher.groupCount(); i++) {
                 if (matcher.group(i).matches("^(?i)(--deck (.+))$")) {
                     matcher1 = getCommandMatcher(matcher.group(i), "^(?i)(--deck (.+))$");
                     if (matcher1.find())
@@ -231,11 +234,81 @@ public class DeckMenu {
     private static boolean isInSideDeck(Matcher matcher) {
         boolean isInSideDeck = false;
         if (matcher.find()) {
-            for (int i = 2; i <= matcher.groupCount(); i++)
+            for (int i = 1; i <= matcher.groupCount(); i++)
                 if (matcher.group(i).matches("^(?i)(--side)$"))
                     isInSideDeck = true;
         }
         return isInSideDeck;
+    }
+
+    public static void showSideDeck(Matcher matcher) {
+        if (matcher.find()) {
+            Matcher matcher1;
+            String deckName = null;
+            boolean isInSideDeck = false;
+            for (int i = 2; i < matcher.groupCount(); i++) {
+                if (matcher.group(i).matches("^(?i)(--deck-name (.+))$")) {
+                    matcher1 = getCommandMatcher(matcher.group(i), "^(?i)(--deck-name (.+)$");
+                    if (matcher1.find()) deckName = matcher1.group(2);
+                }
+                if (matcher.group(i).matches("^(?i)(--side)$"))
+                    isInSideDeck = true;
+            }
+            if (deckName != null && isInSideDeck) {
+                if (Deck.getDeckByName(deckName) == null)
+                    System.out.println("deck with name " + deckName + " does not exist");
+                else {
+                    ArrayList<MonsterCard> monsterCards = new ArrayList<MonsterCard>();
+                    ArrayList<TrapAndSpellCard> trapAndSpellCards = new ArrayList<TrapAndSpellCard>();
+                    for (Card card : Deck.getDeckByName(deckName).getSideDeck()) {
+                        if (card instanceof MonsterCard)
+                            monsterCards.add((MonsterCard) card);
+                        else trapAndSpellCards.add((TrapAndSpellCard) card);
+                    }
+                    Collections.sort(monsterCards);
+                    Collections.sort(trapAndSpellCards);
+
+                    System.out.println("Deck: " + deckName + "\n" +
+                            "Side deck\n" +
+                            "Monsters:");
+                    for (int i = 0; i < monsterCards.size(); i++) {
+                        System.out.println(monsterCards.get(i).getCardName() + ": " + monsterCards.get(i).getCardDescription());
+                    }
+                    System.out.println("Spell and Traps:");
+                    for (int i = 0; i < trapAndSpellCards.size(); i++)
+                        System.out.println(trapAndSpellCards.get(i).getCardNumber() + ": " + trapAndSpellCards.get(i).getCardDescription());
+                }
+            } else System.out.println("invalid command");
+        }
+    }
+
+    public static void showMainDeck(Matcher matcher) {
+        if (matcher.find()) {
+            String deckName = matcher.group(2);
+            if (Deck.getDeckByName(deckName) == null)
+                System.out.println("deck with name " + deckName + " does not exist");
+            else {
+                ArrayList<MonsterCard> monsterCards = new ArrayList<MonsterCard>();
+                ArrayList<TrapAndSpellCard> trapAndSpellCards = new ArrayList<TrapAndSpellCard>();
+                for (Card card : Deck.getDeckByName(deckName).getMainDeck()) {
+                    if (card instanceof MonsterCard)
+                        monsterCards.add((MonsterCard) card);
+                    else trapAndSpellCards.add((TrapAndSpellCard) card);
+                }
+                Collections.sort(monsterCards);
+                Collections.sort(trapAndSpellCards);
+
+                System.out.println("Deck: " + deckName + "\n" +
+                        "Main deck\n" +
+                        "Monsters:");
+                for (int i = 0; i < monsterCards.size(); i++) {
+                    System.out.println(monsterCards.get(i).getCardName() + ": " + monsterCards.get(i).getCardDescription());
+                }
+                System.out.println("Spell and Traps:");
+                for (int i = 0; i < trapAndSpellCards.size(); i++)
+                    System.out.println(trapAndSpellCards.get(i).getCardNumber() + ": " + trapAndSpellCards.get(i).getCardDescription());
+            }
+        }
     }
 
     private static Matcher getCommandMatcher(String input, String regex) {
