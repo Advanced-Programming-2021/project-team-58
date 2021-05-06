@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Game {
@@ -6,6 +7,8 @@ public class Game {
     private Phase phase;
     private Player turnOfPlayer;
     private Position selectedPosition;
+    private Card selectedCardHand;
+
     public Game( Player player1, Player player2) {
         setPlayer1(player1);
         setPlayer2(player2);
@@ -52,12 +55,40 @@ public class Game {
 
     }
 
-    public void selectCard(Card card) {
-
+    public void selectPosition(Position position) {
+        selectedPosition = position ;
     }
 
-    public void summon(MonsterCard monsterCard) {
+    public void selectedPositionNulling() {
+        selectedPosition = null;
+    }
 
+    public void selectCardHand(Card card){
+        selectedCardHand = card;
+    }
+
+    public void selectedCardHandNulling(){
+        selectedCardHand = null;
+    }
+
+    private int firstEmptyIndex(ArrayList<Position> array){
+        int n = 0;
+        int i = 0;
+        while( n == 0 ){
+            if (array.get(i).getStatus().equals(StatusOfPosition.EMPTY)){
+                n = 1;
+            }
+            else{
+                i++;
+            }
+        }
+        return i;
+    }
+
+    public void summon() {
+        int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
+        turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
+        turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
     }
 
     public void setMonsterCardOnBoard(MonsterCard monsterCard) {
@@ -93,10 +124,6 @@ public class Game {
     }
 
     public void setTrapOnBoard(TrapAndSpellCard trap) {
-
-    }
-
-    public void selectedCardNulling(Card selectedCard) {
 
     }
 
