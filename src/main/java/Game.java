@@ -209,11 +209,13 @@ public class Game {
 
     }
 
-    public void directAttack(MonsterCard monsterCard) {
-
+    public void directAttack() {
+        int damage = ((MonsterCard)selectedPosition.getCard()).getAttack();
+        getOpposition().decreaseLP(damage);
+        System.out.println("you opponent receives " + damage + " battale damage");
     }
 
-    public void sendToGraveyard(Card Card) {
+    private void sendToGraveyard(Card Card) {
 
     }
 
