@@ -134,6 +134,6 @@ public class Player {
     }
 
     public ArrayList<Card> getAllBoughtCards() {
-        return LoginMenu.getLoggedInPlayer().allCards;
+        return this.allCards;
     }
 }
