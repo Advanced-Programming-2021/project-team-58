@@ -33,4 +33,8 @@ public class Board {
         }
     }
 
+    public void addToGraveyard(Card card){
+        graveYard.add(card);
+    }
+
 }
