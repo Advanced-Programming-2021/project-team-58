@@ -315,11 +315,12 @@ public class DeckMenu {
         for (int i = 0; i < trapAndSpellCards.size(); i++)
             System.out.println(trapAndSpellCards.get(i).getCardNumber() + ": " + trapAndSpellCards.get(i).getCardDescription());
     }
+
     private static void showAllCards() {
-        ArrayList<Card> allCards = LoginMenu.getLoggedInPlayer().getAllCards();
+        ArrayList<Card> allCards = LoginMenu.getLoggedInPlayer().getAllBoughtCards();
         Collections.sort(allCards);
-        for (Card card: allCards)
-            System.out.println(card.getCardName()+": "+card.getCardDescription());
+        for (Card card : allCards)
+            System.out.println(card.getCardName() + ": " + card.getCardDescription());
     }
 
     private static Matcher getCommandMatcher(String input, String regex) {
