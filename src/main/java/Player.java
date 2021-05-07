@@ -10,6 +10,7 @@ public class Player {
     private int LP;
     private int money;
     private Board board;
+    private ArrayList<Card> allCards = new ArrayList<Card>();
     private ArrayList<Deck> decks = new ArrayList<Deck>();  //These are NOT the deck that is being used in the game
     private ArrayList<Card> hand = new ArrayList<Card>();
 
@@ -124,5 +125,9 @@ public class Player {
     public static ArrayList<Player> getAllPlayers() {
 
         return allPlayers;
+    }
+
+    public ArrayList<Card> getAllBoughtCards() {
+        return LoginMenu.getLoggedInPlayer().allCards;
     }
 }
