@@ -4,5 +4,7 @@ public enum TrapOrSpellIcons {
     RITUAL,
     CONTINUOUS,
     COUNTER,
-    EQUIP
+    EQUIP,
+    NORMAL,
+    BJI;
 }

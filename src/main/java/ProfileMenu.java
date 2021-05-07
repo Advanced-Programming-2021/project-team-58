@@ -2,7 +2,7 @@ import java.util.*;
 import java.util.regex.*;
 
 public class ProfileMenu {
-    public static void run() {
+    public void run() {
         Scanner scan = new Scanner(System.in);
         String input = scan.nextLine();
 
@@ -70,15 +70,15 @@ public class ProfileMenu {
 
     }
 
-    public static void changePassword(String newPassword) {
+    public void changePassword(String newPassword) {
         new Login().getLoggedInPlayer().setPassword(newPassword);
     }
 
-    public static void changeNickName(String newNickName) {
+    public void changeNickName(String newNickName) {
         new Login().getLoggedInPlayer().setNickname(newNickName);
     }
 
-    public static Matcher getCommandMatcher(String input, String regex) {
+    public Matcher getCommandMatcher(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(input);
     }
