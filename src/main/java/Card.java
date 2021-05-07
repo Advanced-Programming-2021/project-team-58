@@ -8,6 +8,10 @@ abstract public class Card implements Comparable<Card>{
     private static ArrayList<Card> allCards = new ArrayList<Card>();
 //    private static ArrayList<Card> allAvailableCards = new ArrayList<Card>();
 
+    public Card() {
+        allCards.add(this);
+    }
+
     public String getCardName() {
         return cardName;
     }
