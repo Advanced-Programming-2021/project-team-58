@@ -92,11 +92,18 @@ public class Game {
     }
 
     public void setMonsterCardOnBoard(MonsterCard monsterCard) {
-
+        int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
+        turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.DEFENSIVE_HIDDEN);
+        turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
     }
 
-    public void changeMonsterStatus(MonsterCard monsterCard) {
-
+    public void changeMonsterStatus() {
+        if(selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)){
+            selectedPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
+        }
+        if(selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_OCCUPIED)){
+            selectedPosition.setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
+        }
     }
 
     public void attackToMonster(MonsterCard monsterCard) {

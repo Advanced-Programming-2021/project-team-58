@@ -6,6 +6,11 @@ public class Board {
     private ArrayList<Position> spellCard;
     private Deck deck;
 
+    public Board(){
+        createMonsterCardPosition();
+        createSpellCardPosition();
+    }
+
     public ArrayList<Position> getMonsterCards() {
         return monsterCards;
     }
@@ -13,17 +18,19 @@ public class Board {
     public ArrayList<Position> getSpellCard() {
         return spellCard;
     }
+
     public void createMonsterCardPosition(){
-
+        for(int i=0 ; i<5 ; i++){
+            Position x = new Position(StatusOfPosition.EMPTY , i );
+            monsterCards.add(x);
+        }
     }
+
     public void createSpellCardPosition(){
-
-    }
-    public void editStatusOfPosition(StatusOfPosition status,int index){
-
-    }
-    public void editCardOfPosition(Card card,int index){
-
+        for(int i=0 ; i<5 ; i++){
+            Position x = new Position(StatusOfPosition.EMPTY , i );
+            spellCard.add(x);
+        }
     }
 
 }
