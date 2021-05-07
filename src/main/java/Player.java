@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 public class Player {
-    private static ArrayList<Player> allPlayers = new ArrayList<Player>();
     private String username;
     private String password;
     private String nickname;
@@ -13,6 +12,13 @@ public class Player {
     private ArrayList<Card> allCards = new ArrayList<Card>();
     private ArrayList<Deck> decks = new ArrayList<Deck>();  //These are NOT the deck that is being used in the game
     private ArrayList<Card> hand = new ArrayList<Card>();
+    private static ArrayList<Player> allPlayers = new ArrayList<Player>();
+
+    public static ArrayList<Card> getAllCards() {
+        return allCards;
+    }
+
+    private static ArrayList<Card> allCards = new ArrayList<Card>();
 
     public Player(String username, String password) {
         setUsername(username);

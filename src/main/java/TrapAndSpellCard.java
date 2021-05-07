@@ -12,42 +12,39 @@ public class TrapAndSpellCard extends Card{
     }
 
     public TrapAndSpellCard(String cardName, TrapOrSpellTypes cardType, TrapOrSpellIcons cardIcon, String cardDescription, TrapAndSpellStatus status, int price) {
+        super(cardName,cardDescription,price);
         setCardType(cardType);
         setCardIcon(cardIcon);
         setCardStatus(status);
-        super.setCardName(cardName);
-        super.setCardDescription(cardDescription);
-        super.setCardPrice(price);
     }
 
     public TrapOrSpellTypes getTrapOrSpellTypes() {
         return cardType;
     }
-    
     public void setCardType(TrapOrSpellTypes cardType) {
         this.cardType = cardType;
     }
-
     public TrapOrSpellIcons getCardIcon() {
         return cardIcon;
     }
-
     public void setCardIcon(TrapOrSpellIcons cardIcon) {
         this.cardIcon = cardIcon;
     }
 
     public void showCard() {
-    if(this.getTrapOrSpellTypes()== TrapOrSpellTypes.SPELL_CARD){
+
+        if(this.getTrapOrSpellTypes()== TrapOrSpellTypes.SPELL_CARD){
         System.out.println("Name: " + super.getCardName());
         System.out.println("Spell");
-        System.out.println("Type: " + this.getCardType());
+        System.out.println("Type: " + this.getTrapOrSpellTypes());
         System.out.println("Description: " + super.getCardDescription());
     }
-    else if (this.getTrapOrSpellTypes()== TrapOrSpellTypes.TRAP_CARD){
+        else if (this.getTrapOrSpellTypes()== TrapOrSpellTypes.TRAP_CARD){
         System.out.println("Name: " + super.getCardName());
         System.out.println("Trap");
-        System.out.println("Type: " + this.getCardType());
+        System.out.println("Type: " + this.getTrapOrSpellTypes());
         System.out.println("Description: " + super.getCardDescription());
     }
+
     }
 }

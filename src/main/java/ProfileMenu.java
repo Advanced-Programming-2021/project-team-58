@@ -8,14 +8,14 @@ public class ProfileMenu {
 
         //nickname changing
         if (getCommandMatcher(input, "^[ ]+ profile change nickname ([A-Za-z]+) [ ]+ $").find()) {
-            if (getCommandMatcher(input, "^[ ]+ profile change nickname ([A-Za-z]+) [ ]+ $").group(1).equals(new Login().getLoggedInPlayer().getNickname()))
+            if (getCommandMatcher(input, "^[ ]+ profile change nickname ([A-Za-z]+) [ ]+ $").group(1).equals(LoginMenu.getLoggedInPlayer().getNickname()))
                 System.out.println("user with nickname " + getCommandMatcher(input, "^[ ]+ profile change nickname ([A-Za-z]+) [ ]+ $").group(1) + " already exists");
             else {
                 changeNickName(getCommandMatcher(input, "^[ ]+ profile change nickname ([A-Za-z]+) [ ]+ $").group(1));
                 System.out.println("nickname changed successfully!");
             }
         } else if (getCommandMatcher(input, "^[ ]+ profile change ([A-Za-z]+) nickname [ ]+ $").find()) {
-            if (getCommandMatcher(input, "^[ ]+ profile change ([A-Za-z]+) nickname [ ]+ $").group(1).equals(new Login().getLoggedInPlayer().getNickname()))
+            if (getCommandMatcher(input, "^[ ]+ profile change ([A-Za-z]+) nickname [ ]+ $").group(1).equals(LoginMenu.getLoggedInPlayer().getNickname()))
                 System.out.println("user with nickname " + getCommandMatcher(input, "^[ ]+ profile change ([A-Za-z]+) nickname [ ]+ $").group(1) + " already exists");
             else {
                 changeNickName(getCommandMatcher(input, "^[ ]+ profile change ([A-Za-z]+) nickname [ ]+ $").group(1));
@@ -29,11 +29,11 @@ public class ProfileMenu {
             if (getCommandMatcher(input, "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(1).equals(getCommandMatcher(input, "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(0)))
                 System.out.println("please enter a new password");
             else if (getCommandMatcher(input, "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(1)
-                    .equals(new Login().getLoggedInPlayer().getPassword())) {
+                    .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
                 changePassword(getCommandMatcher(input, "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(2));
                 System.out.println("password changed successfully!");
             } else if (getCommandMatcher(input, "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(2)
-                    .equals(new Login().getLoggedInPlayer().getPassword())) {
+                    .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
                 changePassword(getCommandMatcher(input, "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(1));
                 System.out.println("password changed successfully!");
             } else System.out.println("current password is invalid");
@@ -43,11 +43,11 @@ public class ProfileMenu {
             if (getCommandMatcher(input, "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(0).equals(getCommandMatcher(input, "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(1)))
                 System.out.println("please enter a new password");
             else if (getCommandMatcher(input, "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(1)
-                    .equals(new Login().getLoggedInPlayer().getPassword())) {
+                    .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
                 changePassword(getCommandMatcher(input, "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(2));
                 System.out.println("password changed successfully!");
             } else if (getCommandMatcher(input, "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(2)
-                    .equals(new Login().getLoggedInPlayer().getPassword())) {
+                    .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
                 changePassword(getCommandMatcher(input, "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(1));
                 System.out.println("password changed successfully!");
             } else System.out.println("current password is invalid");
@@ -57,11 +57,11 @@ public class ProfileMenu {
             if (getCommandMatcher(input, "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(1).equals(getCommandMatcher(input, "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(0)))
                 System.out.println("please enter a new password");
             else if (getCommandMatcher(input, "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(1)
-                    .equals(new Login().getLoggedInPlayer().getPassword())) {
+                    .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
                 changePassword(getCommandMatcher(input, "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(2));
                 System.out.println("password changed successfully!");
             } else if (getCommandMatcher(input, "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(2)
-                    .equals(new Login().getLoggedInPlayer().getPassword())) {
+                    .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
                 changePassword(getCommandMatcher(input, "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(1));
                 System.out.println("password changed successfully!");
             } else System.out.println("current password is invalid");
@@ -71,11 +71,11 @@ public class ProfileMenu {
     }
 
     public void changePassword(String newPassword) {
-        new Login().getLoggedInPlayer().setPassword(newPassword);
+        LoginMenu.getLoggedInPlayer().setPassword(newPassword);
     }
 
     public void changeNickName(String newNickName) {
-        new Login().getLoggedInPlayer().setNickname(newNickName);
+        LoginMenu.getLoggedInPlayer().setNickname(newNickName);
     }
 
     public Matcher getCommandMatcher(String input, String regex) {
