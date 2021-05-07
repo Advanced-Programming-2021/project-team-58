@@ -7,6 +7,10 @@ abstract public class Card {
     private int cardNumber;
     private static ArrayList<Card> allCards = new ArrayList<>();
 
+    public Card() {
+        allCards.add(this);
+    }
+
     public String getCardName() {
         return cardName;
     }
