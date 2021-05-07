@@ -6,6 +6,11 @@ import java.util.regex.Pattern;
 
 public class DeckMenu {
     public static void run() {
+        handleInput();
+        MainMenu.run(); //Navigating to MainMenu at last
+    }
+
+    private static void handleInput() {
         Scanner scanner = new Scanner(System.in);
         String input;
         while (!((input = scanner.nextLine()).equals("menu exit"))) {
@@ -14,7 +19,7 @@ public class DeckMenu {
                 System.out.println("menu navigation is not possible");
             else if (input.trim().matches("^(?i)(menu[ ]+show-current)$"))
                 showMenuName();
-            else if (input.trim().matches("^(?i)(card[ ]+show[ ]+(\\w+))$"))
+            else if (input.trim().matches("^(?i)(card[ ]+show[ ]+(.+))$"))
                 showCard(getCommandMatcher(input, "^(?i)(card[ ]+show[ ]+(\\w+))$"));
             else if (input.trim().matches("^(?i)(deck[ ]+create[ ]+(\\w+))$"))
                 createDeck(getCommandMatcher(input, "^(?i)(deck[ ]+create[ ]+(\\w+))$"));
@@ -36,9 +41,10 @@ public class DeckMenu {
                 showSideDeck(getCommandMatcher(input, "^(?i)(deck show (.+) (.+) (.+)$"));
             else if (input.trim().matches("^(?i)(deck show --deck-name (.+))$"))
                 showMainDeck(getCommandMatcher(input, "^$(?i)(deck show --deck-name (.+))"));
+            else if (input.trim().matches("^(?i)(deck show --cards)$"))
+                showAllCards();
 
         }
-        MainMenu.run(); //Navigating to MainMenu at last
     }
 
     private static void showMenuName() {
@@ -271,12 +277,7 @@ public class DeckMenu {
                     System.out.println("Deck: " + deckName + "\n" +
                             "Side deck\n" +
                             "Monsters:");
-                    for (int i = 0; i < monsterCards.size(); i++) {
-                        System.out.println(monsterCards.get(i).getCardName() + ": " + monsterCards.get(i).getCardDescription());
-                    }
-                    System.out.println("Spell and Traps:");
-                    for (int i = 0; i < trapAndSpellCards.size(); i++)
-                        System.out.println(trapAndSpellCards.get(i).getCardNumber() + ": " + trapAndSpellCards.get(i).getCardDescription());
+                    printCards(monsterCards, trapAndSpellCards);
                 }
             } else System.out.println("invalid command");
         }
@@ -301,14 +302,24 @@ public class DeckMenu {
                 System.out.println("Deck: " + deckName + "\n" +
                         "Main deck\n" +
                         "Monsters:");
-                for (int i = 0; i < monsterCards.size(); i++) {
-                    System.out.println(monsterCards.get(i).getCardName() + ": " + monsterCards.get(i).getCardDescription());
-                }
-                System.out.println("Spell and Traps:");
-                for (int i = 0; i < trapAndSpellCards.size(); i++)
-                    System.out.println(trapAndSpellCards.get(i).getCardNumber() + ": " + trapAndSpellCards.get(i).getCardDescription());
+                printCards(monsterCards, trapAndSpellCards);
             }
         }
+    }
+
+    private static void printCards(ArrayList<MonsterCard> monsterCards, ArrayList<TrapAndSpellCard> trapAndSpellCards) {
+        for (int i = 0; i < monsterCards.size(); i++) {
+            System.out.println(monsterCards.get(i).getCardName() + ": " + monsterCards.get(i).getCardDescription());
+        }
+        System.out.println("Spell and Traps:");
+        for (int i = 0; i < trapAndSpellCards.size(); i++)
+            System.out.println(trapAndSpellCards.get(i).getCardNumber() + ": " + trapAndSpellCards.get(i).getCardDescription());
+    }
+    private static void showAllCards() {
+        ArrayList<Card> allCards = LoginMenu.getLoggedInPlayer().getAllCards();
+        Collections.sort(allCards);
+        for (Card card: allCards)
+            System.out.println(card.getCardName()+": "+card.getCardDescription());
     }
 
     private static Matcher getCommandMatcher(String input, String regex) {
