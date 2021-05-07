@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class MonsterCard extends Card {
 
     private String monsterType;
@@ -8,6 +10,7 @@ public class MonsterCard extends Card {
     private boolean isEffectExists;
     private Effects effect;
     private String cardTypeOfMonsters;
+    private static ArrayList<MonsterCard> allMonsterCards = new ArrayList<>();
 
     public MonsterCard(String cardName, String cardTypeOfMonsters, String monsterType, int cardLevel,
                        String description, Attribute cardAttribute, int attack, int defense, int price) {
@@ -18,6 +21,7 @@ public class MonsterCard extends Card {
         setAttack(attack);
         setDefense(defense);
         setCardTypeOfMonsters(cardTypeOfMonsters);
+        allMonsterCards.add(this);
     }
 
     public String getCardTypeOfMonsters() { return cardTypeOfMonsters; }

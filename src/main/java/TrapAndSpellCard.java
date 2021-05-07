@@ -1,8 +1,10 @@
+import java.util.ArrayList;
+
 public class TrapAndSpellCard extends Card{
     private TrapOrSpellTypes cardType;
     private TrapOrSpellIcons cardIcon;
     private TrapAndSpellStatus cardStatus;
-
+    private static ArrayList<TrapAndSpellCard> allSpellOrTrapCards = new ArrayList<>();
     public TrapAndSpellStatus getCardStatus() {
         return cardStatus;
     }
@@ -16,6 +18,7 @@ public class TrapAndSpellCard extends Card{
         setCardType(cardType);
         setCardIcon(cardIcon);
         setCardStatus(status);
+        allSpellOrTrapCards.add(this);
     }
 
     public TrapOrSpellTypes getTrapOrSpellTypes() {
