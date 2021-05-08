@@ -25,7 +25,7 @@ public class LoginMenu {
 
             input = scan.nextLine();
 
-            Matcher matchChangeMenu = getCommandMatcher(input, "^menu enter [Main|Duel|Deck|Scoreboard|Profile|Shop]$");
+            Matcher matchChangeMenu = getCommandMatcher(input, "^menu enter (Main|Duel|Deck|Scoreboard|Profile|Shop)$");
 
             Matcher matchLogin1 = getCommandMatcher(input, "^user login username ([a-zA-Z0-9]+) password ([a-zA-Z0-9]+)$");
             Matcher matchLogin2 = getCommandMatcher(input, "^user login password ([a-zA-Z0-9]+) username ([a-zA-Z0-9]+)$");
@@ -51,17 +51,15 @@ public class LoginMenu {
                 registerPlayer(matchRegister6.group(2), matchRegister6.group(1), matchRegister6.group(3));
             } else if (matchLogin1.find()) {
                 logInPlayer(matchLogin1.group(1), matchLogin1.group(2));
-                MainMenu.run();
             } else if (matchLogin2.find()) {
                 logInPlayer(matchLogin2.group(2), matchLogin2.group(1));
-                MainMenu.run();
             } else if (matchChangeMenu.find()) {
                 System.out.println("please login first");
             } else if (input.equals("menu exit")) {
                 System.out.println("You Exited The Game Successfully!");
                 return;
             } else if (input.equals("menu show-current")) {
-                System.out.println("Login menu");
+                System.out.println("Login Menu");
             } else System.out.println("invalid command");
         }
     }
@@ -72,10 +70,11 @@ public class LoginMenu {
         } else {
             if (Player.getPlayerByUsername(username).getPassword() != null) {
                 if (!Player.getPlayerByUsername(username).getPassword().equals(password)) {
-                    System.out.println("Username and password didn’t match!");
+                    System.out.println("Username and password didn't match!");
                 } else {
                     setLoggedInPlayer(Player.getPlayerByUsername(username));
                     System.out.println("user logged in successfully!");
+                    MainMenu.run();
                 }
             }
         }
