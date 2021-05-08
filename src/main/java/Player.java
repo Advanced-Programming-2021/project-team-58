@@ -14,11 +14,11 @@ public class Player {
     private ArrayList<Card> hand = new ArrayList<Card>();
     private static ArrayList<Player> allPlayers = new ArrayList<Player>();
 
-    public static ArrayList<Card> getAllCards() {
-        return allCards;
-    }
+//    public static ArrayList<Card> getAllCards() {
+//        return allCards;
+//    }
 
-    private static ArrayList<Card> allCards = new ArrayList<Card>();
+//    private static ArrayList<Card> allCards = new ArrayList<Card>();
 
     public Player(String username, String password) {
         setUsername(username);

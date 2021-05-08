@@ -53,6 +53,7 @@ public class MainMenu {
 
     public static void startAGame(Matcher matcher) {
         if (matcher.find()) {
+// In this level you should check if the activated deck is valid or not. If it's valid then you are allowed to start the game
 //            int round;
 //            Player player2;
 //            DuelMenu.run(LoginMenu.getLoggedInPlayer(), player2, round);

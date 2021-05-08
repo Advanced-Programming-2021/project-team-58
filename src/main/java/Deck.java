@@ -11,9 +11,9 @@ public class Deck implements Comparable<Deck> {
     private ArrayList<Card> sideDeck = new ArrayList<Card>();
     private HashMap<Card, Integer> cardsAndTheirAmountInThisDeck = new HashMap<Card, Integer>();
 
-    public Deck(String deckName, String playerName) {
+    public Deck(String deckName, Player player) {
         setDeckName(deckName);
-        Player.getPlayerByUsername(playerName).addDeckToAllDecks(this);
+        player.addDeckToAllDecks(this);
         allDecks.add(this);
     }
 
@@ -66,8 +66,8 @@ public class Deck implements Comparable<Deck> {
         decreaseNumOfCardInDeck(card, 1);
     }
 
-    public static void addDeckToAllDecks(String deckName, String playerName) {
-        allDecks.add(new Deck(deckName, playerName));
+    public static void addDeckToAllDecks(String deckName, Player player) {
+        allDecks.add(new Deck(deckName,player));
     }
 
     public static void removeDeckFromAllDecks(String deckName) {

@@ -21,11 +21,11 @@ public class DeckMenu {
                 showMenuName();
             else if (input.trim().matches("^(?i)(card[ ]+show[ ]+(.+))$"))
                 showCard(getCommandMatcher(input, "^(?i)(card[ ]+show[ ]+(\\w+))$"));
-            else if (input.trim().matches("^(?i)(deck[ ]+create[ ]+(\\w+))$"))
+            else if (input.trim().matches("^(?i)(deck[ ]+create[ ]+(.+))$"))
                 createDeck(getCommandMatcher(input, "^(?i)(deck[ ]+create[ ]+(\\w+))$"));
-            else if (input.trim().matches("^(?i)(deck[ ]+delete[ ]+(\\w+))$"))
+            else if (input.trim().matches("^(?i)(deck[ ]+delete[ ]+(.+))$"))
                 deleteDeck(getCommandMatcher(input, "^(?i)(deck[ ]+delete[ ]+(\\w+))$"));
-            else if (input.trim().matches("^(?i)(deck[ ]+set[ -_]+activate[ ]+(\\w+))$"))
+            else if (input.trim().matches("^(?i)(deck[ ]+set[ -_]+activate[ ]+(.+))$"))
                 setActivatedDeck(getCommandMatcher(input, "^(?i)(deck[ ]+set[ -_]+activate[ ]+(\\w+))$"));
             else if (input.trim().matches("^(?i)(deck add-card (--.+) (--.+) (--.+))$"))
                 addCardToSideDeck(getCommandMatcher(input, "^(?i)(deck add-card (--.+) (--.+) (--.+))$"));
@@ -65,7 +65,7 @@ public class DeckMenu {
             String deckName = matcher.group(2);
             if (Deck.getDeckByName(deckName) == null) {
                 System.out.println("deck created successfully!");
-                Deck.addDeckToAllDecks(deckName, LoginMenu.getLoggedInPlayer().getUsername());
+                Deck.addDeckToAllDecks(deckName, LoginMenu.getLoggedInPlayer());
             } else System.out.println("deck with name " + deckName + " already exists");
         }
     }
@@ -213,7 +213,7 @@ public class DeckMenu {
             Matcher matcher1;
             for (int i = 2; i <= matcher.groupCount(); i++) {
                 if (matcher.group(i).matches("^(?i)(--card (.+))$")) {
-                    matcher1 = getCommandMatcher(matcher.group(i), "^(?i)(--card (.*))$");
+                    matcher1 = getCommandMatcher(matcher.group(i), "^(?i)(--card (.+))$");
                     if (matcher1.find())
                         cardName = matcher1.group(2);
                 }
@@ -313,7 +313,7 @@ public class DeckMenu {
         }
         System.out.println("Spell and Traps:");
         for (int i = 0; i < trapAndSpellCards.size(); i++)
-            System.out.println(trapAndSpellCards.get(i).getCardNumber() + ": " + trapAndSpellCards.get(i).getCardDescription());
+            System.out.println(trapAndSpellCards.get(i).getCardName() + ": " + trapAndSpellCards.get(i).getCardDescription());
     }
 
     private static void showAllCards() {
