@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,13 +21,13 @@ public class DeckMenu {
             else if (input.trim().matches("^(?i)(menu[ ]+show-current)$"))
                 showMenuName();
             else if (input.trim().matches("^(?i)(card[ ]+show[ ]+(.+))$"))
-                showCard(getCommandMatcher(input, "^(?i)(card[ ]+show[ ]+(\\w+))$"));
+                showCard(getCommandMatcher(input, "^(?i)(card[ ]+show[ ]+(.+))$"));
             else if (input.trim().matches("^(?i)(deck[ ]+create[ ]+(.+))$"))
-                createDeck(getCommandMatcher(input, "^(?i)(deck[ ]+create[ ]+(\\w+))$"));
+                createDeck(getCommandMatcher(input, "^(?i)(deck[ ]+create[ ]+(.+))$"));
             else if (input.trim().matches("^(?i)(deck[ ]+delete[ ]+(.+))$"))
-                deleteDeck(getCommandMatcher(input, "^(?i)(deck[ ]+delete[ ]+(\\w+))$"));
-            else if (input.trim().matches("^(?i)(deck[ ]+set[ -_]+activate[ ]+(.+))$"))
-                setActivatedDeck(getCommandMatcher(input, "^(?i)(deck[ ]+set[ -_]+activate[ ]+(\\w+))$"));
+                deleteDeck(getCommandMatcher(input, "^(?i)(deck[ ]+delete[ ]+(.+))$"));
+            else if (input.trim().matches("^(?i)(deck[ ]+set-activate[ ]+(.+))$"))
+                setActivatedDeck(getCommandMatcher(input, "^(?i)(deck[ ]+set-activate[ ]+(.+))$"));
             else if (input.trim().matches("^(?i)(deck add-card (--.+) (--.+) (--.+))$"))
                 addCardToSideDeck(getCommandMatcher(input, "^(?i)(deck add-card (--.+) (--.+) (--.+))$"));
             else if (input.trim().matches("^(?i)(deck add-card (--.+) (--.+))$"))
@@ -37,13 +38,13 @@ public class DeckMenu {
                 removeCardFromMainDeck(getCommandMatcher(input, "^(?i)(deck rm-card (--.+) (--.+))$"));
             else if (input.trim().matches("^(?i)(deck show --all)$"))
                 showAllDecks();
-            else if (input.trim().matches("^(?i)(dech show (.+) (.+) (.+))$"))
-                showSideDeck(getCommandMatcher(input, "^(?i)(deck show (.+) (.+) (.+)$"));
+            else if (input.trim().matches("^(?i)(deck show (--.+) (--.+))$"))
+                showSideDeck(getCommandMatcher(input, "^(?i)(deck show (--.+) (--.+))$"));
             else if (input.trim().matches("^(?i)(deck show --deck-name (.+))$"))
                 showMainDeck(getCommandMatcher(input, "^$(?i)(deck show --deck-name (.+))"));
             else if (input.trim().matches("^(?i)(deck show --cards)$"))
                 showAllCards();
-
+            else System.out.println("invalid command");
         }
     }
 
@@ -146,8 +147,8 @@ public class DeckMenu {
                     System.out.println("deck with name " + deckName + " does not exist");
                 else {
                     Card card = Card.getCardByName(cardName);
-                    boolean isInMainDeckExists = Deck.getDeckByName(deckName).getMainDeck().contains(card);
-                    if (card == null || !isInMainDeckExists)
+                    boolean isCardInMainDeckExists = Deck.getDeckByName(deckName).getMainDeck().contains(card);
+                    if (card == null || !isCardInMainDeckExists)
                         System.out.println("card with name " + cardName + " does not exist in main deck");
                     else {
                         Deck.getDeckByName(deckName).removeCardFromMainDeck(Card.getCardByName(cardName));
@@ -163,13 +164,14 @@ public class DeckMenu {
             String cardName = findCardName(matcher);
             String deckName = findDeckName(matcher);
             boolean isInSideDeck = isInSideDeck(matcher);
+
             if (cardName != null && deckName != null && isInSideDeck) {
                 if (Deck.getDeckByName(deckName) == null)
                     System.out.println("deck with name " + deckName + " does not exist");
                 else {
                     Card card = Card.getCardByName(cardName);
-                    boolean isInSideDeckExists = Deck.getDeckByName(deckName).getSideDeck().contains(card);
-                    if (card == null || !isInSideDeckExists)
+                    boolean isCardInSideDeckExists = Deck.getDeckByName(deckName).getSideDeck().contains(card);
+                    if (card == null || !isCardInSideDeckExists)
                         System.out.println("card with name " + cardName + " does not exist in side deck");
                     else {
                         Deck.getDeckByName(deckName).removeCardFromSideDeck(card);
@@ -184,27 +186,29 @@ public class DeckMenu {
         System.out.println("Decks:");
         System.out.println("Active deck:");
         if (LoginMenu.getLoggedInPlayer().getActiveDeck() != null) {
-            String activeDeckName = LoginMenu.getLoggedInPlayer().getActiveDeck().getDeckName();
-            int mainDeckSize = LoginMenu.getLoggedInPlayer().getActiveDeck().getMainDeckSize();
-            int sideDeckSize = LoginMenu.getLoggedInPlayer().getActiveDeck().getSideDeckSize();
-            if (Deck.getDeckByName(activeDeckName).isValid())
+            Deck activeDeck = LoginMenu.getLoggedInPlayer().getActiveDeck();
+            String activeDeckName = activeDeck.getDeckName();
+            int mainDeckSize = activeDeck.getMainDeckSize();
+            int sideDeckSize = activeDeck.getSideDeckSize();
+            if (activeDeck.isValid())
                 System.out.println(activeDeckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", valid");
             else
                 System.out.println(activeDeckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", invalid");
         }
         System.out.println("Other decks:");
         ArrayList<Deck> decks = LoginMenu.getLoggedInPlayer().getDecks();
-        Collections.sort(decks);
-        for (int i = 0; i < decks.size(); i++) {
-            String deckName = decks.get(i).getDeckName();
-            int mainDeckSize = decks.get(i).getMainDeckSize();
-            int sideDeckSize = decks.get(i).getSideDeckSize();
-            if (decks.get(i).isValid())
-                System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", valid");
-            else
-                System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", invalid");
+        if (!decks.isEmpty()) {
+            Collections.sort(decks);
+            for (int i = 0; i < decks.size(); i++) {
+                String deckName = decks.get(i).getDeckName();
+                int mainDeckSize = decks.get(i).getMainDeckSize();
+                int sideDeckSize = decks.get(i).getSideDeckSize();
+                if (decks.get(i).isValid())
+                    System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", valid");
+                else
+                    System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", invalid");
+            }
         }
-
     }
 
     private static String findCardName(Matcher matcher) {
@@ -317,7 +321,7 @@ public class DeckMenu {
     }
 
     private static void showAllCards() {
-        ArrayList<Card> allCards = LoginMenu.getLoggedInPlayer().getAllBoughtCards();
+        ArrayList<Card> allCards = LoginMenu.getLoggedInPlayer().getAllCards();
         Collections.sort(allCards);
         for (Card card : allCards)
             System.out.println(card.getCardName() + ": " + card.getCardDescription());
@@ -325,7 +329,6 @@ public class DeckMenu {
 
     private static Matcher getCommandMatcher(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
-        return matcher;
+        return pattern.matcher(input);
     }
 }
