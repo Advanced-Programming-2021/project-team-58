@@ -9,7 +9,6 @@ public class Deck implements Comparable<Deck> {
     private ArrayList<Card> allCards = new ArrayList<Card>();
     private ArrayList<Card> mainDeck = new ArrayList<Card>();
     private ArrayList<Card> sideDeck = new ArrayList<Card>();
-    private HashMap<Card, Integer> cardsAndTheirAmountInThisDeck = new HashMap<Card, Integer>();
 
     public Deck(String deckName, Player player) {
         setDeckName(deckName);
@@ -27,7 +26,7 @@ public class Deck implements Comparable<Deck> {
 
     public boolean isValid() {
         if (this.mainDeck.size() >= 40 && this.mainDeck.size() <= 60 && this.sideDeck.size() <= 15) return true;
-        else return false;
+        return false;
     }
 
     public int getDeckSize() {
@@ -45,29 +44,25 @@ public class Deck implements Comparable<Deck> {
     public void addCardToMainDeck(Card card) {
         this.mainDeck.add(card);
         this.allCards.add(card);
-        increaseNumOfCardInDeck(card, 1);
     }
 
     public void removeCardFromMainDeck(Card card) {
         this.mainDeck.remove(card);
         this.allCards.remove(card);
-        decreaseNumOfCardInDeck(card, 1);
     }
 
     public void addCardToSideDeck(Card card) {
         this.sideDeck.add(card);
         this.allCards.add(card);
-        increaseNumOfCardInDeck(card, 1);
     }
 
     public void removeCardFromSideDeck(Card card) {
         this.sideDeck.remove(card);
         this.allCards.remove(card);
-        decreaseNumOfCardInDeck(card, 1);
     }
 
     public static void addDeckToAllDecks(String deckName, Player player) {
-        allDecks.add(new Deck(deckName,player));
+        allDecks.add(new Deck(deckName, player));
     }
 
     public static void removeDeckFromAllDecks(String deckName) {
@@ -90,19 +85,11 @@ public class Deck implements Comparable<Deck> {
     }
 
     public int getNumOfCardInDeck(Card card) {
-        return cardsAndTheirAmountInThisDeck.get(card);
-    }
-
-    public void increaseNumOfCardInDeck(Card card, int howMany) {
-        int theExistingNum = cardsAndTheirAmountInThisDeck.get(card);
-        cardsAndTheirAmountInThisDeck.remove(card);
-        cardsAndTheirAmountInThisDeck.put(card, theExistingNum + howMany);
-    }
-
-    public void decreaseNumOfCardInDeck(Card card, int howMany) {
-        int theExistingNum = cardsAndTheirAmountInThisDeck.get(card);
-        cardsAndTheirAmountInThisDeck.remove(card);
-        cardsAndTheirAmountInThisDeck.put(card, theExistingNum - howMany);
+        int counter = 0;
+        for (Card c : allCards)
+            if (c == card)
+                counter++;
+        return counter;
     }
 
     public int compareTo(Deck anotherDeck) {
