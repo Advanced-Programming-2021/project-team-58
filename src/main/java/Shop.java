@@ -19,7 +19,7 @@ public class Shop {
         for (int i = 0; i < Card.getAllCards().size(); i++) {
             if (Card.getAllCards().get(i).getCardName().equals(cardName))
                 player.decreaseMoney(Card.getAllCards().get(i).getPrice());
-            Player.getAllCards().add(Card.getAllCards().get(i));
+            player.getAllCards().add(Card.getAllCards().get(i));
         }
     }
     public static boolean checkCardExist(String cardName) {

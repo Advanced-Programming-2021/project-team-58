@@ -9,16 +9,14 @@ public class Player {
     private int LP;
     private int money;
     private Board board;
-    private ArrayList<Card> allCards = new ArrayList<Card>();
+    private static ArrayList<Card> allCards = new ArrayList<Card>();
     private ArrayList<Deck> decks = new ArrayList<Deck>();  //These are NOT the deck that is being used in the game
     private ArrayList<Card> hand = new ArrayList<Card>();
     private static ArrayList<Player> allPlayers = new ArrayList<Player>();
 
-//    public static ArrayList<Card> getAllCards() {
-//        return allCards;
-//    }
-
-//    private static ArrayList<Card> allCards = new ArrayList<Card>();
+    public ArrayList<Card> getAllCards() {
+        return allCards;
+    }
 
     public Player(String username, String password) {
         setUsername(username);
@@ -28,7 +26,9 @@ public class Player {
         allPlayers.add(this);
     }
 
-    public void setUsername(String username) { this.username = username;}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getUsername() {
         return this.username;
@@ -42,7 +42,9 @@ public class Player {
         return this.password;
     }
 
-    public void setNickname(String nickname) { this.nickname = nickname;}
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
     public String getNickname() {
         return this.nickname;
@@ -64,15 +66,21 @@ public class Player {
         this.LP -= LP;
     }
 
-    public void setActiveDeck(Deck activeDeck) { this.activeDeck = activeDeck;}
+    public void setActiveDeck(Deck activeDeck) {
+        this.activeDeck = activeDeck;
+    }
 
     public Deck getActiveDeck() {
         return this.activeDeck;
     }
 
-    public void setScore(int score){ this.score = score;}
+    public void setScore(int score) {
+        this.score = score;
+    }
 
-    public int getScore(){ return this.score;}
+    public int getScore() {
+        return this.score;
+    }
 
     public void increaseScore(int score) {
         this.score += score;
@@ -90,13 +98,17 @@ public class Player {
         this.money -= money;
     }
 
-    public void setMoney(int money) { this.money = money;}
+    public void setMoney(int money) {
+        this.money = money;
+    }
 
     public int getMoney() {
         return this.money;
     }
 
-    public Board getBoard() { return this.board;}
+    public Board getBoard() {
+        return this.board;
+    }
 
     public ArrayList<Deck> getDecks() {
         return this.decks;
@@ -131,9 +143,5 @@ public class Player {
     public static ArrayList<Player> getAllPlayers() {
 
         return allPlayers;
-    }
-
-    public ArrayList<Card> getAllBoughtCards() {
-        return this.allCards;
     }
 }
