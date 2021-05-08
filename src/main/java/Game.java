@@ -88,7 +88,7 @@ public class Game {
         }
         return convertIndex(i);
     }
-
+//changed firstEmptyIndex: maybe it has error!
     public void summon() {
         int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
         turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
