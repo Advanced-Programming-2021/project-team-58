@@ -1,25 +1,31 @@
 import java.util.ArrayList;
 
-abstract public class Card implements Comparable<Card>{
+abstract public class Card implements Comparable<Card> {
 
     private String cardName;
     private String cardDescription;
     private int price;
     private static ArrayList<Card> allCards = new ArrayList<>();
 
-       public Card(String cardName, String cardDescription, int price) {
+    public Card(String cardName, String cardDescription, int price) {
         setCardName(cardName);
         setCardDescription(cardDescription);
         setPrice(price);
         allCards.add(this);
     }
-    public static ArrayList<Card> getAllCards() { return allCards; }
+
+    public static ArrayList<Card> getAllCards() {
+        return allCards;
+    }
+
     public int getPrice() {
         return price;
     }
+
     public void setPrice(int price) {
         this.price = price;
     }
+
     public String getCardName() {
         return cardName;
     }
@@ -35,12 +41,14 @@ abstract public class Card implements Comparable<Card>{
     public void setCardDescription(String cardDescription) {
         this.cardDescription = cardDescription;
     }
+
     public static Card getCardByName(String cardName) {
         for (Card card : allCards) {
             if (card.getCardName().equals(cardName)) return card;
         }
         return null;
     }
+
     abstract public void showCard();
 
     public int compareTo(Card anotherCard) {
