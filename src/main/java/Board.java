@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 public class Board {
-    private ArrayList<Card> graveYard;
-    private ArrayList<Position> monsterCards;
-    private ArrayList<Position> spellCard;
+    private ArrayList<Card> graveYard = new ArrayList<>();
+    private ArrayList<Position> monsterCards = new ArrayList<>();
+    private ArrayList<Position> spellCard = new ArrayList<>();
     private Deck deck;
 
     public Board(){

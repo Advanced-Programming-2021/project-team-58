@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Position {
-    public static ArrayList<Position> allPositions;
+    public static ArrayList<Position> allPositions = new ArrayList<>();
     private StatusOfPosition status;
     private Card card;
     private int index;

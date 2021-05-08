@@ -18,11 +18,12 @@ public class Player {
         return allCards;
     }
 
-    public Player(String username, String password) {
+    public Player(String username, String password, String nickname) {
         setUsername(username);
         setPassword(password);
+        setNickname(nickname);
         setMoney(100000);
-        board = new Board();
+        this.board = new Board();
         allPlayers.add(this);
     }
 
