@@ -77,16 +77,16 @@ public class Game {
 
     private int firstEmptyIndex(ArrayList<Position> array){
         int n = 0;
-        int i = 0;
+        int i = 1;
         while( n == 0 ){
-            if (array.get(i).getStatus().equals(StatusOfPosition.EMPTY)){
+            if (array.get(convertIndex(i)).getStatus().equals(StatusOfPosition.EMPTY)){
                 n = 1;
             }
             else{
                 i++;
             }
         }
-        return i;
+        return convertIndex(i);
     }
 
     public void summon() {
@@ -95,7 +95,7 @@ public class Game {
         turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
     }
 
-    public void setMonsterCardOnBoard(MonsterCard monsterCard) {
+    public void setMonsterCardOnBoard() {
         int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
         turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.DEFENSIVE_HIDDEN);
         turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
@@ -134,7 +134,8 @@ public class Game {
         }
         return player1;
     }
-
+//1.use sendToGraveyard
+//2.generate new methods to make it smaller
     public void attackToMonster(int index) {
         int selectedCardAttack = ((MonsterCard)selectedPosition.getCard()).getAttack();
         int oppositionCardAttack = ((MonsterCard)getOpposition().getBoard().getMonsterCards().get(index).getCard()).getAttack();
@@ -215,8 +216,8 @@ public class Game {
         System.out.println("you opponent receives " + damage + " battale damage");
     }
 
-    private void sendToGraveyard(Card Card) {
-
+    private void sendToGraveyard(Card card , Player player) {
+        player.getBoard().addToGraveyard(card);
     }
 
     public void activateSpell(TrapAndSpellCard spell) {
@@ -227,12 +228,16 @@ public class Game {
 
     }
 
-    public void setSpellOnBoard(TrapAndSpellCard spell) {
-
+    public void setSpellOnBoard() {
+        int i = firstEmptyIndex(turnOfPlayer.getBoard().getSpellCard());
+        turnOfPlayer.getBoard().getSpellCard().get(i).setStatus(StatusOfPosition.SPELL_OR_TRAP_HIDDEN);
+        turnOfPlayer.getBoard().getSpellCard().get(i).setCard(selectedCardHand);
     }
 
     public void setTrapOnBoard(TrapAndSpellCard trap) {
-
+        int i = firstEmptyIndex(turnOfPlayer.getBoard().getSpellCard());
+        turnOfPlayer.getBoard().getSpellCard().get(i).setStatus(StatusOfPosition.SPELL_OR_TRAP_HIDDEN);
+        turnOfPlayer.getBoard().getSpellCard().get(i).setCard(selectedCardHand);
     }
 
     public void activateTrapInOpponentTurn(TrapAndSpellCard trap) {
