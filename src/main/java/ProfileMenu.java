@@ -7,7 +7,6 @@ public class ProfileMenu {
         String input = scan.nextLine();
         if (input.trim().equalsIgnoreCase("menu exit")) MainMenu.run();
         else while (!input.trim().equalsIgnoreCase("menu exit")) {
-            input = scan.nextLine();
             if (getCommandMatcher(input.trim(), "^ [ ]+ menu enter [A-Za-z]+ [ ]+ $").find())
                 System.out.println("menu navigation is not possible");
 
@@ -72,7 +71,7 @@ public class ProfileMenu {
                         System.out.println("password changed successfully!");
                     } else System.out.println("current password is invalid");
                 }
-
+            input = scan.nextLine();
             }
     }
 

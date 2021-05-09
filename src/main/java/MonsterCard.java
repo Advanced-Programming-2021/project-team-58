@@ -12,18 +12,27 @@ public class MonsterCard extends Card {
     private String cardTypeOfMonsters;
     private static ArrayList<MonsterCard> allMonsterCards = new ArrayList<>();
 
+//    @Override
+//    public String toString() {
+//        return this.getAttack();
+//    }
+
     public MonsterCard(String cardName, String cardTypeOfMonsters, String monsterType, int cardLevel,
                        String description, Attribute cardAttribute, int attack, int defense, int price) {
         super(cardName,description,price);
+        allCards.add(this);
+
         setMonsterType(monsterType);
         setCardLevel(cardLevel);
         setCardAttribute(cardAttribute);
         setAttack(attack);
         setDefense(defense);
         setCardTypeOfMonsters(cardTypeOfMonsters);
-        allMonsterCards.add(this);
+//        Card.addToAllCards(this);
+//        allMonsterCards.add(this);
     }
 
+    public static ArrayList<MonsterCard> getAllMonsterCards() { return allMonsterCards; }
     public String getCardTypeOfMonsters() { return cardTypeOfMonsters; }
     public void setCardTypeOfMonsters(String cardTypeOfMonsters) {this.cardTypeOfMonsters = cardTypeOfMonsters; }
     public String getMonsterType() { return monsterType; }
@@ -80,7 +89,7 @@ public class MonsterCard extends Card {
         System.out.println("DEF: " + this.getDefense());
         System.out.println("Description: " + this.getCardDescription());
     }
-    {
+    public static void addMonster(){
         allMonsterCards.add(new MonsterCard("Battle OX", "Normal", "Beast-Warrior",
                 4, "A monster with tremendous power,it destroys enemies with a swing of its axe.",
                 Attribute.EARTH, 1700, 1000, 2900));

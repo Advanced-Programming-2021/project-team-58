@@ -53,7 +53,7 @@ public class TrapAndSpellCard extends Card {
         }
     }
 
-    {
+    public static void addTrapAndSpell(){
         allSpellOrTrapCards.add(new TrapAndSpellCard("Trap Hole", TrapOrSpellTypes.TRAP_CARD, TrapOrSpellIcons.NORMAL,
                 "When your opponent Normal or Flip Summons 1 monster with 1000 or more ATK: Target that " +
                         "monster; destroy that target.", TrapAndSpellStatus.UNLIMITED, 2000));

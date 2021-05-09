@@ -5,13 +5,12 @@ abstract public class Card implements Comparable<Card> {
     private String cardName;
     private String cardDescription;
     private int price;
-    private static ArrayList<Card> allCards = new ArrayList<>();
+    protected static ArrayList<Card> allCards = new ArrayList<>();
 
     public Card(String cardName, String cardDescription, int price) {
         setCardName(cardName);
         setCardDescription(cardDescription);
         setPrice(price);
-        allCards.add(this);
     }
 
     public static ArrayList<Card> getAllCards() {
