@@ -76,7 +76,10 @@ public class DeckMenu {
             String deckName = matcher.group(2);
             if (Deck.getDeckByName(deckName) == null)
                 System.out.println("deck with name " + deckName + " does not exist");
-            else Deck.removeDeckFromAllDecks(deckName);
+            else {
+                Deck.removeDeckFromAllDecks(deckName);
+                System.out.println("deck deleted successfully");
+            }
         }
     }
 

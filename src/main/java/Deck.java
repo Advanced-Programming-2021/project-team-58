@@ -1,7 +1,10 @@
+import com.sun.istack.internal.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Deck implements Comparable<Deck> {
+
     private static ArrayList<Deck> allDecks = new ArrayList<Deck>();
     private static HashMap<Player, Deck> playersAndTheirActivatedDeck = new HashMap<Player, Deck>();
     private String deckName;
@@ -9,6 +12,7 @@ public class Deck implements Comparable<Deck> {
     private ArrayList<Card> allCards = new ArrayList<Card>();
     private ArrayList<Card> mainDeck = new ArrayList<Card>();
     private ArrayList<Card> sideDeck = new ArrayList<Card>();
+    private static Deck nullDeck;
 
     public Deck(String deckName, Player player) {
         setDeckName(deckName);

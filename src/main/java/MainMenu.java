@@ -9,8 +9,8 @@ public class MainMenu {
 
         while (!(input = scanner.nextLine()).equals("menu exit")) {
 
-            if (input.trim().matches("^(?i)(menu[ ]+enter[ ]+([\\w]+))$")) //doesn't contain duel & scoreboard menu
-                enterAMenu(getCommandMatcher(input, "^(?i)(menu[ ]+enter[ ]+([\\w]+))$"));
+            if (input.trim().matches("^(?i)(menu[ ]+enter[ ]+(.+))$")) //doesn't contain duel & scoreboard menu
+                enterAMenu(getCommandMatcher(input, "^(?i)(menu[ ]+enter[ ]+(.+))$"));
             else if (input.trim().matches("^(?i)(menu[ ]+show-current)$"))
                 showMenuName();
             else if (input.trim().matches("^(?i)(user[ ]+logout)$")) {
@@ -25,7 +25,7 @@ public class MainMenu {
 
     private static void enterAMenu(Matcher matcher) {
         if (matcher.find()) {
-            String menuName = matcher.group(1);
+            String menuName = matcher.group(2);
             if (menuName.matches("^(?i)(profile([ -_]*menu)?)$"))
                 ProfileMenu.run();
             else if (menuName.matches("^(?i)(shop([ -_]*menu)?)$"))
@@ -60,9 +60,8 @@ public class MainMenu {
         }
     }
 
-    public static Matcher getCommandMatcher(String input, String regex) {
+    private static Matcher getCommandMatcher(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
-        return matcher;
+        return pattern.matcher(input);
     }
 }
