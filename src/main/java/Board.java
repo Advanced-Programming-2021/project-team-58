@@ -37,4 +37,15 @@ public class Board {
         graveYard.add(card);
     }
 
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public ArrayList<Card> getGraveYard() {
+        return graveYard;
+    }
 }

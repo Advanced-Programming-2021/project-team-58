@@ -13,6 +13,7 @@ public class Game {
         setPlayer1(player1);
         setPlayer2(player2);
         setPlayersLp();
+        setPlayersDeckOnBoard();
     }
 
     public Player getPlayer1() {
@@ -36,39 +37,154 @@ public class Game {
         player2.setLP(8000);
     }
 
+    public void setPlayersDeckOnBoard(){
+        player1.getBoard().setDeck(player1.getActiveDeck());
+        player2.getBoard().setDeck(player2.getActiveDeck());
+    }
+
     public Position getSelectedPosition() {
         return selectedPosition;
     }
 
     public void draw() {
-        int mainDeckSize = turnOfPlayer.getActiveDeck().getMainDeck().size();
+        int mainDeckSize = turnOfPlayer.getBoard().getDeck().getMainDeck().size();
         Random rand = new Random();
         int index = rand.nextInt(mainDeckSize);
-        turnOfPlayer.addCardToHand(turnOfPlayer.getActiveDeck().getMainDeck().get(index));
+        turnOfPlayer.addCardToHand(turnOfPlayer.getBoard().getDeck().getMainDeck().get(index));
+        turnOfPlayer.getBoard().getDeck().getMainDeck().remove(index);
     }
 
     public void surrender() {
         turnOfPlayer.setLP(0);
     }
 
+    private String convertStatusToChar(StatusOfPosition status){
+        if(status.equals(StatusOfPosition.EMPTY)){
+            return "E";
+        }
+        else if(status.equals(StatusOfPosition.OFFENSIVE_OCCUPIED)){
+            return "OO";
+        }
+        else if(status.equals(StatusOfPosition.DEFENSIVE_OCCUPIED)){
+            return "DO";
+        }
+        else if(status.equals(StatusOfPosition.DEFENSIVE_HIDDEN)){
+            return "DH";
+        }
+        else if(status.equals(StatusOfPosition.SPELL_OR_TRAP_HIDDEN)){
+            return "H";
+        }
+        else if(status.equals(StatusOfPosition.SPELL_OR_TRAP_OCCUPIED)){
+            return "O";
+        }
+        else{
+            return "E";
+        }
+    }
+
+    private String printOpponentMonsterOnBoard(Player player){
+        String result = "";
+        String character = "";
+        for(int i=4 ; i>=0 ; i--){
+            character = convertStatusToChar(player.getBoard().getMonsterCards().get(i).getStatus());
+            if(character.length() == 2){
+                result = result + character + "   ";
+            }
+            else{
+                result = result + character + "    ";
+            }
+        }
+        return result;
+    }
+
+    private String printOpponentSpellCardsOnBoard(Player player){
+        String result = "";
+        String character = "";
+        for(int i=4 ; i>=0 ; i--){
+            character = convertStatusToChar(player.getBoard().getSpellCard().get(i).getStatus());
+            result = result + character + "    ";
+        }
+        return result;
+    }
+
+    private String printMonsterCardOnBoard(Player player){
+        String result = "";
+        String character = "";
+        for(int i=0 ; i<5 ; i++){
+            character = convertStatusToChar(player.getBoard().getMonsterCards().get(i).getStatus());
+            if(character.length() == 2){
+                result = result + character + "   ";
+            }
+            else{
+                result = result + character + "    ";
+            }
+        }
+        return result;
+    }
+
+    private String printSpellCardsOnBoard(Player player){
+        String result = "";
+        String character = "";
+        for(int i=0 ; i<5 ; i++){
+            character = convertStatusToChar(player.getBoard().getSpellCard().get(i).getStatus());
+            result = result + character + "    ";
+        }
+        return result;
+    }
+
+    private String printCardsOnBoard(Player player){
+        int handCardNumbers = player.getHand().size();
+        String result ="";
+        for(int i=0 ; i<handCardNumbers ; i++){
+            result = result + "c    ";
+        }
+        return result;
+    }
+//field zone hasn't added in this
     public void showBoard() {
-
+        System.out.println(getOpposition().getNickname() + " : " + getOpposition().getLP());
+        System.out.println("    " + printCardsOnBoard(getOpposition()));
+        System.out.println(getOpposition().getBoard().getDeck().getDeckSize());
+        System.out.println("    " + printOpponentSpellCardsOnBoard(getOpposition()));
+        System.out.println("    " + printOpponentMonsterOnBoard(getOpposition()));
+        System.out.println(getOpposition().getBoard().getGraveYard().size());
+        System.out.println();
+        System.out.println("--------------------------");
+        System.out.println();
+        System.out.println(turnOfPlayer.getBoard().getGraveYard().size());
+        System.out.println("    " + printMonsterCardOnBoard(turnOfPlayer));
+        System.out.println("    " + printSpellCardsOnBoard(turnOfPlayer));
+        System.out.println(printCardsOnBoard(turnOfPlayer));
+        System.out.println(turnOfPlayer.getNickname() + " : " + turnOfPlayer.getLP());
     }
 
-    public void activateEffect() {
-
-    }
-
-    public void selectPosition(Position position) {
-        selectedPosition = position ;
+//which player: =opponent if opponents board , =player if ours board
+//whichField: =monsterCards if monsters , =trapCards if trap and spell
+    public void selectPosition(int index , String whichField , String whichPlayer, Position position) {
+        if(whichField.equals("monsterCards")){
+            if(whichPlayer.equals("opponent")){
+                selectedPosition = getOpposition().getBoard().getMonsterCards().get(convertIndex(index));
+            }
+            else if(whichPlayer.equals("player")){
+                selectedPosition = turnOfPlayer.getBoard().getMonsterCards().get(convertIndex(index));
+            }
+        }
+        else if(whichField.equals("trapCards")){
+            if(whichPlayer.equals("opponent")){
+                selectedPosition = getOpposition().getBoard().getSpellCard().get(convertIndex(index));
+            }
+            else if(whichPlayer.equals("player")){
+                selectedPosition = turnOfPlayer.getBoard().getSpellCard().get(convertIndex(index));
+            }
+        }
     }
 
     public void selectedPositionNulling() {
         selectedPosition = null;
     }
 
-    public void selectCardHand(Card card){
-        selectedCardHand = card;
+    public void selectCardHand(int index){
+        selectedCardHand = turnOfPlayer.getHand().get(index-1);
     }
 
     public void selectedCardHandNulling(){
@@ -88,6 +204,7 @@ public class Game {
         }
         return convertIndex(i);
     }
+
 //changed firstEmptyIndex: maybe it has error!
     public void summon() {
         int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
@@ -134,6 +251,7 @@ public class Game {
         }
         return player1;
     }
+
 //1.use sendToGraveyard
 //2.generate new methods to make it smaller
     public void attackToMonster(int index) {
@@ -220,14 +338,6 @@ public class Game {
         player.getBoard().addToGraveyard(card);
     }
 
-    public void activateSpell(TrapAndSpellCard spell) {
-
-    }
-
-    public void activateTrap(TrapAndSpellCard trap) {
-
-    }
-
     public void setSpellOnBoard() {
         int i = firstEmptyIndex(turnOfPlayer.getBoard().getSpellCard());
         turnOfPlayer.getBoard().getSpellCard().get(i).setStatus(StatusOfPosition.SPELL_OR_TRAP_HIDDEN);
@@ -264,8 +374,24 @@ public class Game {
 
     }
 
-    public void showCard() {
+    public void activateSpell(TrapAndSpellCard spell) {
 
     }
-}
 
+    public void activateTrap(TrapAndSpellCard trap) {
+
+    }
+
+    public void activateEffect() {
+
+    }
+
+    public void showCard() {
+        if(selectedPosition.equals(null)){
+            selectedCardHand.showCard();
+        }
+        else if(selectedCardHand.equals(null)){
+            selectedPosition.getCard().showCard();
+        }
+    }
+}
