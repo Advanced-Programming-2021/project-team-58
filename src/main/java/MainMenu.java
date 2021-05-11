@@ -16,8 +16,8 @@ public class MainMenu {
             else if (input.trim().matches("^(?i)(user[ ]+logout)$")) {
                 printProperRespondForLogOut();
                 break;
-            } else if (input.trim().matches("duel (.*)"))
-                startAGame(getCommandMatcher(input, "duel (.*)"));
+            } else if (input.trim().matches("^(?i)(duel (--.+) (--.+) (--.+))$"))
+                startAGame(getCommandMatcher(input, "^(?i)(duel (--.+) (--.+) (--.+))$"));
             else System.out.println("invalid command");
         }
         LoginMenu.run(); //Navigating to LoginMenu at last
@@ -53,11 +53,62 @@ public class MainMenu {
 
     public static void startAGame(Matcher matcher) {
         if (matcher.find()) {
-// In this level you should check if the activated deck is valid or not. If it's valid then you are allowed to start the game
-//            int round;
-//            Player player2;
+            Player loggedInPlayer = LoginMenu.getLoggedInPlayer();
+            int numOfRounds = 1;
+            String opponentName = findOpponentName(matcher);
+            boolean isNewEntered = isNewEntered(matcher);
+//            if (opponentName != null && isNewEntered && numOfRounds != 0) {
+            System.out.println(opponentName);
+
+                if (Player.getPlayerByUsername(opponentName) == null)
+                    System.out.println("there is no player with this username");
+                else if (loggedInPlayer.getActiveDeck() == null)
+                    System.out.println(loggedInPlayer.getUsername() + " had no activated deck");
+                else if (Player.getPlayerByUsername(opponentName).getActiveDeck() == null)
+                    System.out.println(opponentName + " had no activated deck");
+                else if (!loggedInPlayer.getActiveDeck().isValid())
+                    System.out.println(loggedInPlayer.getUsername() + "'s deck is invalid");
+                else if (!Player.getPlayerByUsername(opponentName).getActiveDeck().isValid())
+                    System.out.println(opponentName + "'s deck is invalid");
+                else if (numOfRounds != 1 && numOfRounds != 3)
+                    System.out.println("number of rounds is not supported");
+                else{
+                    System.out.println("a new game is being started");
+                }
+//             else System.out.println("invalid command");
+
 //            DuelMenu.run(LoginMenu.getLoggedInPlayer(), player2, round);
         }
+    }
+
+    private static int findNumOfRounds(Matcher matcher) {
+        int numOfRounds = 0;
+        Matcher matcher1 = null;
+        for (int i = 2; i < matcher.groupCount(); i++) {
+            if (matcher.group(i).matches("(?i)(--rounds (.+))"))
+                matcher1 = getCommandMatcher(matcher.group(i),"(?i)(--rounds (.+))");
+            if (matcher1.find())
+                numOfRounds = Integer.parseInt(matcher1.group(2));
+        }
+        return numOfRounds;
+    }
+
+    private static String findOpponentName(Matcher matcher) {
+        String opponentName = null;
+        Matcher matcher1 = null;
+        for (int i = 2; i < matcher.groupCount(); i++) {
+            if (matcher.group(i).matches("(?i)(--second-player (.+))"))
+                matcher1 = getCommandMatcher(matcher.group(i),"(?i)(--second-player (.+))");
+            if (matcher1.find())
+                opponentName = matcher1.group(2);
+        }
+        return opponentName;
+    }
+
+    private static boolean isNewEntered(Matcher matcher) {
+        if (matcher.group(2).matches("(?i)(--new)"))
+            return true;
+        return false;
     }
 
     private static Matcher getCommandMatcher(String input, String regex) {
