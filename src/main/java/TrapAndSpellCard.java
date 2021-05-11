@@ -16,7 +16,7 @@ public class TrapAndSpellCard extends Card {
         setCardType(cardType);
         setCardIcon(cardIcon);
         setCardStatus(status);
-        allSpellOrTrapCards.add(this);
+        allCards.add(this);
     }
 
     public void setCardStatus(TrapAndSpellStatus cardStatus) {

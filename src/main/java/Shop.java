@@ -3,69 +3,59 @@ import java.util.regex.*;
 
 public class Shop {
     public static void run() {
-        String input;
         Scanner scanner = new Scanner(System.in);
-
-        while (!(input = scanner.nextLine()).equalsIgnoreCase("menu exit")) {
+        String input = scanner.nextLine();
+        while (!input.equalsIgnoreCase("menu exit")) {
             MonsterCard.addMonster();
+            TrapAndSpellCard.addTrapAndSpell();
 
-            if (input.matches("shop buy ([A-Za-z]+)"))
-                buy(getCommandMatcher(input, "shop buy ([A-Za-z]+)"));
-            else if (input.matches("^ [ ]+ menu enter [A-Za-z]+ [ ]+ $"))
-                System.out.println("menu navigation is not possible");
+            if (input.matches("menu enter [A-Za-z ]+")) System.out.println("menu navigation is not possible");
+            if (input.matches("menu show-current")) System.out.println("Shop");
+            if (input.matches("shop show --all")) showAllCards();
 
-//             تا اینجا الان به نظرم تمیز شد
-//             فقط باید تو تابع buy بررسی کنی که این اسمی که میگیره ایا وجود داره یا نه
-//            و اینکه خریدار پول کافی داره یا نه
-//            بقیه ش هم با همین منطق پیش بری به نظر مشکلی نخواهد بود
-
-
-//            else if (input.trim().equalsIgnoreCase("menu show-current")) System.out.println("Shop Menu");
-//            if (getCommandMatcher(input.trim(), "shop buy ([A-Za-z]+)").find()) {
-//                if (checkCardExist(getCommandMatcher(input.trim(), "shop buy ([A-Za-z]+)").group(1)) &&
-//                        checkEnoughMoney(getCommandMatcher(input.trim(), "shop buy ([A-Za-z]+)").group(1)))
-//                    buy(getCommandMatcher(input.trim(), "shop buy ([A-Za-z]+)"));
-//            }
-//            if (getCommandMatcher(input.trim(), "^ [ ]+ shop show --all [ ]+ $").find())
-//                showAllCards();
-        }
-        MainMenu.run(); //Navigating to the Main Menu at last
-    }
-
-    public static void buy(Matcher matcher) {
-        if (matcher.find()) {
-            String cardName = matcher.group(1);
+            //buy
+            Pattern buy1 = Pattern.compile("shop buy ([A-Za-z ]+)");
+            Matcher buy2 = buy1.matcher(input);
             Player player = LoginMenu.getLoggedInPlayer();
-            for (int i = 0; i < Card.getAllCards().size(); i++) {
-                if (Card.getCardByName(cardName) != null) {
-                    player.decreaseMoney(Objects.requireNonNull(Card.getCardByName(cardName)).getPrice());
-                    player.getAllCards().add(Card.getCardByName(cardName));
-                    System.out.println("successful");
-                }
-//                مثلا میتونی برای همین if یه else همینجا بذاری که اگر این کارت وجود نداشت خطا بده
+
+            if (buy2.find()) {
+                if (checkCardExist(buy2) && checkEnoughMoney(buy2, player))
+                    buy(buy2,player);
             }
+            input = scanner.nextLine();
+        }
+
+        MainMenu.run();
+    }
+
+
+    public static void buy(Matcher matcher, Player player) {
+        if (matcher.find()) {
+            player.decreaseMoney(Objects.requireNonNull(Card.getCardByName(matcher.group(1))).getPrice());
+            player.getAllCards().add(Card.getCardByName(matcher.group(1)));
         }
     }
 
-    public static boolean checkCardExist(String cardName) {
-
-        if (Card.getCardByName(cardName) != null)
-            return true;
-
-        System.out.println("there is no card with this name");
+    public static boolean checkCardExist(Matcher matcher) {
+        if (matcher.find()) {
+            if (Card.getCardByName(matcher.group(1)) != null)
+                return true;
+            System.out.println("there is no card with this name");
+            return false;
+        }
         return false;
     }
 
-    public static boolean checkEnoughMoney(String cardName) {
-
-        if (Card.getCardByName(cardName) != null) {
-            Player player = LoginMenu.getLoggedInPlayer();
-            if (Objects.requireNonNull(Card.getCardByName(cardName)).getPrice() > player.getMoney())
-                System.out.println("not enough money");
+    public static boolean checkEnoughMoney(Matcher matcher, Player player) {
+        if (matcher.find()) {
+            if (player.getMoney() >= Objects.requireNonNull(Card.getCardByName(matcher.group(1))).getPrice()) {
+                System.out.println("Successful");
+                return true;
+            }
+            System.out.println("not enough money!");
             return false;
         }
-
-        return true;
+        return false;
     }
 
     public static void showAllCards() {
@@ -77,9 +67,5 @@ public class Shop {
     public static Matcher getCommandMatcher(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(input);
-    }
-
-    public static void main(String[] args) {
-        Shop.run();
     }
 }
