@@ -70,7 +70,7 @@ public class Deck implements Comparable<Deck> {
     }
 
     public static void removeDeckFromAllDecks(String deckName) {
-        allDecks.remove(getDeckByName(deckName));
+        allDecks.remove(Deck.getDeckByName(deckName));
     }
 
     public static Deck getDeckByName(String deckName) {

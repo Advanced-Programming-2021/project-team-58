@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class MonsterCard extends Card {
+public class MonsterCard extends Card{
 
     private String monsterType;
     private int cardLevel;
@@ -81,6 +81,7 @@ public class MonsterCard extends Card {
         System.out.println("DEF: " + this.getDefense());
         System.out.println("Description: " + this.getCardDescription());
     }
+
     public static void addMonster(){
         allMonsterCards.add(new MonsterCard("Battle OX", "Normal", "Beast-Warrior",
                 4, "A monster with tremendous power,it destroys enemies with a swing of its axe.",

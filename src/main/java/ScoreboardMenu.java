@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ScoreboardMenu {
     private static ArrayList<Player> playersSort = Player.getAllPlayers();
@@ -12,12 +13,12 @@ public class ScoreboardMenu {
         int rank = 1;
         for (int i = 0; i < playersSort.size(); i++) {
             if (i == 0) {
-                System.out.println("1" + playersSort.get(i).getNickname() + ": " + playersSort.get(i).getScore());
+                System.out.println("1- " + playersSort.get(i).getNickname() + ": " + playersSort.get(i).getScore());
             } else {
                 if (playersSort.get(i - 1).getScore() != playersSort.get(i).getScore()) {
                     rank = i + 1;
                 }
-                System.out.println(rank + playersSort.get(i).getNickname() + ": " + playersSort.get(i).getScore());
+                System.out.println(rank +"- "+ playersSort.get(i).getNickname() + ": " + playersSort.get(i).getScore());
             }
         }
     }

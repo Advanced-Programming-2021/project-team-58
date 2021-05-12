@@ -3,59 +3,38 @@ import java.util.regex.*;
 
 public class Shop {
     public static void run() {
+        MonsterCard.addMonster();
+        TrapAndSpellCard.addTrapAndSpell();
+        Collections.sort(MonsterCard.getAllMonsterCards());
+        Collections.sort(TrapAndSpellCard.getAllCards());
+
+        String input;
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        while (!input.equalsIgnoreCase("menu exit")) {
-            MonsterCard.addMonster();
-            TrapAndSpellCard.addTrapAndSpell();
+        while (!(input = scanner.nextLine()).equalsIgnoreCase("menu exit")) {
 
             if (input.matches("menu enter [A-Za-z ]+")) System.out.println("menu navigation is not possible");
-            if (input.matches("menu show-current")) System.out.println("Shop");
-            if (input.matches("shop show --all")) showAllCards();
-
-            //buy
-            Pattern buy1 = Pattern.compile("shop buy ([A-Za-z ]+)");
-            Matcher buy2 = buy1.matcher(input);
-            Player player = LoginMenu.getLoggedInPlayer();
-
-            if (buy2.find()) {
-                if (checkCardExist(buy2) && checkEnoughMoney(buy2, player))
-                    buy(buy2,player);
-            }
-            input = scanner.nextLine();
+            else if (input.matches("menu show-current")) System.out.println("Shop Menu");
+            else if (input.matches("shop show --all")) showAllCards();
+            else if (input.matches("shop buy (.+)"))
+                buy(getCommandMatcher(input,"shop buy (.+)"));
         }
-
         MainMenu.run();
     }
 
-
-    public static void buy(Matcher matcher, Player player) {
+    public static void buy(Matcher matcher) {
         if (matcher.find()) {
-            player.decreaseMoney(Objects.requireNonNull(Card.getCardByName(matcher.group(1))).getPrice());
-            player.getAllCards().add(Card.getCardByName(matcher.group(1)));
-        }
-    }
-
-    public static boolean checkCardExist(Matcher matcher) {
-        if (matcher.find()) {
-            if (Card.getCardByName(matcher.group(1)) != null)
-                return true;
-            System.out.println("there is no card with this name");
-            return false;
-        }
-        return false;
-    }
-
-    public static boolean checkEnoughMoney(Matcher matcher, Player player) {
-        if (matcher.find()) {
-            if (player.getMoney() >= Objects.requireNonNull(Card.getCardByName(matcher.group(1))).getPrice()) {
-                System.out.println("Successful");
-                return true;
+            Player player = LoginMenu.getLoggedInPlayer();
+            String cardName = matcher.group(1);
+            if (Card.getCardByName(cardName) == null)
+                System.out.println("there is no card with this name");
+            else if (player.getMoney()<Card.getCardByName(cardName).getPrice())
+                System.out.println("not enough money");
+            else {
+                player.decreaseMoney(Card.getCardByName(cardName).getPrice());
+                player.getAllCards().add(Card.getCardByName(cardName));
+                System.out.println("Card with name "+cardName+" was bought successfully!");
             }
-            System.out.println("not enough money!");
-            return false;
         }
-        return false;
     }
 
     public static void showAllCards() {

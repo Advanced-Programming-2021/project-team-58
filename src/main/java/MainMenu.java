@@ -3,7 +3,11 @@ import java.util.regex.*;
 
 public class MainMenu {
     public static void run() {
+        handleInput();
+        LoginMenu.run(); //Navigating to LoginMenu at last
+    }
 
+    private static void handleInput() {
         Scanner scanner = new Scanner(System.in);
         String input;
 
@@ -15,12 +19,13 @@ public class MainMenu {
                 showMenuName();
             else if (input.trim().matches("^(?i)(user[ ]+logout)$")) {
                 printProperRespondForLogOut();
-                break;
-            } else if (input.trim().matches("^(?i)(duel (--.+) (--.+) (--.+))$"))
-                startAGame(getCommandMatcher(input, "^(?i)(duel (--.+) (--.+) (--.+))$"));
+                return;}
+            else if (input.trim().matches("^(?i)(scoreboard show)$"))
+                ScoreboardMenu.run();
+//            } else if (input.trim().matches("^(?i)(duel (--.+) (--.+) (--.+))$"))
+//                startAGame(getCommandMatcher(input, "^(?i)(duel (--.+) (--.+) (--.+))$"));
             else System.out.println("invalid command");
         }
-        LoginMenu.run(); //Navigating to LoginMenu at last
     }
 
     private static void enterAMenu(Matcher matcher) {
@@ -51,15 +56,27 @@ public class MainMenu {
         System.out.println("User logged out successfully!");
     }
 
-    public static void startAGame(Matcher matcher) {
-        if (matcher.find()) {
-            Player loggedInPlayer = LoginMenu.getLoggedInPlayer();
-            int numOfRounds = 1;
-            String opponentName = findOpponentName(matcher);
-            boolean isNewEntered = isNewEntered(matcher);
-//            if (opponentName != null && isNewEntered && numOfRounds != 0) {
-            System.out.println(opponentName);
+    public static void startAGame(String input) {
+            int numOfRounds = 0;
+            String opponentName = null;
+            boolean isNewEntered = false;
+            
+            if (getCommandMatcher(input,"--new").find()) {
+                isNewEntered = true;
+            }
+            if (getCommandMatcher(input,"--second-player (.+)").find()) {
+                    opponentName = getCommandMatcher(input, "--second-player (.+)").group(1);
+            }
+            if (getCommandMatcher(input,"--rounds (\\d+)").find()) {
+                    System.out.println(getCommandMatcher(input, "--rounds (\\d+)").group(1));
+                //  numOfRounds =Integer.parseInt(getCommandMatcher(matcher.group(i),"--rounds (\\d+)").group(1));
+            }
 
+            System.out.println(opponentName);
+            System.out.println(numOfRounds);
+            System.out.println(isNewEntered);
+            Player loggedInPlayer = LoginMenu.getLoggedInPlayer();
+            if (opponentName != null && isNewEntered && numOfRounds != 0) {
                 if (Player.getPlayerByUsername(opponentName) == null)
                     System.out.println("there is no player with this username");
                 else if (loggedInPlayer.getActiveDeck() == null)
@@ -72,47 +89,23 @@ public class MainMenu {
                     System.out.println(opponentName + "'s deck is invalid");
                 else if (numOfRounds != 1 && numOfRounds != 3)
                     System.out.println("number of rounds is not supported");
-                else{
-                    System.out.println("a new game is being started");
+                else {
+                    System.out.println("New game started between " + LoginMenu.getLoggedInPlayer().getUsername() +
+                            " and " + opponentName + "!");
+                    DuelMenu.run(LoginMenu.getLoggedInPlayer(), Player.getPlayerByUsername(opponentName), numOfRounds);
                 }
-//             else System.out.println("invalid command");
-
-//            DuelMenu.run(LoginMenu.getLoggedInPlayer(), player2, round);
-        }
-    }
-
-    private static int findNumOfRounds(Matcher matcher) {
-        int numOfRounds = 0;
-        Matcher matcher1 = null;
-        for (int i = 2; i < matcher.groupCount(); i++) {
-            if (matcher.group(i).matches("(?i)(--rounds (.+))"))
-                matcher1 = getCommandMatcher(matcher.group(i),"(?i)(--rounds (.+))");
-            if (matcher1.find())
-                numOfRounds = Integer.parseInt(matcher1.group(2));
-        }
-        return numOfRounds;
-    }
-
-    private static String findOpponentName(Matcher matcher) {
-        String opponentName = null;
-        Matcher matcher1 = null;
-        for (int i = 2; i < matcher.groupCount(); i++) {
-            if (matcher.group(i).matches("(?i)(--second-player (.+))"))
-                matcher1 = getCommandMatcher(matcher.group(i),"(?i)(--second-player (.+))");
-            if (matcher1.find())
-                opponentName = matcher1.group(2);
-        }
-        return opponentName;
-    }
-
-    private static boolean isNewEntered(Matcher matcher) {
-        if (matcher.group(2).matches("(?i)(--new)"))
-            return true;
-        return false;
+            } else System.out.println("invalid command");
     }
 
     private static Matcher getCommandMatcher(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(input);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        if (input.matches("^(?i)(duel (--.+) (--.+) (--.+))$"))
+            startAGame(input);
     }
 }

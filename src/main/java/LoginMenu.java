@@ -25,7 +25,7 @@ public class LoginMenu {
 
             input = scan.nextLine();
 
-            Matcher matchChangeMenu = getCommandMatcher(input, "^menu enter (Main|Duel|Deck|Scoreboard|Profile|Shop)$");
+            Matcher matchChangeMenu = getCommandMatcher(input, "^(?i)(menu enter (Main|Duel|Deck|Scoreboard|Profile|Shop))$");
 
             Matcher matchLogin1 = getCommandMatcher(input, "^user login username ([a-zA-Z0-9]+) password ([a-zA-Z0-9]+)$");
             Matcher matchLogin2 = getCommandMatcher(input, "^user login password ([a-zA-Z0-9]+) username ([a-zA-Z0-9]+)$");
