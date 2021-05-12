@@ -12,24 +12,16 @@ public class MonsterCard extends Card {
     private String cardTypeOfMonsters;
     private static ArrayList<MonsterCard> allMonsterCards = new ArrayList<>();
 
-//    @Override
-//    public String toString() {
-//        return this.getAttack();
-//    }
-
     public MonsterCard(String cardName, String cardTypeOfMonsters, String monsterType, int cardLevel,
                        String description, Attribute cardAttribute, int attack, int defense, int price) {
         super(cardName,description,price);
         allCards.add(this);
-
         setMonsterType(monsterType);
         setCardLevel(cardLevel);
         setCardAttribute(cardAttribute);
         setAttack(attack);
         setDefense(defense);
         setCardTypeOfMonsters(cardTypeOfMonsters);
-//        Card.addToAllCards(this);
-//        allMonsterCards.add(this);
     }
 
     public static ArrayList<MonsterCard> getAllMonsterCards() { return allMonsterCards; }
