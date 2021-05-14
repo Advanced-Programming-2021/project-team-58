@@ -47,6 +47,9 @@ public class Game {
         String input;
         isAnyCardSummoned = false;
         while (!(input = scanner.nextLine()).equals("next phase")) {
+            Matcher matchChangeStatus = getCommandMatcher(input , "^set position (attack|defense)$");
+
+
             if (input.equals("summon")){
                 if (isAnyCardSummoned) {
                     isAnyCardSummoned = summon();
@@ -56,6 +59,7 @@ public class Game {
                     isAnyCardSummoned = summon();
                 }
                 selectedCardHandNulling();
+                selectedPositionNulling();
             }
             else if(input.equals("set")){
                 if (isAnyCardSummoned) {
@@ -65,6 +69,12 @@ public class Game {
                 else{
                     isAnyCardSummoned = setMonsterCardOnBoard();
                 }
+                selectedCardHandNulling();
+                selectedPositionNulling();
+            }
+            else if(matchChangeStatus.find()){
+                changeMonsterStatus( matchChangeStatus.group(1) );
+                selectedPositionNulling();
                 selectedCardHandNulling();
             }
         }
@@ -88,11 +98,17 @@ public class Game {
         while (player.getLP() != 0 && player2.getLP() != 0) {
             drawPhase();
             standbyPhase();
+            setAllPositionsChangeStatus(); //SETS CHANGING IN STATUS TO FALSE IN NEW TURN
             mainPhase();
             battlePhase();
             mainPhase();
             endPhase();
 
+        }
+    }
+    private void setAllPositionsChangeStatus(){
+        for (int i = 0; i < 5; i++) {
+            turnOfPlayer.getBoard().getMonsterCards().get(i).setStatusChanged(false);
         }
     }
 
@@ -417,12 +433,32 @@ public class Game {
         }
     }
 
-    public void changeMonsterStatus() {
-        if (selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) {
-            selectedPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
+    public void changeMonsterStatus(String newStatus) {
+        if((selectedPosition == null) && (selectedCardHand == null)){
+            System.out.println("no card is selected yet");
         }
-        if (selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_OCCUPIED)) {
-            selectedPosition.setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
+        else if( (selectedCardHand != null) || (selectedPosition.getCard() instanceof MonsterCard) ){
+            System.out.println("you can’t change this card position");
+        }
+        else if(!this.phase.equals(Phase.MAIN)){
+            System.out.println("you can’t do this action in this phase");
+        }
+        else if( ((!selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_OCCUPIED)) && (newStatus.equals("attack")))
+            || ((!selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) && (newStatus.equals("defense")))){
+            System.out.println("this card is already in the wanted position");
+        }
+        else if(selectedPosition.getIsStatusChanged()){
+            System.out.println("you already changed this card position in this turn");
+        }
+        else {
+            if (selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) {
+                selectedPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
+            }
+            if (selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_OCCUPIED)) {
+                selectedPosition.setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
+            }
+            System.out.println("monster card position changed successfully");
+            selectedPosition.setStatusChanged(true);
         }
     }
 
