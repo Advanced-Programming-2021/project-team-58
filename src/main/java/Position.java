@@ -1,10 +1,12 @@
+
 import java.util.ArrayList;
 
 public class Position {
-    public static ArrayList<Position> allPositions = new ArrayList<>();
+    public static ArrayList<Position> allPositions = new ArrayList<Position>();
     private StatusOfPosition status;
     private Card card;
     private int index;
+    private boolean isStatusChanged;
 
     public Position(StatusOfPosition status, int index) {
         setStatus(status);
@@ -34,6 +36,14 @@ public class Position {
 
     public void setCard(Card card) {
         this.card = card;
+    }
+
+    public void setStatusChanged(boolean statusChanged) {
+        isStatusChanged = statusChanged;
+    }
+
+    public boolean getIsStatusChanged(){
+        return isStatusChanged;
     }
 
     public static Position getPositionByIndex(int index){
