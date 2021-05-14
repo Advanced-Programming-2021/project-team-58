@@ -43,6 +43,16 @@ public class Board {
         return true;
     }
 
+    public int cardsInMonsterZone(){
+        int i = 0;
+        for (Position position: monsterCards) {
+            if(!position.getStatus().equals(StatusOfPosition.EMPTY)) {
+                i++;
+            }
+        }
+        return i;
+    }
+
     public boolean isTrapAndSpellZoneFull(){
         for (Position position: trapAndSpellCard) {
             if(position.getStatus().equals(StatusOfPosition.EMPTY)){
