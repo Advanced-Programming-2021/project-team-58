@@ -1,4 +1,6 @@
 
+import jdk.internal.util.xml.impl.Input;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -48,7 +50,7 @@ public class Game {
         isAnyCardSummoned = false;
         while (!(input = scanner.nextLine()).equals("next phase")) {
             Matcher matchChangeStatus = getCommandMatcher(input, "^set position (attack|defense)$");
-
+            Matcher matchSelect = getCommandMatcher(input, "^select (hand|monster|spell) (opponent )*([0-9]+)$");
 
             if (input.equals("summon")) {
                 if (isAnyCardSummoned) {
@@ -69,7 +71,76 @@ public class Game {
                 flipSummon();
                 selectedCardHandNulling();
                 selectedPositionNulling();
+            } else if (matchSelect.find()) {
+                select(matchSelect);
             }
+            else if(input.equals("select -d")){
+                selectedPositionNulling();
+                selectedCardHandNulling();
+            }
+        }
+    }
+
+    public void select(Matcher matcher) {
+        int number = Integer.parseInt(matcher.group(2));
+
+        if ((matcher.group(1).equals("monster")) && (matcher.group(2).equals(""))) {
+            if ((number >= 1) && (number <= 5)) {
+                if (turnOfPlayer.getBoard().getMonsterCards().get(convertIndex(number)).getCard().equals(null)) {
+                    System.out.println("no card found in the given position");
+                } else {
+                    selectedPosition = turnOfPlayer.getBoard().getMonsterCards().get(convertIndex(number));
+                    System.out.println("card selected");
+                }
+            } else {
+                System.out.println("invalid selection");
+            }
+        } else if ((matcher.group(1).equals("spell")) && (matcher.group(2).equals(""))) {
+            if ((number >= 1) && (number <= 5)) {
+                if (turnOfPlayer.getBoard().getTrapAndSpellCard().get(convertIndex(number)).getCard().equals(null)) {
+                    System.out.println("no card found in the given position");
+                } else {
+                    selectedPosition = turnOfPlayer.getBoard().getTrapAndSpellCard().get(convertIndex(number));
+                    System.out.println("card selected");
+                }
+            } else {
+                System.out.println("invalid selection");
+            }
+        } else if ((matcher.group(1).equals("hand")) && (matcher.group(2).equals(""))) {
+            if ((number >= 1) && (number <= turnOfPlayer.getHand().size())) {
+                selectedCardHand = turnOfPlayer.getHand().get(number);
+                System.out.println();
+            } else {
+                System.out.println("invalid selection");
+            }
+        } else if ((matcher.group(1).equals("monster")) && (matcher.group(2).equals("opponent"))) {
+            if ((number >= 1) && (number <= 5)) {
+                if(getOpposition().getBoard().getMonsterCards().get(convertIndex(number)).getCard().equals(null)){
+                    System.out.println("no card found in the given position");
+                }
+                else {
+                    selectedPosition = getOpposition().getBoard().getMonsterCards().get(convertIndex(number));
+                    System.out.println("card selected");
+                }
+            } else {
+                System.out.println("invalid selection");
+            }
+        } else if ((matcher.group(1).equals("spell")) && (matcher.group(2).equals("opponent"))) {
+            if ((number >= 1) && (number <= 5)) {
+                if(getOpposition().getBoard().getTrapAndSpellCard().get(convertIndex(number)).getCard().equals(null)){
+                    System.out.println("no card found in the given position");
+                }
+                else {
+                    selectedPosition = getOpposition().getBoard().getTrapAndSpellCard().get(convertIndex(number));
+                    System.out.println("card selected");
+                }
+            } else {
+                System.out.println("invalid selection");
+            }
+        } else if ((matcher.group(1).equals("hand")) && (matcher.group(2).equals("opponent"))) {
+            System.out.println("invalid selection");
+        } else {
+            System.out.println("invalid selection");
         }
     }
 
