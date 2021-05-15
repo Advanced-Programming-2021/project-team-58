@@ -47,43 +47,46 @@ public class Game {
         String input;
         isAnyCardSummoned = false;
         while (!(input = scanner.nextLine()).equals("next phase")) {
-            Matcher matchChangeStatus = getCommandMatcher(input , "^set position (attack|defense)$");
+            Matcher matchChangeStatus = getCommandMatcher(input, "^set position (attack|defense)$");
 
 
-            if (input.equals("summon")){
+            if (input.equals("summon")) {
                 if (isAnyCardSummoned) {
                     isAnyCardSummoned = summon();
                     isAnyCardSummoned = true;
-                }
-                else{
+                } else {
                     isAnyCardSummoned = summon();
                 }
                 selectedCardHandNulling();
                 selectedPositionNulling();
-            }
-            else if(input.equals("set")){
-                if (isAnyCardSummoned) {
-                    isAnyCardSummoned = setMonsterCardOnBoard();
-                    isAnyCardSummoned = true;
-                }
-                else{
-                    isAnyCardSummoned = setMonsterCardOnBoard();
-                }
-                selectedPosition.setStatusChanged(true);
-                selectedCardHandNulling();
-                selectedPositionNulling();
-            }
-            else if(matchChangeStatus.find()){
-                changeMonsterStatus( matchChangeStatus.group(1) );
+            } else if (input.equals("set")) {
+                set();
+            } else if (matchChangeStatus.find()) {
+                changeMonsterStatus(matchChangeStatus.group(1));
                 selectedPositionNulling();
                 selectedCardHandNulling();
-            }
-            else if(input.equals("flip-summon")){
+            } else if (input.equals("flip-summon")) {
                 flipSummon();
                 selectedCardHandNulling();
                 selectedPositionNulling();
             }
         }
+    }
+
+    public void set() {
+        if (selectedCardHand instanceof TrapAndSpellCard) {
+            setTrapSpellOnBoard();
+        } else {
+            if (isAnyCardSummoned) {
+                isAnyCardSummoned = setMonsterCardOnBoard();
+                isAnyCardSummoned = true;
+            } else {
+                isAnyCardSummoned = setMonsterCardOnBoard();
+            }
+            selectedPosition.setStatusChanged(true);
+        }
+        selectedCardHandNulling();
+        selectedPositionNulling();
     }
 
     public void drawPhase() {
@@ -112,7 +115,8 @@ public class Game {
 
         }
     }
-    private void setAllPositionsChangeStatus(){
+
+    private void setAllPositionsChangeStatus() {
         for (int i = 0; i < 5; i++) {
             turnOfPlayer.getBoard().getMonsterCards().get(i).setStatusChanged(false);
         }
@@ -320,69 +324,58 @@ public class Game {
     //changed firstEmptyIndex: maybe it has error!
     public boolean summon() {
         boolean isTributeSucceeds = false;
-        if((selectedCardHand == null) && (selectedPosition == null)){
+        if ((selectedCardHand == null) && (selectedPosition == null)) {
             System.out.println("no card is selected yet");
             return false;
-        }
-        else if( ((selectedCardHand == null) && (selectedPosition != null)) || !(selectedCardHand instanceof MonsterCard)){
+        } else if (((selectedCardHand == null) && (selectedPosition != null)) || !(selectedCardHand instanceof MonsterCard)) {
             System.out.println("you can’t summon this card");
             return false;
-        }
-        else if(!this.phase.equals(Phase.MAIN)){
+        } else if (!this.phase.equals(Phase.MAIN)) {
             System.out.println("action not allowed in this phase");
             return false;
-        }
-        else if(turnOfPlayer.getBoard().isMonsterZoneFull()){
+        } else if (turnOfPlayer.getBoard().isMonsterZoneFull()) {
             System.out.println("monster card zone is full");
             return false;
-        }
-        else if (this.isAnyCardSummoned){
+        } else if (this.isAnyCardSummoned) {
             System.out.println("you already summoned/set on this turn");
             return true;
-        }
-        else {
-            if(((MonsterCard) selectedCardHand).getCardLevel() < 5) {
+        } else {
+            if (((MonsterCard) selectedCardHand).getCardLevel() < 5) {
                 int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
                 turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
                 turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
                 System.out.println("summoned successfully");
                 return true;
-            }
-            else{
-                if(((MonsterCard) selectedCardHand).getCardLevel() < 7){
-                    if(turnOfPlayer.getBoard().cardsInMonsterZone() == 0){
+            } else {
+                if (((MonsterCard) selectedCardHand).getCardLevel() < 7) {
+                    if (turnOfPlayer.getBoard().cardsInMonsterZone() == 0) {
                         System.out.println("there are not enough cards for tribute");
                         return false;
-                    }
-                    else{
+                    } else {
                         isTributeSucceeds = tribute(1);
-                        if(isTributeSucceeds){
+                        if (isTributeSucceeds) {
                             int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
                             turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
                             turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
                             System.out.println("summoned successfully");
                             return true;
-                        }
-                        else{
+                        } else {
                             return false;
                         }
                     }
-                }
-                else{
-                    if(turnOfPlayer.getBoard().cardsInMonsterZone() < 2){
+                } else {
+                    if (turnOfPlayer.getBoard().cardsInMonsterZone() < 2) {
                         System.out.println("there are not enough cards for tribute");
                         return false;
-                    }
-                    else{
+                    } else {
                         isTributeSucceeds = tribute(2);
-                        if (isTributeSucceeds){
+                        if (isTributeSucceeds) {
                             int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
                             turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
                             turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
                             System.out.println("summoned successfully");
                             return true;
-                        }
-                        else{
+                        } else {
                             return false;
                         }
                     }
@@ -391,15 +384,14 @@ public class Game {
         }
     }
 
-    private boolean tribute(int numberOfCards){
+    private boolean tribute(int numberOfCards) {
         for (int i = 0; i < numberOfCards; i++) {
             int a = scanner.nextInt();
             int b = convertIndex(a);
-            if(turnOfPlayer.getBoard().getMonsterCards().get(b).getStatus().equals(StatusOfPosition.EMPTY)){
+            if (turnOfPlayer.getBoard().getMonsterCards().get(b).getStatus().equals(StatusOfPosition.EMPTY)) {
                 System.out.println("there no monsters one this address");
                 return false;
-            }
-            else{
+            } else {
                 turnOfPlayer.getBoard().addToGraveyard(turnOfPlayer.getBoard().getMonsterCards().get(b).getCard());
                 turnOfPlayer.getBoard().getMonsterCards().get(b).setCard(null);
                 turnOfPlayer.getBoard().getMonsterCards().get(b).setStatus(StatusOfPosition.EMPTY);
@@ -410,27 +402,22 @@ public class Game {
     }
 
     public boolean setMonsterCardOnBoard() {
-        if( (selectedCardHand == null)&&(selectedPosition == null) ){
+        if ((selectedCardHand == null) && (selectedPosition == null)) {
             System.out.println("no card is selected yet");
             return false;
-        }
-        else if( ((selectedCardHand == null) && (selectedPosition != null)) ){
+        } else if (((selectedCardHand == null) && (selectedPosition != null))) {
             System.out.println("you can’t set this card");
             return false;
-        }
-        else if((selectedCardHand instanceof MonsterCard) && !(this.phase.equals(Phase.MAIN))){
+        } else if ((selectedCardHand instanceof MonsterCard) && !(this.phase.equals(Phase.MAIN))) {
             System.out.println("you can’t do this action in this phase");
             return false;
-        }
-        else if(turnOfPlayer.getBoard().isMonsterZoneFull()){
+        } else if (turnOfPlayer.getBoard().isMonsterZoneFull()) {
             System.out.println("monster card zone is full");
             return false;
-        }
-        else if(this.isAnyCardSummoned){
+        } else if (this.isAnyCardSummoned) {
             System.out.println("you already summoned/set on this turn");
             return true;
-        }
-        else {
+        } else {
             int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
             turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.DEFENSIVE_HIDDEN);
             turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
@@ -440,23 +427,18 @@ public class Game {
     }
 
     public void changeMonsterStatus(String newStatus) {
-        if((selectedPosition == null) && (selectedCardHand == null)){
+        if ((selectedPosition == null) && (selectedCardHand == null)) {
             System.out.println("no card is selected yet");
-        }
-        else if( (selectedCardHand != null) || (selectedPosition.getCard() instanceof MonsterCard) ){
+        } else if ((selectedCardHand != null) || (selectedPosition.getCard() instanceof MonsterCard)) {
             System.out.println("you can’t change this card position");
-        }
-        else if(!this.phase.equals(Phase.MAIN)){
+        } else if (!this.phase.equals(Phase.MAIN)) {
             System.out.println("you can’t do this action in this phase");
-        }
-        else if( ((!selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_OCCUPIED)) && (newStatus.equals("attack")))
-            || ((!selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) && (newStatus.equals("defense")))){
+        } else if (((!selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_OCCUPIED)) && (newStatus.equals("attack")))
+                || ((!selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) && (newStatus.equals("defense")))) {
             System.out.println("this card is already in the wanted position");
-        }
-        else if(selectedPosition.getIsStatusChanged()){
+        } else if (selectedPosition.getIsStatusChanged()) {
             System.out.println("you already changed this card position in this turn");
-        }
-        else {
+        } else {
             if (selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) {
                 selectedPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
             }
@@ -570,16 +552,21 @@ public class Game {
         player.getBoard().addToGraveyard(card);
     }
 
-    public void setSpellOnBoard() {
-        int i = firstEmptyIndex(turnOfPlayer.getBoard().getTrapAndSpellCard());
-        turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setStatus(StatusOfPosition.SPELL_OR_TRAP_HIDDEN);
-        turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setCard(selectedCardHand);
-    }
-
-    public void setTrapOnBoard(TrapAndSpellCard trap) {
-        int i = firstEmptyIndex(turnOfPlayer.getBoard().getTrapAndSpellCard());
-        turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setStatus(StatusOfPosition.SPELL_OR_TRAP_HIDDEN);
-        turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setCard(selectedCardHand);
+    public void setTrapSpellOnBoard() {
+        if ((selectedCardHand == null) && (selectedPosition == null)) {
+            System.out.println("no card is selected yet");
+        } else if ((selectedCardHand == null) && (selectedPosition != null)) {
+            System.out.println("you can’t set this card");
+        } else if (!this.phase.equals(Phase.MAIN)) {
+            System.out.println("you can’t do this action in this phase");
+        } else if (turnOfPlayer.getBoard().isTrapAndSpellZoneFull()) {
+            System.out.println("spell card zone is full");
+        } else {
+            int i = firstEmptyIndex(turnOfPlayer.getBoard().getTrapAndSpellCard());
+            turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setStatus(StatusOfPosition.SPELL_OR_TRAP_HIDDEN);
+            turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setCard(selectedCardHand);
+            System.out.println("set successfully");
+        }
     }
 
     public void activateTrapInOpponentTurn(TrapAndSpellCard trap) {
@@ -599,19 +586,15 @@ public class Game {
     }
 
     public void flipSummon() {
-        if( (selectedPosition == null) && (selectedCardHand == null) ){
+        if ((selectedPosition == null) && (selectedCardHand == null)) {
             System.out.println("no card is selected yet");
-        }
-        else if( (selectedCardHand != null) || !(selectedPosition.getCard() instanceof MonsterCard)){
+        } else if ((selectedCardHand != null) || !(selectedPosition.getCard() instanceof MonsterCard)) {
             System.out.println("you can’t change this card position");
-        }
-        else if(!this.phase.equals(Phase.MAIN)){
+        } else if (!this.phase.equals(Phase.MAIN)) {
             System.out.println("you can’t do this action in this phase");
-        }
-        else if( (!selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_HIDDEN)) || (selectedPosition.getIsStatusChanged()) ){
+        } else if ((!selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_HIDDEN)) || (selectedPosition.getIsStatusChanged())) {
             System.out.println("you can’t flip summon this card");
-        }
-        else{
+        } else {
             selectedPosition.setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
             System.out.println("flip summoned successfully");
         }
