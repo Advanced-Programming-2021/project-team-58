@@ -69,6 +69,7 @@ public class Game {
                 else{
                     isAnyCardSummoned = setMonsterCardOnBoard();
                 }
+                selectedPosition.setStatusChanged(true);
                 selectedCardHandNulling();
                 selectedPositionNulling();
             }
@@ -76,6 +77,11 @@ public class Game {
                 changeMonsterStatus( matchChangeStatus.group(1) );
                 selectedPositionNulling();
                 selectedCardHandNulling();
+            }
+            else if(input.equals("flip-summon")){
+                flipSummon();
+                selectedCardHandNulling();
+                selectedPositionNulling();
             }
         }
     }
@@ -592,8 +598,23 @@ public class Game {
 
     }
 
-    public void flipSummon(MonsterCard monsterCard) {
-
+    public void flipSummon() {
+        if( (selectedPosition == null) && (selectedCardHand == null) ){
+            System.out.println("no card is selected yet");
+        }
+        else if( (selectedCardHand != null) || !(selectedPosition.getCard() instanceof MonsterCard)){
+            System.out.println("you can’t change this card position");
+        }
+        else if(!this.phase.equals(Phase.MAIN)){
+            System.out.println("you can’t do this action in this phase");
+        }
+        else if( (!selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_HIDDEN)) || (selectedPosition.getIsStatusChanged()) ){
+            System.out.println("you can’t flip summon this card");
+        }
+        else{
+            selectedPosition.setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
+            System.out.println("flip summoned successfully");
+        }
     }
 
     public void showGraveyard() {
