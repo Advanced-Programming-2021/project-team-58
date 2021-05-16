@@ -712,8 +712,6 @@ public class Game {
         }
     }
 
-}
-
     public void showGraveyard() {
         int graveSize = turnOfPlayer.getBoard().getGraveYard().size();
         if (graveSize == 0) {
