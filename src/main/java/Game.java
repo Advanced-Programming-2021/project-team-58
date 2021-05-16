@@ -357,30 +357,8 @@ public class Game {
         System.out.println(turnOfPlayer.getNickname() + " : " + turnOfPlayer.getLP());
     }
 
-    //which player: =opponent if opponents board , =player if ours board
-//whichField: =monsterCards if monsters , =trapCards if trap and spell
-    public void selectPosition(int index, String whichField, String whichPlayer) {
-        if (whichField.equals("monsterCards")) {
-            if (whichPlayer.equals("opponent")) {
-                selectedPosition = getOpposition().getBoard().getMonsterCards().get(convertIndex(index));
-            } else if (whichPlayer.equals("player")) {
-                selectedPosition = turnOfPlayer.getBoard().getMonsterCards().get(convertIndex(index));
-            }
-        } else if (whichField.equals("trapCards")) {
-            if (whichPlayer.equals("opponent")) {
-                selectedPosition = getOpposition().getBoard().getTrapAndSpellCard().get(convertIndex(index));
-            } else if (whichPlayer.equals("player")) {
-                selectedPosition = turnOfPlayer.getBoard().getTrapAndSpellCard().get(convertIndex(index));
-            }
-        }
-    }
-
     public void selectedPositionNulling() {
         selectedPosition = null;
-    }
-
-    public void selectCardHand(int index) {
-        selectedCardHand = turnOfPlayer.getHand().get(index - 1);
     }
 
     public void selectedCardHandNulling() {
@@ -423,6 +401,7 @@ public class Game {
                 int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
                 turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
                 turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
+                turnOfPlayer.getHand().remove(selectedCardHand);
                 System.out.println("summoned successfully");
                 return true;
             } else {
@@ -436,6 +415,7 @@ public class Game {
                             int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
                             turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
                             turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
+                            turnOfPlayer.getHand().remove(selectedCardHand);
                             System.out.println("summoned successfully");
                             return true;
                         } else {
@@ -452,6 +432,7 @@ public class Game {
                             int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
                             turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
                             turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
+                            turnOfPlayer.getHand().remove(selectedCardHand);
                             System.out.println("summoned successfully");
                             return true;
                         } else {
@@ -500,6 +481,7 @@ public class Game {
             int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
             turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.DEFENSIVE_HIDDEN);
             turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
+            turnOfPlayer.getHand().remove(selectedCardHand);
             System.out.println("set successfully");
             return true;
         }
@@ -689,8 +671,75 @@ public class Game {
 
     }
 
-    public void specialSummon(MonsterCard monsterCard) {
+    private boolean isAnyMonsterInArray(ArrayList<Card> array){
+        for (Card card : array) {
+            if(card instanceof MonsterCard){
+                return true;
+            }
+        }
+        return false;
+    }
 
+    private void specialSummonHelping(ArrayList<Card> array){
+        int n = 0;
+        while(n == 0){
+            int number = scanner.nextInt();
+            if(number > array.size()){
+                System.out.println("given number is greater than number of cards");
+            }
+            else if(!(array.get(number) instanceof MonsterCard)){
+                System.out.println("you can't summon this card");
+            }
+            else{
+                int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
+                turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
+                turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(array.get(number));
+                array.remove(number);
+                System.out.println("special summoned successfully");
+            }
+        }
+    }
+
+    public void specialSummon(String arrayName) {
+        if(arrayName.equals("deck")){
+            if(!isAnyMonsterInArray(turnOfPlayer.getBoard().getDeck().getMainDeck())){
+                System.out.println("there is no way you could special summon a monster");
+            }
+            else{
+                if(turnOfPlayer.getBoard().isMonsterZoneFull()){
+                    System.out.println("monster zone is full");
+                }
+                else{
+                    specialSummonHelping(turnOfPlayer.getBoard().getDeck().getMainDeck());
+                }
+            }
+        }
+        else if(arrayName.equals("hand")){
+            if(!isAnyMonsterInArray(turnOfPlayer.getHand())){
+                System.out.println("there is no way you could special summon a monster");
+            }
+            else{
+                if(turnOfPlayer.getBoard().isMonsterZoneFull()){
+                    System.out.println("monster zone is full");
+                }
+                else{
+                    specialSummonHelping(turnOfPlayer.getHand());
+                }
+            }
+        }
+        else{      //grave
+            if(!isAnyMonsterInArray(turnOfPlayer.getBoard().getGraveYard())){
+                System.out.println("there is no way you could special summon a monster");
+            }
+            else{
+                if(turnOfPlayer.getBoard().isMonsterZoneFull()){
+                    System.out.println("monster zone is full");
+                }
+                else{
+                    specialSummonHelping(turnOfPlayer.getBoard().getGraveYard());
+                }
+            }
+        }
     }
 
     public void ritualSummon(MonsterCard monsterCard) {
