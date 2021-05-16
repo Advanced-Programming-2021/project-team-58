@@ -81,7 +81,11 @@ public class Game {
                 }
             } else if (input.equals("card show selected")) {
                 showCard();
-            } else {
+            }
+            else if(input.equals("show graveyard")){
+                showGraveyard();
+            }
+            else {
                 System.out.println("invalid command");
             }
         }
@@ -678,7 +682,18 @@ public class Game {
     }
 
     public void showGraveyard() {
-
+        int graveSize = turnOfPlayer.getBoard().getGraveYard().size();
+        if(graveSize == 0){
+            System.out.println("graveyard is empty");
+        }
+        else {
+            for (int i = 0; i < graveSize; i++) {
+                String cardName = turnOfPlayer.getBoard().getGraveYard().get(i).getCardName();
+                String cardDescription = turnOfPlayer.getBoard().getGraveYard().get(i).getCardDescription();
+                int rank = i + 1;
+                System.out.println(rank + ". " + cardName + " : " + cardDescription);
+            }
+        }
     }
 
     public void activateSpell(TrapAndSpellCard spell) {
