@@ -727,6 +727,19 @@ public class Game {
                 }
             }
         }
+        else if(arrayName.equals("opponents graveyard")){
+            if(!isAnyMonsterInArray(getOpposition().getBoard().getGraveYard())){
+                System.out.println("there is no way you could special summon a monster");
+            }
+            else{
+                if(turnOfPlayer.getBoard().isMonsterZoneFull()){
+                    System.out.println("monster zone is full");
+                }
+                else{
+                    specialSummonHelping(getOpposition().getBoard().getGraveYard());
+                }
+            }
+        }
         else{      //grave
             if(!isAnyMonsterInArray(turnOfPlayer.getBoard().getGraveYard())){
                 System.out.println("there is no way you could special summon a monster");
