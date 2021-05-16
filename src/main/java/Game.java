@@ -45,6 +45,7 @@ public class Game {
     }
 
     public void mainPhase() {
+        System.out.println("phase: main phase");
         setPhase(Phase.MAIN);
         String input;
         isAnyCardSummoned = false;
@@ -73,10 +74,15 @@ public class Game {
                 selectedPositionNulling();
             } else if (matchSelect.find()) {
                 select(matchSelect);
-            }
-            else if(input.equals("select -d")){
-                selectedPositionNulling();
-                selectedCardHandNulling();
+            } else if (input.equals("select -d")) {
+                if ((selectedPosition == null) && (selectedCardHand == null)) {
+                    selectedPositionNulling();
+                    selectedCardHandNulling();
+                }
+            } else if (input.equals("card show selected")) {
+                showCard();
+            } else {
+                System.out.println("invalid command");
             }
         }
     }
@@ -115,10 +121,9 @@ public class Game {
             }
         } else if ((matcher.group(1).equals("monster")) && (matcher.group(2).equals("opponent"))) {
             if ((number >= 1) && (number <= 5)) {
-                if(getOpposition().getBoard().getMonsterCards().get(convertIndex(number)).getCard().equals(null)){
+                if (getOpposition().getBoard().getMonsterCards().get(convertIndex(number)).getCard().equals(null)) {
                     System.out.println("no card found in the given position");
-                }
-                else {
+                } else {
                     selectedPosition = getOpposition().getBoard().getMonsterCards().get(convertIndex(number));
                     System.out.println("card selected");
                 }
@@ -127,10 +132,9 @@ public class Game {
             }
         } else if ((matcher.group(1).equals("spell")) && (matcher.group(2).equals("opponent"))) {
             if ((number >= 1) && (number <= 5)) {
-                if(getOpposition().getBoard().getTrapAndSpellCard().get(convertIndex(number)).getCard().equals(null)){
+                if (getOpposition().getBoard().getTrapAndSpellCard().get(convertIndex(number)).getCard().equals(null)) {
                     System.out.println("no card found in the given position");
-                }
-                else {
+                } else {
                     selectedPosition = getOpposition().getBoard().getTrapAndSpellCard().get(convertIndex(number));
                     System.out.println("card selected");
                 }
@@ -237,6 +241,8 @@ public class Game {
             Random rand = new Random();
             int index = rand.nextInt(mainDeckSize);
             player.addCardToHand(player.getBoard().getDeck().getMainDeck().get(index));
+            String cardName = turnOfPlayer.getBoard().getDeck().getMainDeck().get(index).getCardName();
+            System.out.println("new card added to the hand : " + cardName);
             player.getBoard().getDeck().getMainDeck().remove(index);
         }
     }
@@ -687,11 +693,36 @@ public class Game {
 
     }
 
+    private boolean isPositionInOpponentsBoard() {
+        if (getOpposition().getBoard().getMonsterCards().contains(selectedPosition)) {
+            return true;
+        } else if (getOpposition().getBoard().getTrapAndSpellCard().contains(selectedPosition)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isPositionHidden() {
+        if ((selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_HIDDEN)) ||
+                (selectedPosition.getStatus().equals(StatusOfPosition.SPELL_OR_TRAP_HIDDEN))) {
+            return true;
+        }
+        return false;
+    }
+
     public void showCard() {
-        if (selectedPosition.equals(null)) {
-            selectedCardHand.showCard();
-        } else if (selectedCardHand.equals(null)) {
-            selectedPosition.getCard().showCard();
+        if ((selectedCardHand == null) && (selectedPosition == null)) {
+            System.out.println("no card is selected yet");
+        } else if ((isPositionInOpponentsBoard()) && (isPositionHidden())) {
+            System.out.println("card is not visible");
+        }
+        else {
+            if (selectedPosition == null) {
+                selectedCardHand.showCard();
+            } else if (selectedCardHand == null) {
+                selectedPosition.getCard().showCard();
+            }
         }
     }
 
