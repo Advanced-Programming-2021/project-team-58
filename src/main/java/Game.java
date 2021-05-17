@@ -2,6 +2,7 @@
 import jdk.internal.util.xml.impl.Input;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -16,6 +17,7 @@ public class Game {
     private Card selectedCardHand;
     private boolean isAnyCardSummoned;
     static Scanner scanner = new Scanner(System.in);
+    List<Position> attackedCards = new ArrayList<>();
 
     public Game(Player player1, Player player2) {
         setPlayer1(player1);
@@ -172,7 +174,10 @@ public class Game {
     }
 
     public void battlePhase() {
+
         setPhase(Phase.BATTLE);
+//        In the end of this phase we call this method:
+//        clearAttackedCardsArrayList();
     }
 
     public void standbyPhase() {
@@ -531,6 +536,8 @@ public class Game {
         }
         return player;
     }
+//    ----------------------------------------------------------------------------------------------------
+//    ----------------------------------------BATTLE PHASE------------------------------------------------
 
     public boolean isConditionsUnsuitableForAttack() {
         if (selectedPosition == null) {
@@ -545,14 +552,22 @@ public class Game {
             System.out.println("you can’t do this action in this phase");
             return true;
         }
-//      if (the card has already attacked)
-//           {System.out.println("this card already attacked");
-//           return true;}
+        if (hasCardAttackedInThisPhase(selectedPosition)) {
+            System.out.println("this card already attacked");
+            return true;
+        }
         return false;
     }
 
-//    1.use sendToGraveyard
-//    done:)
+    public boolean hasCardAttackedInThisPhase(Position position) {
+        if (attackedCards.contains(position)) return true;
+        return false;
+    }
+
+    public void clearAttackedCardsArrayList() {
+        attackedCards.clear();
+    }
+
     //2.generate new methods to make it smaller
 
     public void attackToMonster(int index) {
@@ -626,6 +641,7 @@ public class Game {
                     oppositionCardPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
                 }
             }
+            attackedCards.add(selectedPosition);
         }
     }
 
@@ -641,6 +657,9 @@ public class Game {
             System.out.println("you opponent receives " + damage + " battle damage");
         }
     }
+
+//    --------------------------------------------------------------------------------------------------------
+//    --------------------------------------------------------------------------------------------------------
 
     private void sendToGraveyard(Card card, Player player) {
         player.getBoard().addToGraveyard(card);
@@ -671,26 +690,24 @@ public class Game {
 
     }
 
-    private boolean isAnyMonsterInArray(ArrayList<Card> array){
+    private boolean isAnyMonsterInArray(ArrayList<Card> array) {
         for (Card card : array) {
-            if(card instanceof MonsterCard){
+            if (card instanceof MonsterCard) {
                 return true;
             }
         }
         return false;
     }
 
-    private void specialSummonHelping(ArrayList<Card> array){
+    private void specialSummonHelping(ArrayList<Card> array) {
         int n = 0;
-        while(n == 0){
+        while (n == 0) {
             int number = scanner.nextInt();
-            if(number > array.size()){
+            if (number > array.size()) {
                 System.out.println("given number is greater than number of cards");
-            }
-            else if(!(array.get(number) instanceof MonsterCard)){
+            } else if (!(array.get(number) instanceof MonsterCard)) {
                 System.out.println("you can't summon this card");
-            }
-            else{
+            } else {
                 int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
                 turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
                 turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(array.get(number));
@@ -701,54 +718,43 @@ public class Game {
     }
 
     public void specialSummon(String arrayName) {
-        if(arrayName.equals("deck")){
-            if(!isAnyMonsterInArray(turnOfPlayer.getBoard().getDeck().getMainDeck())){
+        if (arrayName.equals("deck")) {
+            if (!isAnyMonsterInArray(turnOfPlayer.getBoard().getDeck().getMainDeck())) {
                 System.out.println("there is no way you could special summon a monster");
-            }
-            else{
-                if(turnOfPlayer.getBoard().isMonsterZoneFull()){
+            } else {
+                if (turnOfPlayer.getBoard().isMonsterZoneFull()) {
                     System.out.println("monster zone is full");
-                }
-                else{
+                } else {
                     specialSummonHelping(turnOfPlayer.getBoard().getDeck().getMainDeck());
                 }
             }
-        }
-        else if(arrayName.equals("hand")){
-            if(!isAnyMonsterInArray(turnOfPlayer.getHand())){
+        } else if (arrayName.equals("hand")) {
+            if (!isAnyMonsterInArray(turnOfPlayer.getHand())) {
                 System.out.println("there is no way you could special summon a monster");
-            }
-            else{
-                if(turnOfPlayer.getBoard().isMonsterZoneFull()){
+            } else {
+                if (turnOfPlayer.getBoard().isMonsterZoneFull()) {
                     System.out.println("monster zone is full");
-                }
-                else{
+                } else {
                     specialSummonHelping(turnOfPlayer.getHand());
                 }
             }
-        }
-        else if(arrayName.equals("opponents graveyard")){
-            if(!isAnyMonsterInArray(getOpposition().getBoard().getGraveYard())){
+        } else if (arrayName.equals("opponents graveyard")) {
+            if (!isAnyMonsterInArray(getOpposition().getBoard().getGraveYard())) {
                 System.out.println("there is no way you could special summon a monster");
-            }
-            else{
-                if(turnOfPlayer.getBoard().isMonsterZoneFull()){
+            } else {
+                if (turnOfPlayer.getBoard().isMonsterZoneFull()) {
                     System.out.println("monster zone is full");
-                }
-                else{
+                } else {
                     specialSummonHelping(getOpposition().getBoard().getGraveYard());
                 }
             }
-        }
-        else{      //grave
-            if(!isAnyMonsterInArray(turnOfPlayer.getBoard().getGraveYard())){
+        } else {      //grave
+            if (!isAnyMonsterInArray(turnOfPlayer.getBoard().getGraveYard())) {
                 System.out.println("there is no way you could special summon a monster");
-            }
-            else{
-                if(turnOfPlayer.getBoard().isMonsterZoneFull()){
+            } else {
+                if (turnOfPlayer.getBoard().isMonsterZoneFull()) {
                     System.out.println("monster zone is full");
-                }
-                else{
+                } else {
                     specialSummonHelping(turnOfPlayer.getBoard().getGraveYard());
                 }
             }
