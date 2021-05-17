@@ -176,8 +176,17 @@ public class Game {
     public void battlePhase() {
 
         setPhase(Phase.BATTLE);
+        String input;
+        while (!(input = scanner.nextLine()).equals("next menu")) {
+            if (input.trim().matches("^(?i)(attack (.+))$"))
+                attackToMonster(getCommandMatcher(input, "^(?i)(attack (.+))$"));
+            else if (input.trim().matches("^(?i)(attack direct)$"))
+                directAttack();
+            else System.out.println("invalid command for this phase");
+        }
 //        In the end of this phase we call this method:
 //        clearAttackedCardsArrayList();
+        mainPhase(); //Navigation to mainPhase at last
     }
 
     public void standbyPhase() {
@@ -570,84 +579,87 @@ public class Game {
 
     //2.generate new methods to make it smaller
 
-    public void attackToMonster(int index) {
-        if (isConditionsUnsuitableForAttack())
-            return;
-        Position oppositionCardPosition = getOpposition().getBoard().getMonsterCards().get(index);
-        StatusOfPosition statusOfOpposition = oppositionCardPosition.getStatus();
-        if (isOpponentMonsterZoneEmpty())
-            System.out.println("your opponent's monster zone is empty and you can attack directly to their LP");
-        else if (statusOfOpposition.equals(StatusOfPosition.EMPTY))
-            System.out.println("there is no card to attack here");
-        else {
-            int selectedCardAttack = ((MonsterCard) selectedPosition.getCard()).getAttack();
-            int oppositionCardAttack = ((MonsterCard) oppositionCardPosition.getCard()).getAttack();
-            int oppositionCardDefense = ((MonsterCard) oppositionCardPosition.getCard()).getDefense();
+    public void attackToMonster(Matcher matcher) {
+        if (matcher.find()) {
+            int index = Integer.parseInt(matcher.group(2));
+            if (isConditionsUnsuitableForAttack())
+                return;
+            Position oppositionCardPosition = getOpposition().getBoard().getMonsterCards().get(index);
+            StatusOfPosition statusOfOpposition = oppositionCardPosition.getStatus();
+            if (isOpponentMonsterZoneEmpty())
+                System.out.println("your opponent's monster zone is empty and you can attack directly to their LP");
+            else if (statusOfOpposition.equals(StatusOfPosition.EMPTY))
+                System.out.println("there is no card to attack here");
+            else {
+                int selectedCardAttack = ((MonsterCard) selectedPosition.getCard()).getAttack();
+                int oppositionCardAttack = ((MonsterCard) oppositionCardPosition.getCard()).getAttack();
+                int oppositionCardDefense = ((MonsterCard) oppositionCardPosition.getCard()).getDefense();
 
-            if (statusOfOpposition.equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) {
-                if (selectedCardAttack > oppositionCardAttack) {
-                    int damage = selectedCardAttack - oppositionCardAttack;
-                    sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
-                    oppositionCardPosition.setCard(null);
-                    oppositionCardPosition.setStatus(StatusOfPosition.EMPTY);
-                    getOpposition().decreaseLP(damage);
-                    System.out.println("your opponent’s monster is destroyed and your opponent receives "
-                            + damage + " battle damage");
-                } else if (selectedCardAttack < oppositionCardAttack) {
-                    int damage = oppositionCardAttack - selectedCardAttack;
-                    sendToGraveyard(oppositionCardPosition.getCard(), turnOfPlayer);
-                    selectedPosition.setCard(null);
-                    selectedPosition.setStatus(StatusOfPosition.EMPTY);
-                    turnOfPlayer.decreaseLP(damage);
-                    System.out.println("Your monster card is destroyed and you received " + damage +
-                            " battle damage");
-                } else {
-                    sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
-                    sendToGraveyard(selectedPosition.getCard(), turnOfPlayer);
-                    selectedPosition.setCard(null);
-                    selectedPosition.setStatus(StatusOfPosition.EMPTY);
-                    oppositionCardPosition.setCard(null);
-                    oppositionCardPosition.setStatus(StatusOfPosition.EMPTY);
-                    System.out.println("both you and your opponent monster cards "
-                            + "are destroyed and no one receives damage");
+                if (statusOfOpposition.equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) {
+                    if (selectedCardAttack > oppositionCardAttack) {
+                        int damage = selectedCardAttack - oppositionCardAttack;
+                        sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
+                        oppositionCardPosition.setCard(null);
+                        oppositionCardPosition.setStatus(StatusOfPosition.EMPTY);
+                        getOpposition().decreaseLP(damage);
+                        System.out.println("your opponent’s monster is destroyed and your opponent receives "
+                                + damage + " battle damage");
+                    } else if (selectedCardAttack < oppositionCardAttack) {
+                        int damage = oppositionCardAttack - selectedCardAttack;
+                        sendToGraveyard(oppositionCardPosition.getCard(), turnOfPlayer);
+                        selectedPosition.setCard(null);
+                        selectedPosition.setStatus(StatusOfPosition.EMPTY);
+                        turnOfPlayer.decreaseLP(damage);
+                        System.out.println("Your monster card is destroyed and you received " + damage +
+                                " battle damage");
+                    } else {
+                        sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
+                        sendToGraveyard(selectedPosition.getCard(), turnOfPlayer);
+                        selectedPosition.setCard(null);
+                        selectedPosition.setStatus(StatusOfPosition.EMPTY);
+                        oppositionCardPosition.setCard(null);
+                        oppositionCardPosition.setStatus(StatusOfPosition.EMPTY);
+                        System.out.println("both you and your opponent monster cards "
+                                + "are destroyed and no one receives damage");
+                    }
+                } else if (statusOfOpposition.equals(StatusOfPosition.DEFENSIVE_OCCUPIED)) {
+                    if (selectedCardAttack > oppositionCardDefense) {
+                        sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
+                        oppositionCardPosition.setCard(null);
+                        oppositionCardPosition.setStatus(StatusOfPosition.EMPTY);
+                        System.out.println("the defense position monster is destroyed");
+                    } else if (selectedCardAttack < oppositionCardDefense) {
+                        int damage = oppositionCardDefense - selectedCardAttack;
+                        turnOfPlayer.decreaseLP(damage);
+                        System.out.println("no card is destroyed and you received " + damage + " battle damage");
+                    } else {
+                        System.out.println("no card is destroyed");
+                    }
+                } else if (statusOfOpposition.equals(StatusOfPosition.DEFENSIVE_HIDDEN)) {
+                    String cardName = oppositionCardPosition.getCard().getCardName();
+                    if (selectedCardAttack > oppositionCardDefense) {
+                        sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
+                        System.out.println("opponent’s monster card was " + cardName +
+                                " and the defense position monster is destroyed");
+                        oppositionCardPosition.setCard(null);
+                        oppositionCardPosition.setStatus(StatusOfPosition.EMPTY);
+                    } else if (selectedCardAttack < oppositionCardDefense) {
+                        int damage = oppositionCardDefense - selectedCardAttack;
+                        turnOfPlayer.decreaseLP(damage);
+                        System.out.println("opponent’s monster card was " + cardName +
+                                "no card is destroyed and you received " + damage + " battle damage");
+                        oppositionCardPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
+                    } else {
+                        System.out.println("opponent’s monster card was " + cardName + "no card is destroyed");
+                        oppositionCardPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
+                    }
                 }
-            } else if (statusOfOpposition.equals(StatusOfPosition.DEFENSIVE_OCCUPIED)) {
-                if (selectedCardAttack > oppositionCardDefense) {
-                    sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
-                    oppositionCardPosition.setCard(null);
-                    oppositionCardPosition.setStatus(StatusOfPosition.EMPTY);
-                    System.out.println("the defense position monster is destroyed");
-                } else if (selectedCardAttack < oppositionCardDefense) {
-                    int damage = oppositionCardDefense - selectedCardAttack;
-                    turnOfPlayer.decreaseLP(damage);
-                    System.out.println("no card is destroyed and you received " + damage + " battle damage");
-                } else {
-                    System.out.println("no card is destroyed");
-                }
-            } else if (statusOfOpposition.equals(StatusOfPosition.DEFENSIVE_HIDDEN)) {
-                String cardName = oppositionCardPosition.getCard().getCardName();
-                if (selectedCardAttack > oppositionCardDefense) {
-                    sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
-                    System.out.println("opponent’s monster card was " + cardName +
-                            " and the defense position monster is destroyed");
-                    oppositionCardPosition.setCard(null);
-                    oppositionCardPosition.setStatus(StatusOfPosition.EMPTY);
-                } else if (selectedCardAttack < oppositionCardDefense) {
-                    int damage = oppositionCardDefense - selectedCardAttack;
-                    turnOfPlayer.decreaseLP(damage);
-                    System.out.println("opponent’s monster card was " + cardName +
-                            "no card is destroyed and you received " + damage + " battle damage");
-                    oppositionCardPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
-                } else {
-                    System.out.println("opponent’s monster card was " + cardName + "no card is destroyed");
-                    oppositionCardPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
-                }
+                attackedCards.add(selectedPosition);
             }
-            attackedCards.add(selectedPosition);
         }
     }
 
-    public boolean isOpponentMonsterZoneEmpty(){
+    public boolean isOpponentMonsterZoneEmpty() {
         for (int i = 0; i < 5; i++) {
             if (!getOpposition().getBoard().getMonsterCards().get(i).getStatus().equals(StatusOfPosition.EMPTY))
                 return false;
@@ -660,7 +672,9 @@ public class Game {
         if (isConditionsUnsuitableForAttack())
             return;
         if (isOpponentMonsterZoneEmpty())
-        System.out.println("you can’t attack the opponent directly");
+            System.out.println("you can’t attack the opponent directly");
+//        else if (there are some other reasons that we can't attack and we may find them later)
+//            System.out.println("you can't attack the opponent directly");
         else {
             int damage = ((MonsterCard) selectedPosition.getCard()).getAttack();
             getOpposition().decreaseLP(damage);
