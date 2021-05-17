@@ -575,7 +575,9 @@ public class Game {
             return;
         Position oppositionCardPosition = getOpposition().getBoard().getMonsterCards().get(index);
         StatusOfPosition statusOfOpposition = oppositionCardPosition.getStatus();
-        if (statusOfOpposition.equals(StatusOfPosition.EMPTY))
+        if (isOpponentMonsterZoneEmpty())
+            System.out.println("your opponent's monster zone is empty and you can attack directly to their LP");
+        else if (statusOfOpposition.equals(StatusOfPosition.EMPTY))
             System.out.println("there is no card to attack here");
         else {
             int selectedCardAttack = ((MonsterCard) selectedPosition.getCard()).getAttack();
@@ -645,12 +647,20 @@ public class Game {
         }
     }
 
+    public boolean isOpponentMonsterZoneEmpty(){
+        for (int i = 0; i < 5; i++) {
+            if (!getOpposition().getBoard().getMonsterCards().get(i).getStatus().equals(StatusOfPosition.EMPTY))
+                return false;
+        }
+        return true;
+    }
+
 
     public void directAttack() {
         if (isConditionsUnsuitableForAttack())
             return;
-//        if (for any reason we can't attack directly)
-//        System.out.println("you can’t attack the opponent directly");
+        if (isOpponentMonsterZoneEmpty())
+        System.out.println("you can’t attack the opponent directly");
         else {
             int damage = ((MonsterCard) selectedPosition.getCard()).getAttack();
             getOpposition().decreaseLP(damage);
