@@ -685,7 +685,7 @@ public class Game {
 //    --------------------------------------------------------------------------------------------------------
 //    --------------------------------------------------------------------------------------------------------
 
-    private void sendToGraveyard(Card card, Player player) {
+    public void sendToGraveyard(Card card, Player player) {
         player.getBoard().addToGraveyard(card);
     }
 

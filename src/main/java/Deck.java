@@ -12,7 +12,6 @@ public class Deck implements Comparable<Deck> {
     private ArrayList<Card> allCards = new ArrayList<Card>();
     private ArrayList<Card> mainDeck = new ArrayList<Card>();
     private ArrayList<Card> sideDeck = new ArrayList<Card>();
-    private static Deck nullDeck;
 
     public Deck(String deckName, Player player) {
         setDeckName(deckName);
@@ -70,7 +69,11 @@ public class Deck implements Comparable<Deck> {
     }
 
     public static void removeDeckFromAllDecks(String deckName) {
-        allDecks.remove(Deck.getDeckByName(deckName));
+//        allDecks.remove(Deck.getDeckByName(deckName));
+//        for (int i = 0; i < allDecks.size(); i++) {
+//            if (allDecks.get(i).equals(Deck.getDeckByName(deckName)))
+//                allDecks.get(i) = nullDeck;
+        }
     }
 
     public static Deck getDeckByName(String deckName) {
