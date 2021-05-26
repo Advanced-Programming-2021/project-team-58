@@ -74,7 +74,7 @@ public class Deck implements Comparable<Deck> {
 //            if (allDecks.get(i).equals(Deck.getDeckByName(deckName)))
 //                allDecks.get(i) = nullDeck;
         }
-    }
+
 
     public static Deck getDeckByName(String deckName) {
         for (Deck deck : allDecks)
