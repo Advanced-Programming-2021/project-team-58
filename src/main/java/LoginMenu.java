@@ -3,6 +3,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LoginMenu {
+
     private static Player loggedInPlayer;
 
     public static Player getLoggedInPlayer() {
@@ -16,6 +17,10 @@ public class LoginMenu {
     public static Matcher getCommandMatcher(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(input);
+    }
+    public static void addCards() {
+        MonsterCard.addMonster();
+        TrapAndSpellCard.addTrapAndSpell();
     }
 
     public static void run() {

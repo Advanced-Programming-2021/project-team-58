@@ -3,8 +3,6 @@ import java.util.regex.*;
 
 public class Shop {
     public static void run() {
-        MonsterCard.addMonster();
-        TrapAndSpellCard.addTrapAndSpell();
         Collections.sort(MonsterCard.getAllMonsterCards());
         Collections.sort(TrapAndSpellCard.getAllCards());
 
