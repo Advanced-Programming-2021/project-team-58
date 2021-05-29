@@ -147,6 +147,7 @@ public class Player {
         return allPlayers;
     }
     public boolean hasADeck(Deck deck){
+        if (deck==null) return false;
         for (Deck d: decks){
             if (d.getDeckName().equals(deck.getDeckName()))
                 return true;

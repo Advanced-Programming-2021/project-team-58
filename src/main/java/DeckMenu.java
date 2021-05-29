@@ -35,7 +35,7 @@ public class DeckMenu {
             else if (input.trim().matches("^(?i)(deck add-card (--.+) (--.+) (--.+))$"))
                 addCardToSideDeck(getCommandMatcher(input, "^(?i)(deck add-card (--.+) (--.+) (--.+))$"));
             else if (input.trim().matches("^(?i)(deck add-card (--.+) (--.+))$"))
-                addCardToMainDeck(getCommandMatcher(input, "^(?i)(deck add-card (--.+) (--.+))$"));
+                addCardToMainDeck(input);
             else if (input.trim().matches("^(?i)(deck rm-card (--.+) (--.+) (--.+))$"))
                 removeCardFromSideDeck(getCommandMatcher(input, "^(?i)(deck rm-card (--.+) (--.+) (--.+))$"));
             else if (input.trim().matches("^(?i)(deck rm-card (--.+) (--.+))$"))
@@ -43,9 +43,9 @@ public class DeckMenu {
             else if (input.trim().matches("^(?i)(deck show --all)$"))
                 showAllDecks();
             else if (input.trim().matches("^(?i)(deck show (--.+) (--.+))$"))
-                showSideDeck(getCommandMatcher(input, "^(?i)(deck show (--.+) (--.+))$"));
+                showSideDeck(input);
             else if (input.trim().matches("^(?i)(deck show --deck-name (.+))$"))
-                showMainDeck(getCommandMatcher(input, "^$(?i)(deck show --deck-name (.+))"));
+                showMainDeck(getCommandMatcher(input, "^(?i)(deck show --deck-name (.+))$"));
             else if (input.trim().matches("^(?i)(deck show --cards)$"))
                 showAllCards();
             else System.out.println("invalid command");
@@ -83,6 +83,9 @@ public class DeckMenu {
             else {
 //                Deck.removeDeckFromAllDecks(Deck.getDeckByName(deckName));
                 player.getDecks().remove(Deck.getDeckByName(deckName));
+                if (player.getActiveDeck() != null)
+                    if (player.getActiveDeck().getDeckName().equals(deckName))
+                        player.setActiveDeck(null);
                 System.out.println("deck with name " + deckName + " deleted successfully");
             }
         }
@@ -100,25 +103,38 @@ public class DeckMenu {
         }
     }
 
-    private static void addCardToMainDeck(Matcher matcher) {
-        if (matcher.find()) {
-            String cardName = findCardName(matcher);
-            String deckName = findDeckName(matcher);
-
-            if (cardName != null && deckName != null) {
-                if (!player.getAllCards().contains(Card.getCardByName(cardName)))
-                    System.out.println("card with name " + cardName + " does not exist");
-                else if (!player.getDecks().contains(Deck.getDeckByName(deckName)))
-                    System.out.println("deck with name " + deckName + " does not exist");
-                else if (Deck.getDeckByName(deckName).getMainDeckSize() == 60)
-                    System.out.println("main deck is full");
-                else if (Deck.getDeckByName(deckName).getNumOfCardInDeck(Card.getCardByName(cardName)) == 3)
-                    System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
-                else {
-                    Deck.getDeckByName(deckName).addCardToMainDeck(Card.getCardByName(cardName));
-                    System.out.println("card added to deck successfully");
-                }
-            } else System.out.println("invalid command");
+    private static void addCardToMainDeck(String input) {
+        String cardName = null;
+        String deckName = null;
+        if (input.matches("deck add-card --deck (.+) --card (.+)")) {
+            Matcher matcher = getCommandMatcher(input, "deck add-card --deck (.+) --card (.+)");
+            if (matcher.find()) {
+                deckName = matcher.group(1);
+                cardName = matcher.group(2);
+            }
+        } else if (input.matches("deck add-card --card (.+) --deck (.+)")) {
+            Matcher matcher = getCommandMatcher(input, "deck add-card --card (.+) --deck (.+)");
+            if (matcher.find()) {
+                cardName = matcher.group(1);
+                deckName = matcher.group(2);
+            }
+        } else {
+            System.out.println("invalid command");
+            return;
+        }
+        if (cardName != null && deckName != null) {
+            if (!player.getAllCards().contains(Card.getCardByName(cardName)))
+                System.out.println("card with name " + cardName + " does not exist");
+            else if (!player.getDecks().contains(Deck.getDeckByName(deckName)))
+                System.out.println("deck with name " + deckName + " does not exist");
+            else if (Deck.getDeckByName(deckName).getMainDeckSize() == 60)
+                System.out.println("main deck is full");
+            else if (Deck.getDeckByName(deckName).getNumOfCardInDeck(Card.getCardByName(cardName)) == 3)
+                System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
+            else {
+                Deck.getDeckByName(deckName).addCardToMainDeck(Card.getCardByName(cardName));
+                System.out.println("card added to deck successfully");
+            }
         }
     }
 
@@ -262,46 +278,47 @@ public class DeckMenu {
         return isInSideDeck;
     }
 
-    public static void showSideDeck(Matcher matcher) {
-        if (matcher.find()) {
-            Matcher matcher1;
-            String deckName = null;
-            boolean isInSideDeck = false;
-            for (int i = 2; i < matcher.groupCount(); i++) {
-                if (matcher.group(i).matches("^(?i)(--deck-name (.+))$")) {
-                    matcher1 = getCommandMatcher(matcher.group(i), "^(?i)(--deck-name (.+)$");
-                    if (matcher1.find()) deckName = matcher1.group(2);
-                }
-                if (matcher.group(i).matches("^(?i)(--side)$"))
-                    isInSideDeck = true;
+    public static void showSideDeck(String input) {
+        String deckName = null;
+        if (input.matches("deck show --deck-name (.+) --side") ||
+                input.matches("deck show --side --deck-name (.+)")) {
+            Matcher matcher = getCommandMatcher(input, "deck show --deck-name (.+) --side");
+            Matcher matcher1 = getCommandMatcher(input, "deck show --side --deck-name (.+)");
+            if (matcher.find()) {
+                deckName = matcher.group(1);
+            } else if (matcher1.find()) {
+                deckName = matcher1.group(1);
             }
-            if (deckName != null && isInSideDeck) {
-                if (!player.getDecks().contains(Deck.getDeckByName(deckName)))
-                    System.out.println("deck with name " + deckName + " does not exist");
-                else {
-                    ArrayList<MonsterCard> monsterCards = new ArrayList<MonsterCard>();
-                    ArrayList<TrapAndSpellCard> trapAndSpellCards = new ArrayList<TrapAndSpellCard>();
-                    for (Card card : Deck.getDeckByName(deckName).getSideDeck()) {
-                        if (card instanceof MonsterCard)
-                            monsterCards.add((MonsterCard) card);
-                        else trapAndSpellCards.add((TrapAndSpellCard) card);
-                    }
-                    Collections.sort(monsterCards);
-                    Collections.sort(trapAndSpellCards);
+        } else {
+            System.out.println("invalid command");
+            return;
+        }
 
-                    System.out.println("Deck: " + deckName + "\n" +
-                            "Side deck\n" +
-                            "Monsters:");
-                    printCards(monsterCards, trapAndSpellCards);
-                }
-            } else System.out.println("invalid command");
+        if (!player.hasADeck(Deck.getDeckByName(deckName)))
+            System.out.println("deck with name " + deckName + " does not exist");
+        else {
+            ArrayList<MonsterCard> monsterCards = new ArrayList<MonsterCard>();
+            ArrayList<TrapAndSpellCard> trapAndSpellCards = new ArrayList<TrapAndSpellCard>();
+            for (Card card : Deck.getDeckByName(deckName).getSideDeck()) {
+                if (card instanceof MonsterCard)
+                    monsterCards.add((MonsterCard) card);
+                else trapAndSpellCards.add((TrapAndSpellCard) card);
+            }
+            Collections.sort(monsterCards);
+            Collections.sort(trapAndSpellCards);
+
+            System.out.println("Deck: " + deckName + "\n" +
+                    "Side deck\n" +
+                    "Monsters:");
+            printCards(monsterCards, trapAndSpellCards);
         }
     }
+
 
     public static void showMainDeck(Matcher matcher) {
         if (matcher.find()) {
             String deckName = matcher.group(2);
-            if (!player.getDecks().contains(Deck.getDeckByName(deckName)))
+            if (!player.hasADeck(Deck.getDeckByName(deckName)))
                 System.out.println("deck with name " + deckName + " does not exist");
             else {
                 ArrayList<MonsterCard> monsterCards = new ArrayList<MonsterCard>();
