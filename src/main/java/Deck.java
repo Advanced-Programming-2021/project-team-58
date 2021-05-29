@@ -6,18 +6,20 @@ import java.util.HashMap;
 public class Deck implements Comparable<Deck> {
 
     private static ArrayList<Deck> allDecks = new ArrayList<Deck>();
-    private static HashMap<Player, Deck> playersAndTheirActivatedDeck = new HashMap<Player, Deck>();
     private String deckName;
     private boolean isValid;
     private ArrayList<Card> allCards = new ArrayList<Card>();
     private ArrayList<Card> mainDeck = new ArrayList<Card>();
     private ArrayList<Card> sideDeck = new ArrayList<Card>();
 
-    public Deck(String deckName, Player player) {
+    public Deck(String deckName) {
         setDeckName(deckName);
-        player.addDeckToAllDecks(this);
         allDecks.add(this);
     }
+
+//    public static void addDeckToAllDecks(Deck deck) {
+//        allDecks.add(deck);
+//    }
 
     public void setDeckName(String deckName) {
         this.deckName = deckName;
@@ -64,15 +66,8 @@ public class Deck implements Comparable<Deck> {
         this.allCards.remove(card);
     }
 
-    public static void addDeckToAllDecks(String deckName, Player player) {
-        allDecks.add(new Deck(deckName, player));
-    }
-
-    public static void removeDeckFromAllDecks(String deckName) {
-//        allDecks.remove(Deck.getDeckByName(deckName));
-//        for (int i = 0; i < allDecks.size(); i++) {
-//            if (allDecks.get(i).equals(Deck.getDeckByName(deckName)))
-//                allDecks.get(i) = nullDeck;
+    public static void removeDeckFromAllDecks(Deck deck) {
+        allDecks.remove(deck);
         }
 
 

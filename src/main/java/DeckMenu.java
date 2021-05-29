@@ -2,6 +2,7 @@ import sun.rmi.runtime.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,9 +68,9 @@ public class DeckMenu {
     private static void createDeck(Matcher matcher) {
         if (matcher.find()) {
             String deckName = matcher.group(2);
-            if (Deck.getDeckByName(deckName) == null) {
-                System.out.println("deck created successfully!");
-                Deck.addDeckToAllDecks(deckName, player);
+            if (!(player.hasADeck(Deck.getDeckByName(deckName)))) {
+                System.out.println("deck with name " + deckName + " created successfully!");
+                player.getDecks().add(new Deck(deckName));
             } else System.out.println("deck with name " + deckName + " already exists");
         }
     }
@@ -77,11 +78,12 @@ public class DeckMenu {
     private static void deleteDeck(Matcher matcher) {
         if (matcher.find()) {
             String deckName = matcher.group(2);
-            if (!player.getDecks().contains(Deck.getDeckByName(deckName)))
+            if (!player.hasADeck(Deck.getDeckByName(deckName)))
                 System.out.println("deck with name " + deckName + " does not exist");
             else {
-                Deck.removeDeckFromAllDecks(deckName);
-                System.out.println("deck deleted successfully");
+//                Deck.removeDeckFromAllDecks(Deck.getDeckByName(deckName));
+                player.getDecks().remove(Deck.getDeckByName(deckName));
+                System.out.println("deck with name " + deckName + " deleted successfully");
             }
         }
     }
@@ -89,7 +91,7 @@ public class DeckMenu {
     private static void setActivatedDeck(Matcher matcher) {
         if (matcher.find()) {
             String deckName = matcher.group(2);
-            if (!player.getDecks().contains(Deck.getDeckByName(deckName)))
+            if (!player.hasADeck(Deck.getDeckByName(deckName)))
                 System.out.println("deck with name " + deckName + " does not exist");
             else {
                 player.setActiveDeck(Deck.getDeckByName(deckName));
@@ -202,13 +204,14 @@ public class DeckMenu {
                 System.out.println(activeDeckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", invalid");
         }
         System.out.println("Other decks:");
-        ArrayList<Deck> decks = player.getDecks();
+        LinkedList<Deck> decks = player.getDecks();
         if (!decks.isEmpty()) {
             Collections.sort(decks);
             for (int i = 0; i < decks.size(); i++) {
                 String deckName = decks.get(i).getDeckName();
-                if (deckName.equals(player.getActiveDeck().getDeckName()))
-                    continue;
+                if (player.getActiveDeck() != null)
+                    if (deckName.equals(player.getActiveDeck().getDeckName()))
+                        continue;
                 int mainDeckSize = decks.get(i).getMainDeckSize();
                 int sideDeckSize = decks.get(i).getSideDeckSize();
                 if (decks.get(i).isValid())

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Player {
     private String username;
@@ -10,7 +11,7 @@ public class Player {
     private int money;
     private Board board;
     private static ArrayList<Card> allCards = new ArrayList<Card>();
-    private ArrayList<Deck> decks = new ArrayList<Deck>();  //These are NOT the deck that is being used in the game
+    private LinkedList<Deck> decks = new LinkedList<Deck>();  //These are NOT the deck that is being used in the game
     private ArrayList<Card> hand = new ArrayList<Card>();
     private static ArrayList<Player> allPlayers = new ArrayList<Player>();
 
@@ -111,7 +112,7 @@ public class Player {
         return this.board;
     }
 
-    public ArrayList<Deck> getDecks() {
+    public LinkedList<Deck> getDecks() {
         return this.decks;
     }
 
@@ -144,5 +145,12 @@ public class Player {
     public static ArrayList<Player> getAllPlayers() {
 
         return allPlayers;
+    }
+    public boolean hasADeck(Deck deck){
+        for (Deck d: decks){
+            if (d.getDeckName().equals(deck.getDeckName()))
+                return true;
+        }
+        return false;
     }
 }
