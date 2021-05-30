@@ -139,6 +139,7 @@ public class DeckMenu {
                 System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
             else {
                 Deck.getDeckByName(deckName).addCardToMainDeck(Card.getCardByName(cardName));
+                player.getAllCards().remove(Card.getCardByName(cardName));
                 System.out.println("card added to deck successfully");
             }
         }
@@ -161,6 +162,7 @@ public class DeckMenu {
                     System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
                 else {
                     Deck.getDeckByName(deckName).addCardToSideDeck(Card.getCardByName(cardName));
+                    player.getAllCards().remove(Card.getCardByName(cardName));
                     System.out.println("card added to deck successfully");
                 }
             } else System.out.println("invalid command");
@@ -182,6 +184,7 @@ public class DeckMenu {
                         System.out.println("card with name " + cardName + " does not exist in main deck");
                     else {
                         Deck.getDeckByName(deckName).removeCardFromMainDeck(Card.getCardByName(cardName));
+                        player.getAllCards().add(Card.getCardByName(cardName));
                         System.out.println("card removed form deck successfully");
                     }
                 }
@@ -205,6 +208,7 @@ public class DeckMenu {
                         System.out.println("card with name " + cardName + " does not exist in side deck");
                     else {
                         Deck.getDeckByName(deckName).removeCardFromSideDeck(card);
+                        player.getAllCards().add(Card.getCardByName(cardName));
                         System.out.println("card removed form deck successfully");
                     }
                 }

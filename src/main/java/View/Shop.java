@@ -20,6 +20,7 @@ public class Shop {
             else if (input.matches("shop show --all")) showAllCards();
             else if (input.matches("shop buy (.+)"))
                 buy(getCommandMatcher(input,"shop buy (.+)"));
+            else System.out.println("invalid command");
         }
         MainMenu.run();
     }
