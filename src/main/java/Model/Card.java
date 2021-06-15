@@ -10,7 +10,7 @@ abstract public class Card implements Comparable<Card> {
     private String cardName;
     private String cardDescription;
     private int price;
-    protected static ArrayList<Card> allCards = new ArrayList<>();
+    protected static ArrayList<Card> allCards = new ArrayList<Card>();
 
     public Card(String cardName, String cardDescription, int price) {
         setCardName(cardName);

@@ -14,9 +14,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DeckMenu {
-    static Player player = LoginMenu.getLoggedInPlayer();
+    static Player player;
+
+    public static void setPlayer(Player player) {
+        DeckMenu.player = player;
+    }
 
     public static void run() {
+        setPlayer(LoginMenu.getLoggedInPlayer());
         handleInput();
         MainMenu.run(); //Navigating to MainMenu at last
     }
@@ -217,7 +222,7 @@ public class DeckMenu {
     }
 
     public static void showAllDecks() {
-        System.out.println("hello everyone");
+        System.out.println("hello everyone!");
         System.out.println("Decks:");
         System.out.println("Active deck:");
         if (player.getActiveDeck() != null) {
@@ -241,10 +246,6 @@ public class DeckMenu {
                         continue;
                 int mainDeckSize = decks.get(i).getMainDeckSize();
                 int sideDeckSize = decks.get(i).getSideDeckSize();
-                System.out.println(mainDeckSize>=5);
-                System.out.println(mainDeckSize<=10);
-                System.out.println(mainDeckSize<=15);
-
                 if (decks.get(i).isValid())
                     System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", valid");
                 else

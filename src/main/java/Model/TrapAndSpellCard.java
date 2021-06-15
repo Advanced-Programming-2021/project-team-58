@@ -10,7 +10,7 @@ public class TrapAndSpellCard extends Card {
     private TrapOrSpellTypes cardType;
     private TrapOrSpellIcons cardIcon;
     private TrapAndSpellStatus cardStatus;
-    private static ArrayList<TrapAndSpellCard> allSpellOrTrapCards = new ArrayList<>();
+    private static ArrayList<TrapAndSpellCard> allSpellOrTrapCards = new ArrayList<TrapAndSpellCard>();
 
     public TrapAndSpellStatus getCardStatus() {
         return cardStatus;

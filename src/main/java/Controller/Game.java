@@ -14,7 +14,7 @@ public class Game {
     private Card selectedCardHand;
     private boolean isAnyCardSummoned;
     static Scanner scanner = new Scanner(System.in);
-    List<Position> attackedCards = new ArrayList<>();
+    List<Position> attackedCards = new ArrayList<Position>();
 
     public Game(Player player1, Player player2) {
         setPlayer1(player1);
@@ -184,9 +184,11 @@ public class Game {
 //        clearAttackedCardsArrayList();
         mainPhase(); //Navigation to mainPhase at last
     }
+
     public void standbyPhase() {
         setPhase(Phase.STANDBY);
     }
+
     public void run() {
         while (player.getLP() != 0 && player2.getLP() != 0) {
             drawPhase();

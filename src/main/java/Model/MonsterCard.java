@@ -15,7 +15,7 @@ public class MonsterCard extends Card{
     private boolean isEffectExists;
     private Effects effect;
     private String cardTypeOfMonsters;
-    private static ArrayList<MonsterCard> allMonsterCards = new ArrayList<>();
+    private static ArrayList<MonsterCard> allMonsterCards = new ArrayList<MonsterCard>();
 
     public MonsterCard(String cardName, String cardTypeOfMonsters, String monsterType, int cardLevel,
                        String description, Attribute cardAttribute, int attack, int defense, int price) {
