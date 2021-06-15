@@ -2,6 +2,11 @@ package View;
 
 import Controller.*;
 import Model.*;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;

@@ -74,7 +74,7 @@ public class DeckMenu {
     private static void createDeck(Matcher matcher) {
         if (matcher.find()) {
             String deckName = matcher.group(2);
-            if (!(player.hasADeck(Deck.getDeckByName(deckName)))) {
+            if (!(player.hasADeck(player.getDeckByName(deckName)))) {
                 System.out.println("deck with name " + deckName + " created successfully!");
                 player.getDecks().add(new Deck(deckName));
             } else System.out.println("deck with name " + deckName + " already exists");
@@ -84,14 +84,14 @@ public class DeckMenu {
     private static void deleteDeck(Matcher matcher) {
         if (matcher.find()) {
             String deckName = matcher.group(2);
-            if (!player.hasADeck(Deck.getDeckByName(deckName)))
+            if (!player.hasADeck(player.getDeckByName(deckName)))
                 System.out.println("deck with name " + deckName + " does not exist");
             else {
-//                Deck.removeDeckFromAllDecks(Deck.getDeckByName(deckName));
-                player.getDecks().remove(Deck.getDeckByName(deckName));
+                Deck.removeDeckFromAllDecks(player.getDeckByName(deckName));
                 if (player.getActiveDeck() != null)
                     if (player.getActiveDeck().getDeckName().equals(deckName))
                         player.setActiveDeck(null);
+                player.getDecks().remove(player.getDeckByName(deckName));
                 System.out.println("deck with name " + deckName + " deleted successfully");
             }
         }
@@ -100,10 +100,10 @@ public class DeckMenu {
     private static void setActivatedDeck(Matcher matcher) {
         if (matcher.find()) {
             String deckName = matcher.group(2);
-            if (!player.hasADeck(Deck.getDeckByName(deckName)))
+            if (!player.hasADeck(player.getDeckByName(deckName)))
                 System.out.println("deck with name " + deckName + " does not exist");
             else {
-                player.setActiveDeck(Deck.getDeckByName(deckName));
+                player.setActiveDeck((Deck) player.getDeckByName(deckName).clone());
                 System.out.println("deck activated successfully!");
             }
         }
@@ -131,14 +131,14 @@ public class DeckMenu {
         if (cardName != null && deckName != null) {
             if (!player.getAllCards().contains(Card.getCardByName(cardName)))
                 System.out.println("card with name " + cardName + " does not exist");
-            else if (!player.getDecks().contains(Deck.getDeckByName(deckName)))
+            else if (!player.hasADeck(player.getDeckByName(deckName)))
                 System.out.println("deck with name " + deckName + " does not exist");
-            else if (Deck.getDeckByName(deckName).getMainDeckSize() == 60)
+            else if (player.getDeckByName(deckName).getMainDeckSize() == 60)
                 System.out.println("main deck is full");
-            else if (Deck.getDeckByName(deckName).getNumOfCardInDeck(Card.getCardByName(cardName)) == 3)
+            else if (player.getDeckByName(deckName).getNumOfCardInDeck(Card.getCardByName(cardName)) == 3)
                 System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
             else {
-                Deck.getDeckByName(deckName).addCardToMainDeck(Card.getCardByName(cardName));
+                player.getDeckByName(deckName).addCardToMainDeck(Card.getCardByName(cardName));
                 player.getAllCards().remove(Card.getCardByName(cardName));
                 System.out.println("card added to deck successfully");
             }
@@ -154,14 +154,14 @@ public class DeckMenu {
             if (cardName != null && deckName != null && isInSideDeck) {
                 if (!player.getAllCards().contains(Card.getCardByName(cardName)))
                     System.out.println("card with name " + cardName + " does not exist");
-                else if (!player.getDecks().contains(Deck.getDeckByName(deckName)))
+                else if (!player.getDecks().contains(player.getDeckByName(deckName)))
                     System.out.println("deck with name " + deckName + " does not exist");
-                else if (Deck.getDeckByName(deckName).getSideDeckSize() == 15)
+                else if (player.getDeckByName(deckName).getSideDeckSize() == 15)
                     System.out.println("side deck is full");
-                else if (Deck.getDeckByName(deckName).getNumOfCardInDeck(Card.getCardByName(cardName)) == 3)
+                else if (player.getDeckByName(deckName).getNumOfCardInDeck(Card.getCardByName(cardName)) == 3)
                     System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
                 else {
-                    Deck.getDeckByName(deckName).addCardToSideDeck(Card.getCardByName(cardName));
+                    player.getDeckByName(deckName).addCardToSideDeck(Card.getCardByName(cardName));
                     player.getAllCards().remove(Card.getCardByName(cardName));
                     System.out.println("card added to deck successfully");
                 }
@@ -175,15 +175,15 @@ public class DeckMenu {
             String cardName = findCardName(matcher);
             String deckName = findDeckName(matcher);
             if (cardName != null && deckName != null) {
-                if (!player.getDecks().contains(Deck.getDeckByName(deckName)))
+                if (!player.getDecks().contains(player.getDeckByName(deckName)))
                     System.out.println("deck with name " + deckName + " does not exist");
                 else {
                     Card card = Card.getCardByName(cardName);
-                    boolean isCardInMainDeckExists = Deck.getDeckByName(deckName).getMainDeck().contains(card);
+                    boolean isCardInMainDeckExists = player.getDeckByName(deckName).getMainDeck().contains(card);
                     if (card == null || !isCardInMainDeckExists)
                         System.out.println("card with name " + cardName + " does not exist in main deck");
                     else {
-                        Deck.getDeckByName(deckName).removeCardFromMainDeck(Card.getCardByName(cardName));
+                        player.getDeckByName(deckName).removeCardFromMainDeck(Card.getCardByName(cardName));
                         player.getAllCards().add(Card.getCardByName(cardName));
                         System.out.println("card removed form deck successfully");
                     }
@@ -199,15 +199,15 @@ public class DeckMenu {
             boolean isInSideDeck = isInSideDeck(matcher);
 
             if (cardName != null && deckName != null && isInSideDeck) {
-                if (!player.getDecks().contains(Deck.getDeckByName(deckName)))
+                if (!player.getDecks().contains(player.getDeckByName(deckName)))
                     System.out.println("deck with name " + deckName + " does not exist");
                 else {
                     Card card = Card.getCardByName(cardName);
-                    boolean isCardInSideDeckExists = Deck.getDeckByName(deckName).getSideDeck().contains(card);
+                    boolean isCardInSideDeckExists = player.getDeckByName(deckName).getSideDeck().contains(card);
                     if (card == null || !isCardInSideDeckExists)
                         System.out.println("card with name " + cardName + " does not exist in side deck");
                     else {
-                        Deck.getDeckByName(deckName).removeCardFromSideDeck(card);
+                        player.getDeckByName(deckName).removeCardFromSideDeck(card);
                         player.getAllCards().add(Card.getCardByName(cardName));
                         System.out.println("card removed form deck successfully");
                     }
@@ -217,6 +217,7 @@ public class DeckMenu {
     }
 
     public static void showAllDecks() {
+        System.out.println("hello everyone");
         System.out.println("Decks:");
         System.out.println("Active deck:");
         if (player.getActiveDeck() != null) {
@@ -240,6 +241,10 @@ public class DeckMenu {
                         continue;
                 int mainDeckSize = decks.get(i).getMainDeckSize();
                 int sideDeckSize = decks.get(i).getSideDeckSize();
+                System.out.println(mainDeckSize>=5);
+                System.out.println(mainDeckSize<=10);
+                System.out.println(mainDeckSize<=15);
+
                 if (decks.get(i).isValid())
                     System.out.println(deckName + ": main deck " + mainDeckSize + ", side deck " + sideDeckSize + ", valid");
                 else
@@ -304,12 +309,12 @@ public class DeckMenu {
             return;
         }
 
-        if (!player.hasADeck(Deck.getDeckByName(deckName)))
+        if (!player.hasADeck(player.getDeckByName(deckName)))
             System.out.println("deck with name " + deckName + " does not exist");
         else {
             ArrayList<MonsterCard> monsterCards = new ArrayList<MonsterCard>();
             ArrayList<TrapAndSpellCard> trapAndSpellCards = new ArrayList<TrapAndSpellCard>();
-            for (Card card : Deck.getDeckByName(deckName).getSideDeck()) {
+            for (Card card : player.getDeckByName(deckName).getSideDeck()) {
                 if (card instanceof MonsterCard)
                     monsterCards.add((MonsterCard) card);
                 else trapAndSpellCards.add((TrapAndSpellCard) card);
@@ -328,12 +333,12 @@ public class DeckMenu {
     public static void showMainDeck(Matcher matcher) {
         if (matcher.find()) {
             String deckName = matcher.group(2);
-            if (!player.hasADeck(Deck.getDeckByName(deckName)))
+            if (!player.hasADeck(player.getDeckByName(deckName)))
                 System.out.println("deck with name " + deckName + " does not exist");
             else {
                 ArrayList<MonsterCard> monsterCards = new ArrayList<MonsterCard>();
                 ArrayList<TrapAndSpellCard> trapAndSpellCards = new ArrayList<TrapAndSpellCard>();
-                for (Card card : Deck.getDeckByName(deckName).getMainDeck()) {
+                for (Card card : player.getDeckByName(deckName).getMainDeck()) {
                     if (card instanceof MonsterCard)
                         monsterCards.add((MonsterCard) card);
                     else trapAndSpellCards.add((TrapAndSpellCard) card);

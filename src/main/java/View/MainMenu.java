@@ -28,8 +28,6 @@ public class MainMenu {
                 ScoreboardMenu.run();
             else if (input.matches("duel --second-player (.+) --rounds (.+) --new"))
                 startAGame(getCommandMatcher(input, "duel --second-player (.+) --rounds (.+) --new"));
-//            } else if (input.trim().matches("^(?i)(duel (--.+) (--.+) (--.+))$"))
-//                startAGame(getCommandMatcher(input, "^(?i)(duel (--.+) (--.+) (--.+))$"));
             else System.out.println("invalid command");
         }
     }

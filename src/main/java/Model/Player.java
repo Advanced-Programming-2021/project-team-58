@@ -4,7 +4,6 @@ import Controller.*;
 import View.*;
 
 
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -153,12 +152,20 @@ public class Player {
 
         return allPlayers;
     }
-    public boolean hasADeck(Deck deck){
-        if (deck==null) return false;
-        for (Deck d: decks){
+
+    public boolean hasADeck(Deck deck) {
+        if (deck == null) return false;
+        for (Deck d : decks) {
             if (d.getDeckName().equals(deck.getDeckName()))
                 return true;
         }
         return false;
+    }
+
+    public Deck getDeckByName(String deckName) {
+        for (Deck deck : decks)
+            if (deck.getDeckName().equals(deckName))
+                return deck;
+        return null;
     }
 }

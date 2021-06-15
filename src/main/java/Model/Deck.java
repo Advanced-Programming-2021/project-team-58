@@ -1,12 +1,8 @@
 package Model;
 
-import Controller.*;
-import View.*;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class Deck implements Comparable<Deck> {
+public class Deck implements Comparable<Deck>, Cloneable {
 
     private static ArrayList<Deck> allDecks = new ArrayList<Deck>();
     private String deckName;
@@ -33,7 +29,7 @@ public class Deck implements Comparable<Deck> {
     }
 
     public boolean isValid() {
-        if (this.mainDeck.size() >= 40 && this.mainDeck.size() <= 60 && this.sideDeck.size() <= 15) return true;
+        if (this.mainDeck.size() >= 5 && this.mainDeck.size() <= 10 && this.sideDeck.size() <= 15) return true;
         return false;
     }
 
@@ -71,15 +67,8 @@ public class Deck implements Comparable<Deck> {
 
     public static void removeDeckFromAllDecks(Deck deck) {
         allDecks.remove(deck);
-        }
-
-
-    public static Deck getDeckByName(String deckName) {
-        for (Deck deck : allDecks)
-            if (deck.getDeckName().equals(deckName))
-                return deck;
-        return null;
     }
+
 
     public ArrayList<Card> getMainDeck() {
         return mainDeck;
@@ -99,5 +88,15 @@ public class Deck implements Comparable<Deck> {
 
     public int compareTo(Deck anotherDeck) {
         return this.getDeckName().compareTo(anotherDeck.getDeckName());
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            System.err.println("hi");
+        }
+        return null;
     }
 }
