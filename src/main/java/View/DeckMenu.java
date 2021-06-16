@@ -92,13 +92,26 @@ public class DeckMenu {
             if (!player.hasADeck(player.getDeckByName(deckName)))
                 System.out.println("deck with name " + deckName + " does not exist");
             else {
-                Deck.removeDeckFromAllDecks(player.getDeckByName(deckName));
                 if (player.getActiveDeck() != null)
                     if (player.getActiveDeck().getDeckName().equals(deckName))
                         player.setActiveDeck(null);
+
+                giveBackCards(player.getDeckByName(deckName));
+                Deck.removeDeckFromAllDecks(player.getDeckByName(deckName));
                 player.getDecks().remove(player.getDeckByName(deckName));
                 System.out.println("deck with name " + deckName + " deleted successfully");
             }
+        }
+    }
+
+    private static void giveBackCards(Deck deck){
+        ArrayList<Card> mainDeck = deck.getMainDeck();
+        ArrayList<Card> sideDeck = deck.getMainDeck();
+        for (Card card : mainDeck) {
+            player.getAllCards().add(card);
+        }
+        for (Card card : sideDeck) {
+            player.getAllCards().add(card);
         }
     }
 

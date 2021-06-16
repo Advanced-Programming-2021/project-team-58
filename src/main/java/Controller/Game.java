@@ -2,6 +2,7 @@ package Controller;
 
 import Model.*;
 import View.*;
+
 import java.util.*;
 import java.util.regex.*;
 
@@ -48,7 +49,7 @@ public class Game {
         setPhase(Phase.MAIN);
         String input;
         isAnyCardSummoned = false;
-        while (!(input = scanner.nextLine()).equals("next phase")) {
+        while (!((input = scanner.nextLine()).equals("next phase"))) {
             Matcher matchChangeStatus = getCommandMatcher(input, "^set position (attack|defense)$");
             Matcher matchSelect = getCommandMatcher(input, "^select (hand|monster|spell) (opponent )*([0-9]+)$");
 
@@ -72,6 +73,7 @@ public class Game {
                 selectedCardHandNulling();
                 selectedPositionNulling();
             } else if (matchSelect.find()) {
+                System.out.println("vared shod");
                 select(matchSelect);
             } else if (input.equals("select -d")) {
                 if ((selectedPosition == null) && (selectedCardHand == null)) {
@@ -89,11 +91,16 @@ public class Game {
     }
 
     public void select(Matcher matcher) {
-        int number = Integer.parseInt(matcher.group(2));
+        int number = Integer.parseInt(matcher.group(3));
+        System.out.println(matcher.group(3));
+        System.out.println(number);
+        System.out.println(":" + matcher.group(2) + ":");
 
-        if ((matcher.group(1).equals("monster")) && (matcher.group(2).equals(""))) {
+
+        if ((matcher.group(1).equals("monster")) && (matcher.group(2) == null)) {
+            System.out.println("monster khodi");
             if ((number >= 1) && (number <= 5)) {
-                if (turnOfPlayer.getBoard().getMonsterCards().get(convertIndex(number)).getCard().equals(null)) {
+                if (turnOfPlayer.getBoard().getMonsterCards().get(convertIndex(number)).getCard() == null) {
                     System.out.println("no card found in the given position");
                 } else {
                     selectedPosition = turnOfPlayer.getBoard().getMonsterCards().get(convertIndex(number));
@@ -102,9 +109,10 @@ public class Game {
             } else {
                 System.out.println("invalid selection");
             }
-        } else if ((matcher.group(1).equals("spell")) && (matcher.group(2).equals(""))) {
+        } else if ((matcher.group(1).equals("spell")) && (matcher.group(2) == null)) {
+            System.out.println("spell khodi");
             if ((number >= 1) && (number <= 5)) {
-                if (turnOfPlayer.getBoard().getTrapAndSpellCard().get(convertIndex(number)).getCard().equals(null)) {
+                if (turnOfPlayer.getBoard().getTrapAndSpellCard().get(convertIndex(number)).getCard() == null) {
                     System.out.println("no card found in the given position");
                 } else {
                     selectedPosition = turnOfPlayer.getBoard().getTrapAndSpellCard().get(convertIndex(number));
@@ -113,16 +121,18 @@ public class Game {
             } else {
                 System.out.println("invalid selection");
             }
-        } else if ((matcher.group(1).equals("hand")) && (matcher.group(2).equals(""))) {
+        } else if ((matcher.group(1).equals("hand")) && (matcher.group(2) == null)) {
+            System.out.println("hand");
             if ((number >= 1) && (number <= turnOfPlayer.getHand().size())) {
-                selectedCardHand = turnOfPlayer.getHand().get(number);
-                System.out.println();
+                selectedCardHand = turnOfPlayer.getHand().get(number - 1);
+                System.out.println("card selected");
             } else {
                 System.out.println("invalid selection");
             }
-        } else if ((matcher.group(1).equals("monster")) && (matcher.group(2).equals("opponent"))) {
+        } else if ((matcher.group(1).equals("monster")) && (matcher.group(2).equals("opponent "))) {
+            System.out.println("monster opponent");
             if ((number >= 1) && (number <= 5)) {
-                if (getOpposition().getBoard().getMonsterCards().get(convertIndex(number)).getCard().equals(null)) {
+                if (getOpposition().getBoard().getMonsterCards().get(convertIndex(number)).getCard() == null) {
                     System.out.println("no card found in the given position");
                 } else {
                     selectedPosition = getOpposition().getBoard().getMonsterCards().get(convertIndex(number));
@@ -131,9 +141,10 @@ public class Game {
             } else {
                 System.out.println("invalid selection");
             }
-        } else if ((matcher.group(1).equals("spell")) && (matcher.group(2).equals("opponent"))) {
+        } else if ((matcher.group(1).equals("spell")) && (matcher.group(2).equals("opponent "))) {
+            System.out.println("spell opponent");
             if ((number >= 1) && (number <= 5)) {
-                if (getOpposition().getBoard().getTrapAndSpellCard().get(convertIndex(number)).getCard().equals(null)) {
+                if (getOpposition().getBoard().getTrapAndSpellCard().get(convertIndex(number)).getCard() == null) {
                     System.out.println("no card found in the given position");
                 } else {
                     selectedPosition = getOpposition().getBoard().getTrapAndSpellCard().get(convertIndex(number));
@@ -142,9 +153,11 @@ public class Game {
             } else {
                 System.out.println("invalid selection");
             }
-        } else if ((matcher.group(1).equals("hand")) && (matcher.group(2).equals("opponent"))) {
+        } else if ((matcher.group(1).equals("hand")) && (matcher.group(2).equals("opponent "))) {
+            System.out.println("hand opponent 1");
             System.out.println("invalid selection");
         } else {
+            System.out.println(":)");
             System.out.println("invalid selection");
         }
     }
@@ -169,6 +182,7 @@ public class Game {
         setPhase(Phase.DRAW);
         draw();
     }
+
     public void battlePhase() {
 
         setPhase(Phase.BATTLE);
@@ -190,14 +204,20 @@ public class Game {
     }
 
     public void run() {
-        while (player.getLP() != 0 && player2.getLP() != 0) {
-            drawPhase();
-            standbyPhase();
-            setAllPositionsChangeStatus(); //SETS CHANGING IN STATUS TO FALSE IN NEW TURN
-            mainPhase();
-            battlePhase();
-            mainPhase();
-            endPhase();
+        try {
+            while (player.getLP() != 0 && player2.getLP() != 0) {
+                System.out.println(turnOfPlayer.getNickname() + " turn!");
+                drawPhase();
+                standbyPhase();
+                setAllPositionsChangeStatus(); //SETS CHANGING IN STATUS TO FALSE IN NEW TURN
+                mainPhase();
+                battlePhase();
+                mainPhase();
+                endPhase();
+            }
+        }
+        catch (Exception e){
+            this.run();
         }
     }
 
@@ -251,8 +271,8 @@ public class Game {
             Random rand = new Random();
             int index = rand.nextInt(mainDeckSize);
             player.addCardToHand(player.getBoard().getDeck().getMainDeck().get(index));
-            String cardName = turnOfPlayer.getBoard().getDeck().getMainDeck().get(index).getCardName();
-            System.out.println("new card added to the hand : " + cardName);
+            String cardName = player.getBoard().getDeck().getMainDeck().get(index).getCardName();
+            System.out.println("new card : " + cardName + " added to the hand of " + player.getNickname());
             player.getBoard().getDeck().getMainDeck().remove(index);
         }
     }
@@ -263,7 +283,7 @@ public class Game {
         int index = rand.nextInt(mainDeckSize);
         turnOfPlayer.addCardToHand(turnOfPlayer.getBoard().getDeck().getMainDeck().get(index));
         String cardName = turnOfPlayer.getBoard().getDeck().getMainDeck().get(index).getCardName();
-        System.out.println("new card added to the hand : " + cardName);
+        System.out.println("new card :" + cardName + "added to the hand : " + turnOfPlayer.getNickname());
         turnOfPlayer.getBoard().getDeck().getMainDeck().remove(index);
 
     }

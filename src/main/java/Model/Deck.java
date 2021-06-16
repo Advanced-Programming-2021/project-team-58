@@ -29,7 +29,7 @@ public class Deck implements Comparable<Deck>, Cloneable {
     }
 
     public boolean isValid() {
-        if (this.mainDeck.size() >= 5 && this.mainDeck.size() <= 10 && this.sideDeck.size() <= 15) return true;
+        if (this.mainDeck.size() >= 10 && this.mainDeck.size() <= 15 && this.sideDeck.size() <= 15) return true;
         return false;
     }
 
