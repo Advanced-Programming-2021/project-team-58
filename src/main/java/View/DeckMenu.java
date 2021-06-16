@@ -20,7 +20,7 @@ public class DeckMenu {
         DeckMenu.player = player;
     }
 
-    public static void run() {
+    public static void run() throws Exception {
         setPlayer(LoginMenu.getLoggedInPlayer());
         handleInput();
         MainMenu.run(); //Navigating to MainMenu at last

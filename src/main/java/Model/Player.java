@@ -34,6 +34,10 @@ public class Player {
         allPlayers.add(this);
     }
 
+    public static void setAllPlayers(ArrayList<Player> allPlayers) {
+        Player.allPlayers = allPlayers;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

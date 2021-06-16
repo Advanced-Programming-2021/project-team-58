@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.regex.*;
 
 public class Shop {
-    public static void run() {
+    public static void run() throws Exception {
         Collections.sort(MonsterCard.getAllMonsterCards());
         Collections.sort(TrapAndSpellCard.getAllCards());
 

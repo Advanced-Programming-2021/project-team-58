@@ -8,6 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,7 +35,7 @@ public class LoginMenu {
         TrapAndSpellCard.addTrapAndSpell();
     }
 
-    public static void run() {
+    public static void run() throws Exception{
         Scanner scan = new Scanner(System.in);
         String input = "";
         while (!input.equals("menu exit")) {
@@ -79,7 +81,7 @@ public class LoginMenu {
         }
     }
 
-    public static void logInPlayer(String username, String password) {
+    public static void logInPlayer(String username, String password) throws Exception {
         if (Player.getPlayerByUsername(username) == null) {
             System.out.println("Username and password didn't match!");
         } else {
@@ -95,7 +97,7 @@ public class LoginMenu {
         }
     }
 
-    public static void registerPlayer(String username, String password, String nickname) {
+    public static void registerPlayer(String username, String password, String nickname) throws IOException {
         if (Player.getPlayerByUsername(username) != null) {
             System.out.println("user with username " + username + " already exists");
         } else {
@@ -103,6 +105,7 @@ public class LoginMenu {
                 System.out.println("user with nickname " + nickname + " already exists");
             } else {
                 Player player = new Player(username, password, nickname);
+                JsonSaveAndLoad.save(Player.getAllPlayers());
                 System.out.println("user created successfully!");
             }
         }

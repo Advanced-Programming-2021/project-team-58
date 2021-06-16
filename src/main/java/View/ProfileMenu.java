@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.regex.*;
 
 public class ProfileMenu {
-    public static void run() {
+    public static void run() throws Exception {
         Scanner scan = new Scanner(System.in);
         String input = scan.nextLine();
         if (input.trim().equalsIgnoreCase("menu exit")) MainMenu.run();

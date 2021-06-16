@@ -6,12 +6,12 @@ import java.util.Scanner;
 import java.util.regex.*;
 
 public class MainMenu {
-    public static void run() {
+    public static void run() throws Exception {
         handleInput();
         LoginMenu.run(); //Navigating to LoginMenu at last
     }
 
-    private static void handleInput() {
+    private static void handleInput() throws Exception {
         Scanner scanner = new Scanner(System.in);
         String input;
 
@@ -32,7 +32,7 @@ public class MainMenu {
         }
     }
 
-    private static void enterAMenu(Matcher matcher) {
+    private static void enterAMenu(Matcher matcher) throws Exception {
         if (matcher.find()) {
             String menuName = matcher.group(2);
             if (menuName.matches("^(?i)(profile([ -_]*menu)?)$"))
