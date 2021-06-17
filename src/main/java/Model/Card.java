@@ -5,7 +5,7 @@ import View.*;
 
 import java.util.ArrayList;
 
-abstract public class Card implements Comparable<Card> {
+public abstract class Card implements Comparable<Card> {
 
     private String cardName;
     private String cardDescription;

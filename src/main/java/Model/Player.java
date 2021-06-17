@@ -16,7 +16,7 @@ public class Player {
     private int LP;
     private int money;
     private Board board;
-    private static ArrayList<Card> allCards = new ArrayList<Card>();
+    private ArrayList<Card> allCards = new ArrayList<>();
     private LinkedList<Deck> decks = new LinkedList<Deck>();  //These are NOT the deck that is being used in the game
     private ArrayList<Card> hand = new ArrayList<Card>();
     private static ArrayList<Player> allPlayers = new ArrayList<Player>();
@@ -26,7 +26,11 @@ public class Player {
     }
 
     public ArrayList<Card> getAllCards() {
-        return allCards;
+        return this.allCards;
+    }
+
+    public void addCardToAllCards(Card card){
+        this.allCards.add(card);
     }
 
     public Player(String username, String password, String nickname) {
