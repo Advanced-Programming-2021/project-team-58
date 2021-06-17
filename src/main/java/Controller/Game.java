@@ -28,9 +28,10 @@ public class Game {
     }
 
     public void run() {
-        System.out.println("It's " + turnOfPlayer.getNickname() + "’s turn");
+
         try {
             while (player.getLP() != 0 && player2.getLP() != 0) {
+                System.out.println("It's " + turnOfPlayer.getNickname() + "’s turn");
                 drawPhase();
                 standbyPhase();
                 setAllPositionsChangeStatus(); //SETS CHANGING IN STATUS TO FALSE IN NEW TURN
@@ -58,7 +59,6 @@ public class Game {
 
     public void endPhase() {
         changeTurnOfPlayer();
-        System.out.println("It's " + turnOfPlayer.getNickname() + "’s turn");
     }
 
     public void mainPhase() {
@@ -96,16 +96,25 @@ public class Game {
 
             } else if (input.equals("select -d")) {
                 if ((selectedPosition == null) && (selectedCardHand == null)) {
+                    System.out.println("no card is selected yet!");
+                }
+                else{
                     selectedPositionNulling();
                     selectedCardHandNulling();
                 }
+
             } else if (input.equals("card show selected")) {
                 showCard();
             } else if (input.equals("show graveyard")) {
                 showGraveyard();
-            } else {
+            }
+            else if(input.equals("show current-phase")){
+                System.out.println(phase);
+            }
+            else {
                 System.out.println("invalid command");
             }
+            showBoard();
         }
     }
 
@@ -192,19 +201,26 @@ public class Game {
     }
 
     public void battlePhase() {
-
+        System.out.println("phase : battle phase");
         setPhase(Phase.BATTLE);
         String input;
         while (!(input = scanner.nextLine()).equals("next phase")) {
-            if (input.trim().matches("^(?i)(attack (.+))$"))
-                attackToMonster(getCommandMatcher(input, "^(?i)(attack (.+))$"));
-            else if (input.trim().matches("^(?i)(attack direct)$"))
+            Matcher matchSelect = getCommandMatcher(input, "^select --(hand|monster|spell) (--opponent )*([0-9]+)$");
+
+            if (input.trim().matches("^(?i)(attack direct)$"))
                 directAttack();
+            else if (input.trim().matches("^(?i)(attack (.+))$"))
+                attackToMonster(getCommandMatcher(input, "^(?i)(attack (.+))$"));
+            else if(matchSelect.find())
+                select(matchSelect);
+            else if(input.equals("show current-phase"))
+                System.out.println(phase);
             else System.out.println("invalid command for this phase");
+
+            showBoard();
         }
 //        In the end of this phase we call this method:
         clearAttackedCardsArrayList();
-        mainPhase(); //Navigation to mainPhase at last
     }
 
     public void standbyPhase() {
@@ -365,17 +381,18 @@ public class Game {
     //field zone hasn't added in this
     public void showBoard() {
         System.out.println(getOpposition().getNickname() + " : " + getOpposition().getLP());
-        System.out.println("    " + printCardsOnBoard(getOpposition()));
+        System.out.println("     " + printCardsOnBoard(getOpposition()));
         System.out.println(getOpposition().getBoard().getDeck().getDeckSize());
-        System.out.println("    " + printOpponentSpellCardsOnBoard(getOpposition()));
-        System.out.println("    " + printOpponentMonsterOnBoard(getOpposition()));
+        System.out.println("     " + printOpponentSpellCardsOnBoard(getOpposition()));
+        System.out.println("     " + printOpponentMonsterOnBoard(getOpposition()));
         System.out.println(getOpposition().getBoard().getGraveYard().size());
         System.out.println();
-        System.out.println("--------------------------");
+        System.out.println("-------------------------------");
         System.out.println();
-        System.out.println(turnOfPlayer.getBoard().getGraveYard().size());
-        System.out.println("    " + printMonsterCardOnBoard(turnOfPlayer));
-        System.out.println("    " + printSpellCardsOnBoard(turnOfPlayer));
+        System.out.println("                             " + turnOfPlayer.getBoard().getGraveYard().size());
+        System.out.println("     " + printMonsterCardOnBoard(turnOfPlayer));
+        System.out.println("     " + printSpellCardsOnBoard(turnOfPlayer));
+        System.out.println("                             " + turnOfPlayer.getBoard().getDeck().getDeckSize());
         System.out.println(printCardsOnBoard(turnOfPlayer));
         System.out.println(turnOfPlayer.getNickname() + " : " + turnOfPlayer.getLP());
     }
@@ -488,7 +505,7 @@ public class Game {
         if ((selectedCardHand == null) && (selectedPosition == null)) {
             System.out.println("no card is selected yet");
             return false;
-        } else if (((selectedCardHand == null) && (selectedPosition != null))) {
+        } else if (selectedCardHand == null) {
             System.out.println("you can’t set this card");
             return false;
         } else if ((selectedCardHand instanceof MonsterCard) && !(this.phase.equals(Phase.MAIN))) {
@@ -558,14 +575,19 @@ public class Game {
 //    ----------------------------------------BATTLE PHASE------------------------------------------------
 
     public boolean isConditionsUnsuitableForAttack() {
-        if (selectedPosition == null) {
+        if ((selectedPosition == null) && (selectedCardHand == null)){
             System.out.println("no card is selected yet");
+            return true;
+        }
+        if(selectedPosition == null){
+            System.out.println("selected card should not be in your hand");
             return true;
         }
         if (!(selectedPosition.getCard() instanceof MonsterCard)) {
             System.out.println("you can’t attack with this card");
             return true;
         }
+
         if (!phase.equals(Phase.BATTLE)) {
             System.out.println("you can’t do this action in this phase");
             return true;
@@ -589,8 +611,9 @@ public class Game {
     //2.generate new methods to make it smaller
 
     public void attackToMonster(Matcher matcher) {
+
         if (matcher.find()) {
-            int index = Integer.parseInt(matcher.group(2));
+            int index = convertIndex(Integer.parseInt(matcher.group(2)));
             if (isConditionsUnsuitableForAttack())
                 return;
             Position oppositionCardPosition = getOpposition().getBoard().getMonsterCards().get(index);
@@ -656,14 +679,16 @@ public class Game {
                         int damage = oppositionCardDefense - selectedCardAttack;
                         turnOfPlayer.decreaseLP(damage);
                         System.out.println("opponent’s monster card was " + cardName +
-                                "no card is destroyed and you received " + damage + " battle damage");
+                                " no card is destroyed and you received " + damage + " battle damage");
                         oppositionCardPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
                     } else {
-                        System.out.println("opponent’s monster card was " + cardName + "no card is destroyed");
+                        System.out.println("opponent’s monster card was " + cardName + " no card is destroyed");
                         oppositionCardPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
                     }
                 }
                 attackedCards.add(selectedPosition);
+                selectedCardHandNulling();
+                selectedPositionNulling();
             }
         }
     }
@@ -680,7 +705,7 @@ public class Game {
     public void directAttack() {
         if (isConditionsUnsuitableForAttack())
             return;
-        if (isOpponentMonsterZoneEmpty())
+        if (!isOpponentMonsterZoneEmpty())
             System.out.println("you can’t attack the opponent directly");
 //        else if (there are some other reasons that we can't attack and we may find them later)
 //            System.out.println("you can't attack the opponent directly");
@@ -688,7 +713,12 @@ public class Game {
             int damage = ((MonsterCard) selectedPosition.getCard()).getAttack();
             getOpposition().decreaseLP(damage);
             System.out.println("you opponent receives " + damage + " battle damage");
+            attackedCards.add(selectedPosition);
+
+            selectedPositionNulling();
+            selectedCardHandNulling();
         }
+
     }
 
 //    --------------------------------------------------------------------------------------------------------

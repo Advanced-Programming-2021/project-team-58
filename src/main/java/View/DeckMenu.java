@@ -3,6 +3,7 @@ package View;
 import Controller.*;
 import Model.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -20,6 +21,11 @@ public class DeckMenu {
     public static void run() {
         setPlayer(LoginMenu.getLoggedInPlayer());
         handleInput();
+        try {
+            jsonSaveAndLoad.save(Player.getAllPlayers());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         MainMenu.run(); //Navigating to MainMenu at last
     }
 
@@ -144,7 +150,7 @@ public class DeckMenu {
             return;
         }
         if (cardName != null && deckName != null) {
-            if (!player.getAllCards().contains(Card.getCardByName(cardName)))
+            if (!player.hasACard(Card.getCardByName(cardName)))
                 System.out.println("card with name " + cardName + " does not exist");
             else if (!player.hasADeck(player.getDeckByName(deckName)))
                 System.out.println("deck with name " + deckName + " does not exist");
@@ -154,7 +160,12 @@ public class DeckMenu {
                 System.out.println("there are already three cards with name " + cardName + " in deck " + deckName);
             else {
                 player.getDeckByName(deckName).addCardToMainDeck(Card.getCardByName(cardName));
-                player.getAllCards().remove(Card.getCardByName(cardName));
+                player.removeCardFromAllCards(Card.getCardByName(cardName));
+//                try {
+//                    jsonSaveAndLoad.save(Player.getAllPlayers());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 System.out.println("card added to deck successfully");
             }
         }

@@ -3,6 +3,7 @@ package View;
 import Controller.*;
 import Model.*;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.*;
 
@@ -10,7 +11,13 @@ public class ProfileMenu {
     public static void run() {
         Scanner scan = new Scanner(System.in);
         String input = scan.nextLine();
-        if (input.trim().equalsIgnoreCase("menu exit")) MainMenu.run();
+        if (input.trim().equalsIgnoreCase("menu exit")) {
+            try {
+                jsonSaveAndLoad.save(Player.getAllPlayers());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            MainMenu.run();}
         else while (!input.trim().equalsIgnoreCase("menu exit")) {
             if (getCommandMatcher(input.trim(), "^ [ ]+ menu enter [A-Za-z]+ [ ]+ $").find())
                 System.out.println("menu navigation is not possible");
