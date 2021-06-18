@@ -113,6 +113,8 @@ public class Game {
             }
             showBoard();
         }
+        selectedPositionNulling();
+        selectedCardHandNulling();
     }
 
     public void select(Matcher matcher) {
@@ -180,16 +182,13 @@ public class Game {
         if (selectedCardHand instanceof TrapAndSpellCard) {
             setTrapSpellOnBoard();
         } else {
-//            if (isAnyCardSummoned) {
-//                isAnyCardSummoned = setMonsterCardOnBoard();
-//                isAnyCardSummoned = true;
-//            } else {
-            isAnyCardSummoned = setMonsterCardOnBoard();
-//            }
-//            selectedPosition.setStatusChanged(true);
+            if (isAnyCardSummoned) {
+                isAnyCardSummoned = setMonsterCardOnBoard();
+                isAnyCardSummoned = true;
+            } else {
+                isAnyCardSummoned = setMonsterCardOnBoard();
+            }
         }
-//        Do we have any selected position here at all?
-//        selectedPositionNulling();
     }
 
     public void drawPhase() {
