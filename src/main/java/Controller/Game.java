@@ -30,6 +30,7 @@ public class Game {
     public void run() {
         try {
             while (player.getLP() != 0 && player2.getLP() != 0) {
+                isAnyCardSummoned = false;
                 System.out.println("It's " + turnOfPlayer.getNickname() + "’s turn");
                 drawPhase();
                 standbyPhase();
@@ -65,7 +66,6 @@ public class Game {
         System.out.println("phase: main phase");
         setPhase(Phase.MAIN);
         String input;
-        isAnyCardSummoned = false;
         while (!((input = scanner.nextLine()).equals("next phase"))) {
             Matcher matchChangeStatus = getCommandMatcher(input, "^set position (attack|defense)$");
             Matcher matchSelect = getCommandMatcher(input, "^select --(hand|monster|spell) (--opponent )*([0-9]+)$");
@@ -612,7 +612,7 @@ public class Game {
     public void attackToMonster(Matcher matcher) {
 
         if (matcher.find()) {
-            int index = convertIndex(Integer.parseInt(matcher.group(2)));
+            int index = convertIndex(Integer.parseInt(matcher.group(3)));
             if (isConditionsUnsuitableForAttack())
                 return;
             Position oppositionCardPosition = getOpposition().getBoard().getMonsterCards().get(index);
