@@ -28,7 +28,6 @@ public class Game {
     }
 
     public void run() {
-
         try {
             while (player.getLP() != 0 && player2.getLP() != 0) {
                 System.out.println("It's " + turnOfPlayer.getNickname() + "’s turn");
@@ -41,7 +40,8 @@ public class Game {
                 endPhase();
             }
         } catch (Exception e) {
-            this.run();
+            System.out.println("I have caught and exception");
+            e.printStackTrace();
         }
     }
 
@@ -97,8 +97,7 @@ public class Game {
             } else if (input.equals("select -d")) {
                 if ((selectedPosition == null) && (selectedCardHand == null)) {
                     System.out.println("no card is selected yet!");
-                }
-                else{
+                } else {
                     selectedPositionNulling();
                     selectedCardHandNulling();
                 }
@@ -107,11 +106,9 @@ public class Game {
                 showCard();
             } else if (input.equals("show graveyard")) {
                 showGraveyard();
-            }
-            else if(input.equals("show current-phase")){
+            } else if (input.equals("show current-phase")) {
                 System.out.println(phase);
-            }
-            else {
+            } else {
                 System.out.println("invalid command");
             }
             showBoard();
@@ -183,16 +180,16 @@ public class Game {
         if (selectedCardHand instanceof TrapAndSpellCard) {
             setTrapSpellOnBoard();
         } else {
-            if (isAnyCardSummoned) {
-                isAnyCardSummoned = setMonsterCardOnBoard();
-                isAnyCardSummoned = true;
-            } else {
-                isAnyCardSummoned = setMonsterCardOnBoard();
-            }
-            selectedPosition.setStatusChanged(true);
+//            if (isAnyCardSummoned) {
+//                isAnyCardSummoned = setMonsterCardOnBoard();
+//                isAnyCardSummoned = true;
+//            } else {
+            isAnyCardSummoned = setMonsterCardOnBoard();
+//            }
+//            selectedPosition.setStatusChanged(true);
         }
-        selectedCardHandNulling();
-        selectedPositionNulling();
+//        Do we have any selected position here at all?
+//        selectedPositionNulling();
     }
 
     public void drawPhase() {
@@ -211,9 +208,9 @@ public class Game {
                 directAttack();
             else if (input.trim().matches("^(?i)(attack (.+))$"))
                 attackToMonster(getCommandMatcher(input, "^(?i)(attack (.+))$"));
-            else if(matchSelect.find())
+            else if (matchSelect.find())
                 select(matchSelect);
-            else if(input.equals("show current-phase"))
+            else if (input.equals("show current-phase"))
                 System.out.println(phase);
             else System.out.println("invalid command for this phase");
 
@@ -520,9 +517,12 @@ public class Game {
         } else {
             int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
             turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.DEFENSIVE_HIDDEN);
+            turnOfPlayer.getBoard().getMonsterCards().get(i).setStatusChanged(true);
             turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
             turnOfPlayer.getHand().remove(selectedCardHand);
+            selectedCardHandNulling();
             System.out.println("set successfully");
+
             return true;
         }
     }
@@ -575,11 +575,11 @@ public class Game {
 //    ----------------------------------------BATTLE PHASE------------------------------------------------
 
     public boolean isConditionsUnsuitableForAttack() {
-        if ((selectedPosition == null) && (selectedCardHand == null)){
+        if ((selectedPosition == null) && (selectedCardHand == null)) {
             System.out.println("no card is selected yet");
             return true;
         }
-        if(selectedPosition == null){
+        if (selectedPosition == null) {
             System.out.println("selected card should not be in your hand");
             return true;
         }
