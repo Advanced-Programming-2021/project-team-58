@@ -739,7 +739,10 @@ public class Game {
         } else {
             int i = firstEmptyIndex(turnOfPlayer.getBoard().getTrapAndSpellCard());
             turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setStatus(StatusOfPosition.SPELL_OR_TRAP_HIDDEN);
+            turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setStatusChanged(true);
             turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setCard(selectedCardHand);
+            turnOfPlayer.getHand().remove(selectedCardHand);
+            selectedCardHandNulling();
             System.out.println("set successfully");
         }
     }
