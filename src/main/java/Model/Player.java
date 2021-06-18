@@ -16,7 +16,8 @@ public class Player {
     private int LP;
     private int money;
     private Board board;
-    private static ArrayList<Card> allCards = new ArrayList<Card>();
+
+    private ArrayList<Card> allCards = new ArrayList<>();
     private LinkedList<Deck> decks = new LinkedList<Deck>();  //These are NOT the deck that is being used in the game
     private ArrayList<Card> hand = new ArrayList<Card>();
     private static ArrayList<Player> allPlayers = new ArrayList<Player>();
@@ -26,7 +27,7 @@ public class Player {
     }
 
     public ArrayList<Card> getAllCards() {
-        return allCards;
+        return this.allCards;
     }
 
     public Player(String username, String password, String nickname) {
@@ -166,10 +167,24 @@ public class Player {
         return false;
     }
 
+    public boolean hasACard(Card card){
+        if (card == null) return false;
+        for (Card c : allCards) {
+            if (c.getCardName().equals(card.getCardName()))
+                return true;
+        }
+        return false;
+    }
+
     public Deck getDeckByName(String deckName) {
         for (Deck deck : decks)
             if (deck.getDeckName().equals(deckName))
                 return deck;
         return null;
     }
+
+    public void removeCardFromAllCards(Card card){
+        this.allCards.remove(card);
+    }
+
 }

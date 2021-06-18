@@ -2,10 +2,22 @@ package Model;
 
 import Controller.*;
 import View.*;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.util.ArrayList;
 
-abstract public class Card implements Comparable<Card> {
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.CLASS,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "@class"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = MonsterCard.class, name = "Monster"),
+        @JsonSubTypes.Type(value = TrapAndSpellCard.class, name = "Trap"),
+})
+
+public abstract class Card implements Comparable<Card> {
 
     private String cardName;
     private String cardDescription;
