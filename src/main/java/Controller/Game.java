@@ -595,6 +595,10 @@ public class Game {
             System.out.println("this card already attacked");
             return true;
         }
+        if(!selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)){
+            System.out.println("selected card is in defensive position!");
+            return true;
+        }
         return false;
     }
 
@@ -612,7 +616,7 @@ public class Game {
     public void attackToMonster(Matcher matcher) {
 
         if (matcher.find()) {
-            int index = convertIndex(Integer.parseInt(matcher.group(3)));
+            int index = convertIndex(Integer.parseInt(matcher.group(2)));
             if (isConditionsUnsuitableForAttack())
                 return;
             Position oppositionCardPosition = getOpposition().getBoard().getMonsterCards().get(index);
