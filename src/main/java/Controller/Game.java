@@ -72,14 +72,7 @@ public class Game {
             Matcher matchSelectField = getCommandMatcher(input, "^select --field (--opponent)?$");
 
             if (input.equals("summon")) {
-                if (isAnyCardSummoned) {
-                    isAnyCardSummoned = summon();
-                    isAnyCardSummoned = true;
-                } else {
-                    isAnyCardSummoned = summon();
-                }
-                selectedCardHandNulling();
-                selectedPositionNulling();
+                summon();
             } else if (input.equals("set")) {
                 set();
             } else if (matchChangeStatus.find()) {
@@ -414,8 +407,17 @@ public class Game {
         return convertIndex(i);
     }
 
+    public void summon() {
+        if (isAnyCardSummoned) {
+            isAnyCardSummoned = summonMonsterOnBoard();
+            isAnyCardSummoned = true;
+        } else {
+            isAnyCardSummoned = summonMonsterOnBoard();
+        }
+    }
+
     //changed firstEmptyIndex: maybe it has error!
-    public boolean summon() {
+    public boolean summonMonsterOnBoard() {
         boolean isTributeSucceeds = false;
         if ((selectedCardHand == null) && (selectedPosition == null)) {
             System.out.println("no card is selected yet");
@@ -433,30 +435,17 @@ public class Game {
             System.out.println("you already summoned/set on this turn");
             return true;
         } else {
-            if (((MonsterCard) selectedCardHand).getCardLevel() < 5) {
-                int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
-                turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
-                turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
-                turnOfPlayer.getHand().remove(selectedCardHand);
-                System.out.println("summoned successfully");
-                return true;
-            } else {
+            if (((MonsterCard) selectedCardHand).getCardLevel() < 5)
+                return lastStepForSummon();
+            else {
                 if (((MonsterCard) selectedCardHand).getCardLevel() < 7) {
                     if (turnOfPlayer.getBoard().cardsInMonsterZone() == 0) {
                         System.out.println("there are not enough cards for tribute");
                         return false;
                     } else {
                         isTributeSucceeds = tribute(1);
-                        if (isTributeSucceeds) {
-                            int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
-                            turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
-                            turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
-                            turnOfPlayer.getHand().remove(selectedCardHand);
-                            System.out.println("summoned successfully");
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        if (isTributeSucceeds) return lastStepForSummon();
+                        else return false;
                     }
                 } else {
                     if (turnOfPlayer.getBoard().cardsInMonsterZone() < 2) {
@@ -464,20 +453,24 @@ public class Game {
                         return false;
                     } else {
                         isTributeSucceeds = tribute(2);
-                        if (isTributeSucceeds) {
-                            int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
-                            turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
-                            turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
-                            turnOfPlayer.getHand().remove(selectedCardHand);
-                            System.out.println("summoned successfully");
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        if (isTributeSucceeds) return lastStepForSummon();
+                        else return false;
                     }
                 }
             }
         }
+    }
+
+    private boolean lastStepForSummon() {
+        int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
+        turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
+        turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(selectedCardHand);
+        turnOfPlayer.getHand().remove(selectedCardHand);
+        System.out.println("summoned successfully");
+
+        selectedCardHandNulling();
+        selectedPositionNulling();
+        return true;
     }
 
     private boolean tribute(int numberOfCards) {
@@ -595,7 +588,7 @@ public class Game {
             System.out.println("this card already attacked");
             return true;
         }
-        if(!selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)){
+        if (!selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) {
             System.out.println("selected card is in defensive position!");
             return true;
         }
@@ -616,7 +609,13 @@ public class Game {
     public void attackToMonster(Matcher matcher) {
 
         if (matcher.find()) {
-            int index = convertIndex(Integer.parseInt(matcher.group(2)));
+            int index;
+            try {
+                index = convertIndex(Integer.parseInt(matcher.group(2)));
+            } catch (Exception e) {
+                System.out.println("Please enter an integer");
+                return;
+            }
             if (isConditionsUnsuitableForAttack())
                 return;
             Position oppositionCardPosition = getOpposition().getBoard().getMonsterCards().get(index);
