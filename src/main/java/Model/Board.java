@@ -9,9 +9,9 @@ public class Board {
     private ArrayList<Card> graveYard = new ArrayList<Card>();
     private ArrayList<Position> monsterCards = new ArrayList<Position>();
     private ArrayList<Position> trapAndSpellCard = new ArrayList<Position>();
-    private Deck deck;
+    private ArrayList<Card> mainDeck = new ArrayList<>();
 
-    public Board(){
+    public Board() {
         createMonsterCardPosition();
         createSpellCardPosition();
     }
@@ -24,58 +24,66 @@ public class Board {
         return trapAndSpellCard;
     }
 
-    public void createMonsterCardPosition(){
-        for(int i=0 ; i<5 ; i++){
-            Position x = new Position(StatusOfPosition.EMPTY , i );
+    public void createMonsterCardPosition() {
+        for (int i = 0; i < 5; i++) {
+            Position x = new Position(StatusOfPosition.EMPTY, i);
             monsterCards.add(x);
         }
     }
 
-    public void createSpellCardPosition(){
-        for(int i=0 ; i<5 ; i++){
-            Position x = new Position(StatusOfPosition.EMPTY , i );
+    public void createSpellCardPosition() {
+        for (int i = 0; i < 5; i++) {
+            Position x = new Position(StatusOfPosition.EMPTY, i);
             trapAndSpellCard.add(x);
         }
     }
 
-    public boolean isMonsterZoneFull(){
-        for (Position position: monsterCards) {
-            if(position.getStatus().equals(StatusOfPosition.EMPTY)){
+    public boolean isMonsterZoneFull() {
+        for (Position position : monsterCards) {
+            if (position.getStatus().equals(StatusOfPosition.EMPTY)) {
                 return false;
             }
         }
         return true;
     }
 
-    public int cardsInMonsterZone(){
+    public int cardsInMonsterZone() {
         int i = 0;
-        for (Position position: monsterCards) {
-            if(!position.getStatus().equals(StatusOfPosition.EMPTY)) {
+        for (Position position : monsterCards) {
+            if (!position.getStatus().equals(StatusOfPosition.EMPTY)) {
                 i++;
             }
         }
         return i;
     }
 
-    public boolean isTrapAndSpellZoneFull(){
-        for (Position position: trapAndSpellCard) {
-            if(position.getStatus().equals(StatusOfPosition.EMPTY)){
+    public boolean isTrapAndSpellZoneFull() {
+        for (Position position : trapAndSpellCard) {
+            if (position.getStatus().equals(StatusOfPosition.EMPTY)) {
                 return false;
             }
         }
         return true;
     }
 
-    public void addToGraveyard(Card card){
+    public void addToGraveyard(Card card) {
         graveYard.add(card);
     }
 
-    public void setDeck(Deck deck) {
-        this.deck = deck;
+//    public void setDeck(Deck deck) {
+//        this.deck = deck;
+//    }
+//
+//    public Deck getDeck() {
+//        return deck;
+//    }
+
+    public ArrayList<Card> getMainDeck() {
+        return this.mainDeck;
     }
 
-    public Deck getDeck() {
-        return deck;
+    public void setMainDeck(ArrayList<Card> mainDeck) {
+         this.mainDeck = mainDeck;
     }
 
     public ArrayList<Card> getGraveYard() {

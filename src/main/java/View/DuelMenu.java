@@ -12,7 +12,6 @@ public class DuelMenu {
 
     private int round;
     private static Player winnerPlayer;
-    private static Player loserPlayer;
 
     private static Player matchWinner;
 
@@ -30,6 +29,7 @@ public class DuelMenu {
         player2SetsWin = 0;
 
         for (int i = 1; i <= round; i++) {
+            System.out.println("Round "+i+" started!\n");
             new Game(player1, player2).run();
             endOfTheRoundSet(player1, player2);
             if (player1SetsWin == 2 || player2SetsWin == 2) {
@@ -53,7 +53,13 @@ public class DuelMenu {
             player2SetsWin++;
         }
         System.out.println(winnerPlayer.getNickname() + " won the game and the score is: "
-                + player1SetsWin + " - " + player2SetsWin);
+                + player1SetsWin + " - " + player2SetsWin+"\n");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            System.out.println("I have caught an exception in sleeping");
+            e.printStackTrace();
+        }
     }
 
     public static void endOfTheMatch(Player player1, Player player2, int round) {
@@ -82,21 +88,11 @@ public class DuelMenu {
                 + player1SetsWin + " - " + player2SetsWin);
     }
 
-    public static void setLoserPlayer(Player loserPlayer) {
-        DuelMenu.loserPlayer = loserPlayer;
-    }
-
     public static void setWinnerPlayer(Player winnerPlayer) {
         DuelMenu.winnerPlayer = winnerPlayer;
     }
 
     public static void setMatchWinner(Player matchWinner) {
         DuelMenu.matchWinner = matchWinner;
-    }
-
-    public Matcher getCommandMatcher(String input, String regex) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(input);
-        return matcher;
     }
 }

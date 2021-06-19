@@ -8,11 +8,11 @@ import java.util.Random;
 public class addCardToHandEffect extends Effect {
 //Effect of supply squad
     public void activate(Game game){
-        int mainDeckSize = game.getTurnOfPlayer().getBoard().getDeck().getMainDeck().size();
+        int mainDeckSize = game.getTurnOfPlayer().getBoard().getMainDeck().size();
         Random rand = new Random();
         int index = rand.nextInt(mainDeckSize);
-        game.getTurnOfPlayer().getHand().add(game.getTurnOfPlayer().getBoard().getDeck().getMainDeck().get(index));
-        game.getTurnOfPlayer().getBoard().getDeck().getMainDeck().remove(index);
+        game.getTurnOfPlayer().getHand().add(game.getTurnOfPlayer().getBoard().getMainDeck().get(index));
+        game.getTurnOfPlayer().getBoard().getMainDeck().remove(index);
     }
 
     @Override
