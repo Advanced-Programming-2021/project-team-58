@@ -7,8 +7,11 @@ import java.util.*;
 import java.util.regex.*;
 
 public class Game {
+    private static int nextPhaseCheck;
+
     private Player player;
     private Player player2;
+
     private Phase phase;
     private Player turnOfPlayer;
     private Position selectedPosition = null;
@@ -29,16 +32,12 @@ public class Game {
 
     public void run() {
         try {
-            while (player.getLP() != 0 && player2.getLP() != 0) {
+            while (player.getLP() > 0 && player2.getLP() > 0) {
+                nextPhaseCheck = 0;
                 isAnyCardSummoned = false;
+                setAllPositionsChangeStatus(); //SETS CHANGING IN STATUS TO FALSE IN NEW TURN
                 System.out.println("It's " + turnOfPlayer.getNickname() + "’s turn");
                 drawPhase();
-                standbyPhase();
-                setAllPositionsChangeStatus(); //SETS CHANGING IN STATUS TO FALSE IN NEW TURN
-                mainPhase();
-                battlePhase();
-                mainPhase();
-                endPhase();
             }
         } catch (Exception e) {
             System.out.println("I have caught and exception");
@@ -105,9 +104,19 @@ public class Game {
                 System.out.println("invalid command");
             }
             showBoard();
+            if(isAnyoneWin()){
+                return;
+            }
         }
         selectedPositionNulling();
         selectedCardHandNulling();
+        if(nextPhaseCheck == 0){
+            nextPhaseCheck = 1;
+            battlePhase();
+        }
+        else{
+            endPhase();
+        }
     }
 
     public void select(Matcher matcher) {
@@ -187,6 +196,8 @@ public class Game {
     public void drawPhase() {
         setPhase(Phase.DRAW);
         draw();
+        if (isAnyoneWin()) return;
+        mainPhase();
     }
 
     public void battlePhase() {
@@ -207,13 +218,19 @@ public class Game {
             else System.out.println("invalid command for this phase");
 
             showBoard();
+            if (isAnyoneWin()) {
+                return;
+            }
+
         }
 //        In the end of this phase we call this method:
         clearAttackedCardsArrayList();
+        mainPhase();
     }
 
     public void standbyPhase() {
         setPhase(Phase.STANDBY);
+        mainPhase();
     }
 
     private void setAllPositionsChangeStatus() {
@@ -247,13 +264,13 @@ public class Game {
     }
 
     public void setPlayersLp() {
-        player.setLP(8000);
-        player2.setLP(8000);
+        player.setLP(1000);
+        player2.setLP(1000);
     }
 
     public void setPlayersDeckOnBoard() {
-        player.getBoard().setDeck(player.getActiveDeck());
-        player2.getBoard().setDeck(player2.getActiveDeck());
+        player.getBoard().setDeck((Deck) player.getActiveDeck().clone());
+        player2.getBoard().setDeck((Deck) player2.getActiveDeck().clone());
     }
 
     public Position getSelectedPosition() {
@@ -263,6 +280,11 @@ public class Game {
     public void drawAtFirstTurn(Player player) {
         for (int i = 0; i < 6; i++) {
             int mainDeckSize = player.getBoard().getDeck().getMainDeck().size();
+
+            if (mainDeckSize == 0) {
+                System.out.println("You don't have any other card to draw and you lost!!!");
+                return;
+            }
             Random rand = new Random();
             int index = rand.nextInt(mainDeckSize);
             player.addCardToHand(player.getBoard().getDeck().getMainDeck().get(index));
@@ -290,6 +312,7 @@ public class Game {
 
     public void surrender() {
         turnOfPlayer.setLP(0);
+
     }
 
     private String convertStatusToChar(StatusOfPosition status) {
@@ -721,6 +744,10 @@ public class Game {
             selectedCardHandNulling();
         }
 
+    }
+
+    public boolean isAnyoneWin() {
+        return (player.getLP() <= 0) || (player2.getLP() <= 0);
     }
 
 //    --------------------------------------------------------------------------------------------------------

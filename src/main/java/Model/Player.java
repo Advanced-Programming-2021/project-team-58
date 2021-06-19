@@ -68,6 +68,9 @@ public class Player {
     }
 
     public int getLP() {
+        if(this.LP < 0){
+            return 0;
+        }
         return this.LP;
     }
 

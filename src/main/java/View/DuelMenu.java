@@ -30,8 +30,7 @@ public class DuelMenu {
         player2SetsWin = 0;
 
         for (int i = 1; i <= round; i++) {
-            Game game = new Game(player1, player2);
-            game.run();
+            new Game(player1, player2).run();
             endOfTheRoundSet(player1, player2);
             if (player1SetsWin == 2 || player2SetsWin == 2) {
                 break;
