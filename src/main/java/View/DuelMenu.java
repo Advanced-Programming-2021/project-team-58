@@ -29,18 +29,19 @@ public class DuelMenu {
         player2SetsWin = 0;
 
         for (int i = 1; i <= round; i++) {
-            System.out.println("Round "+i+" started!\n");
-            new Game(player1, player2).run();
-            endOfTheRoundSet(player1, player2);
+            System.out.println("Round " + i + " started!\n");
+            Game game = new Game(player1, player2);
+            game.run();
+            endOfTheRoundSet(player1, player2, game);
             if (player1SetsWin == 2 || player2SetsWin == 2) {
                 break;
             }
         }
-        endOfTheMatch(player1 , player2 , round);
+        endOfTheMatch(player1, player2, round);
     }
 
-    public static void endOfTheRoundSet(Player player1, Player player2) {
-        if (player1.getLP() <= 0) {
+    public static void endOfTheRoundSet(Player player1, Player player2, Game game) {
+        if (player1.getLP() <= 0 || player1.getBoard().getMainDeck().size() == 0 || ((game.isSurrendered) && player1.equals(game.getTurnOfPlayer()))) {
             setWinnerPlayer(player2);
         } else {
             setWinnerPlayer(player1);
@@ -53,7 +54,7 @@ public class DuelMenu {
             player2SetsWin++;
         }
         System.out.println(winnerPlayer.getNickname() + " won the game and the score is: "
-                + player1SetsWin + " - " + player2SetsWin+"\n");
+                + player1SetsWin + " - " + player2SetsWin + "\n");
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -75,16 +76,15 @@ public class DuelMenu {
             }
         } else {
             setMatchWinner(winnerPlayer);
-            if(winnerPlayer.equals(player1)){
+            if (winnerPlayer.equals(player1)) {
                 maxLpWinner = Collections.max(LPsPlayer1);
-            }
-            else{
+            } else {
                 maxLpWinner = Collections.max(LPsPlayer2);
             }
         }
         matchWinner.increaseScore(round * 1000);
         matchWinner.increaseMoney(round * (1000 + maxLpWinner));
-        System.out.println( matchWinner.getNickname() + " won the whole match with score: "
+        System.out.println(matchWinner.getNickname() + " won the whole match with score: "
                 + player1SetsWin + " - " + player2SetsWin);
     }
 

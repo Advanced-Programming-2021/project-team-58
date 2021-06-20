@@ -12,8 +12,9 @@ public class Game {
     private Player player;
     private Player player2;
 
-    private Phase phase;
+    private Phase phase = Phase.DRAW;
     private Player turnOfPlayer;
+    public boolean isSurrendered = false;
     private Position selectedPosition = null;
     private Card selectedCardHand;
     private boolean isAnyCardSummoned;
@@ -32,7 +33,7 @@ public class Game {
 
     public void run() {
         try {
-            while (player.getLP() > 0 && player2.getLP() > 0) {
+            while (!isAnyoneWin()) {
                 nextPhaseCheck = 0;
                 isAnyCardSummoned = false;
                 setAllPositionsChangeStatus(); //SETS CHANGING IN STATUS TO FALSE IN NEW TURN
@@ -98,9 +99,12 @@ public class Game {
                 showGraveyard();
             } else if (input.equals("show current-phase")) {
                 System.out.println(phase);
+            } else if (input.equals("surrender")) {
+                surrender();
             } else {
                 System.out.println("invalid command");
             }
+            if (!isSurrendered)
             showBoard();
             if (isAnyoneWin()) {
                 return;
@@ -192,8 +196,8 @@ public class Game {
 
     public void drawPhase() {
         setPhase(Phase.DRAW);
-        draw();
         if (isAnyoneWin()) return;
+        draw();
         mainPhase();
     }
 
@@ -212,13 +216,14 @@ public class Game {
                 select(matchSelect);
             else if (input.equals("show current-phase"))
                 System.out.println(phase);
+            else if (input.equals("surrender"))
+                surrender();
             else System.out.println("invalid command for this phase");
 
             showBoard();
             if (isAnyoneWin()) {
                 return;
             }
-
         }
 //        In the end of this phase we call this method:
         clearAttackedCardsArrayList();
@@ -309,8 +314,10 @@ public class Game {
     }
 
     public void surrender() {
-        turnOfPlayer.setLP(0);
-
+        isSurrendered = true;
+    }
+    public boolean isSurrendered() {
+        return isSurrendered;
     }
 
     public static Player winner;
@@ -502,20 +509,28 @@ public class Game {
     }
 
     private boolean tribute(int numberOfCards) {
-        for (int i = 0; i < numberOfCards; i++) {
-            int a = scanner.nextInt();
-            int b = convertIndex(a);
+        int numOfCardsTributed = 0;
+        while (numOfCardsTributed != numberOfCards) {
+            System.out.println("Please enter the index of the monster that you want to tribute");
+            String a = scanner.nextLine();
+            int b = 0;
+            try {
+                b = convertIndex(Integer.parseInt(a));
+            } catch (Exception e) {
+                System.out.println("Please enter an integer");
+                continue;
+            }
             if (turnOfPlayer.getBoard().getMonsterCards().get(b).getStatus().equals(StatusOfPosition.EMPTY)) {
                 System.out.println("there no monsters one this address");
-                return false;
             } else {
+                System.out.println("I have got number: " + a);
                 turnOfPlayer.getBoard().addToGraveyard(turnOfPlayer.getBoard().getMonsterCards().get(b).getCard());
                 turnOfPlayer.getBoard().getMonsterCards().get(b).setCard(null);
                 turnOfPlayer.getBoard().getMonsterCards().get(b).setStatus(StatusOfPosition.EMPTY);
-                return true;
+                numOfCardsTributed++;
             }
         }
-        return false;
+        return true;
     }
 
     public boolean setMonsterCardOnBoard() {
@@ -759,6 +774,11 @@ public class Game {
     }
 
     public boolean isAnyoneWin() {
+        if (getPhase().equals(Phase.DRAW) && turnOfPlayer.getBoard().getMainDeck().size() == 0) {
+            System.out.println(turnOfPlayer.getNickname() + " has no more card to draw and lost the round");
+            return true;
+        }
+        if (isSurrendered) return true;
         return (player.getLP() <= 0) || (player2.getLP() <= 0);
     }
 
