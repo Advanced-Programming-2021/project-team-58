@@ -89,4 +89,16 @@ public class Board {
     public ArrayList<Card> getGraveYard() {
         return graveYard;
     }
+
+    public void clearBoard(){
+        graveYard.clear();
+        for (Position position : monsterCards) {
+            position.setStatus(StatusOfPosition.EMPTY);
+            position.setCard(null);
+        }
+        for (Position position : trapAndSpellCard) {
+            position.setStatus(StatusOfPosition.EMPTY);
+            position.setCard(null);
+        }
+    }
 }

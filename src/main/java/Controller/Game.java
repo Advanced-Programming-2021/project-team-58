@@ -24,11 +24,27 @@ public class Game {
     public Game(Player player1, Player player2) {
         setPlayer1(player1);
         setPlayer2(player2);
-        setPlayersLp();
-        setPlayersDeckOnBoard();
+        startOfGameSettings();
         turnOfPlayer = player1;
         drawAtFirstTurn(player1);
         drawAtFirstTurn(player2);
+    }
+
+    public void startOfGameSettings(){
+        setPlayersLp();
+        clearHand();
+        clearBoardGame();
+        setPlayersDeckOnBoard();
+    }
+
+    public void clearHand(){
+        player.getHand().clear();
+        player2.getHand().clear();
+    }
+
+    public void clearBoardGame(){
+        player.getBoard().clearBoard();
+        player2.getBoard().clearBoard();
     }
 
     public void run() {
@@ -284,7 +300,7 @@ public class Game {
             int mainDeckSize = player.getBoard().getMainDeck().size();
 
             if (mainDeckSize == 0) {
-                System.out.println("You don't have any other card to draw and you lost!!!");
+//                System.out.println("You don't have any other card to draw and you lost!!!");
                 return;
             }
             Random rand = new Random();
@@ -300,10 +316,10 @@ public class Game {
     public void draw() {
         int mainDeckSize = turnOfPlayer.getBoard().getMainDeck().size();
         //Adding the following in order to avoid Exception for the random method
-        if (mainDeckSize == 0) {
-            System.out.println("You don't have any other card to draw and you lost!!!");
-            return;
-        }
+//        if (mainDeckSize == 0) {
+//            System.out.println("You don't have any other card to draw and you lost!!!");
+//            return;
+//        }
         Random rand = new Random();
         int index = rand.nextInt(mainDeckSize);
         turnOfPlayer.addCardToHand(turnOfPlayer.getBoard().getMainDeck().get(index));
