@@ -5,15 +5,20 @@ import Model.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.*;
 
 public class DuelMenu {
 
-    private int round;
+//    private int round;
     private static Player winnerPlayer;
+    private static Player loserPlayer;
 
     private static Player matchWinner;
+
+    private static Player firstPlayer;
+    private static Player secondPlayer;
 
     private static int player1SetsWin;
     private static int player2SetsWin;
@@ -23,6 +28,7 @@ public class DuelMenu {
 
 
     public static void run(Player player1, Player player2, int round) {
+
         LPsPlayer1.clear();
         LPsPlayer2.clear();
         player1SetsWin = 0;
@@ -30,7 +36,8 @@ public class DuelMenu {
 
         for (int i = 1; i <= round; i++) {
             System.out.println("Round " + i + " started!\n");
-            Game game = new Game(player1, player2);
+            setPlayers(i , player1 , player2);
+            Game game = new Game(firstPlayer, secondPlayer);
             game.run();
             endOfTheRoundSet(player1, player2, game);
             if (player1SetsWin == 2 || player2SetsWin == 2) {
@@ -40,11 +47,42 @@ public class DuelMenu {
         endOfTheMatch(player1, player2, round);
     }
 
+    private static void setPlayers(int i, Player player1, Player player2) {
+        if(i==1){
+            Random rand = new Random();
+            int coin = rand.nextInt(2);
+            System.out.println(player1.getNickname() + "'s bet is head and " + player2.getNickname() + "'s is tail" );
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(coin == 0){
+                System.out.println(player1.getNickname() + " goes first!");
+                firstPlayer = player1;
+                secondPlayer = player2;
+            }
+            else{
+                System.out.println(player2.getNickname() + " goes first!");
+                firstPlayer = player2;
+                secondPlayer = player1;
+            }
+        }
+        else{
+            firstPlayer = winnerPlayer;
+            secondPlayer = loserPlayer;
+            System.out.println(firstPlayer.getNickname() + " goes first!");
+        }
+    }
+
+
     public static void endOfTheRoundSet(Player player1, Player player2, Game game) {
         if (player1.getLP() <= 0 || player1.getBoard().getMainDeck().size() == 0 || ((game.isSurrendered) && player1.equals(game.getTurnOfPlayer()))) {
             setWinnerPlayer(player2);
+            setLoserPlayer(player1);
         } else {
             setWinnerPlayer(player1);
+            setLoserPlayer(player2);
         }
         LPsPlayer1.add(player1.getLP());
         LPsPlayer2.add(player2.getLP());
@@ -86,6 +124,10 @@ public class DuelMenu {
         matchWinner.increaseMoney(round * (1000 + maxLpWinner));
         System.out.println(matchWinner.getNickname() + " won the whole match with score: "
                 + player1SetsWin + " - " + player2SetsWin);
+    }
+
+    public static void setLoserPlayer(Player loserPlayer) {
+        DuelMenu.loserPlayer = loserPlayer;
     }
 
     public static void setWinnerPlayer(Player winnerPlayer) {

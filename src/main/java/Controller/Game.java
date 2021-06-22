@@ -57,7 +57,7 @@ public class Game {
                 drawPhase();
             }
         } catch (Exception e) {
-            System.out.println("I have caught and exception");
+            System.out.println("I have caught an exception");
             e.printStackTrace();
         }
     }

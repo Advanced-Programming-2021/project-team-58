@@ -64,7 +64,7 @@ public class MainMenu {
     public static void startAGame(Matcher matcher) {
         if (matcher.find()) {
             int numOfRounds = Integer.parseInt(matcher.group(2));
-            String opponentName = matcher.group(1);
+            String opponentName = Player.getPlayerByUsername(matcher.group(1)).getNickname();
             Player loggedInPlayer = LoginMenu.getLoggedInPlayer();
 
             if (Player.getPlayerByUsername(opponentName) == null)
@@ -83,7 +83,7 @@ public class MainMenu {
             else if (numOfRounds != 1 && numOfRounds != 3)
                 System.out.println("number of rounds is not supported");
             else {
-                System.out.println("New game started between " + LoginMenu.getLoggedInPlayer().getUsername() +
+                System.out.println("New game started between " + LoginMenu.getLoggedInPlayer().getNickname() +
                         " and " + opponentName + "!\n");
                 DuelMenu.run(LoginMenu.getLoggedInPlayer(), Player.getPlayerByUsername(opponentName), numOfRounds);
             }
