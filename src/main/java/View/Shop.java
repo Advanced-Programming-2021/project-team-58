@@ -21,6 +21,8 @@ public class Shop {
             else if (input.matches("shop show --all")) showAllCards();
             else if (input.matches("shop buy (.+)"))
                 buy(getCommandMatcher(input, "shop buy (.+)"));
+            else if(input.equals("show money"))
+                System.out.println(LoginMenu.getLoggedInPlayer().getMoney());
             else System.out.println("invalid command");
         }
         try {
