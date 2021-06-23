@@ -29,8 +29,41 @@ public class MainMenu {
                 ScoreboardMenu.run();
             else if (input.matches("duel --second-player (.+) --rounds (.+) --new"))
                 startAGame(getCommandMatcher(input, "duel --second-player (.+) --rounds (.+) --new"));
+            else if(input.matches("duel --new --ai --rounds (.*)")){
+                startAGameWithAI(getCommandMatcher(input , "duel --new --ai --rounds (.*)"));
+            }
             else System.out.println("invalid command");
         }
+    }
+
+    private static void startAGameWithAI(Matcher matcher) {
+        if (matcher.find()) {
+            int numOfRounds = 0;
+            try {
+                numOfRounds = Integer.parseInt(matcher.group(1));
+            }
+            catch (Exception e){
+                System.out.println("please enter an integer");
+                return;
+            }
+
+            Player loggedInPlayer = LoginMenu.getLoggedInPlayer();
+
+            if (loggedInPlayer.getActiveDeck() == null)
+                System.out.println(loggedInPlayer.getUsername() + " has no activated deck");
+            else if (!loggedInPlayer.getActiveDeck().isValid())
+                System.out.println(loggedInPlayer.getUsername() + "'s deck is invalid");
+            else if (numOfRounds != 1 && numOfRounds != 3)
+                System.out.println("number of rounds is not supported");
+            else {
+                System.out.println("New game started between " + LoginMenu.getLoggedInPlayer().getNickname() +
+                        " and AI!\n");
+                AIClass aiPlayer = new AIClass();
+                DuelMenu.run(LoginMenu.getLoggedInPlayer(), aiPlayer, numOfRounds);
+            }
+
+        }
+
     }
 
     private static void enterAMenu(Matcher matcher) {

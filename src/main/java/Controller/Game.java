@@ -54,12 +54,30 @@ public class Game {
                 isAnyCardSummoned = false;
                 setAllPositionsChangeStatus(); //SETS CHANGING IN STATUS TO FALSE IN NEW TURN
                 System.out.println("It's " + turnOfPlayer.getNickname() + "’s turn");
-                drawPhase();
+                if(turnOfPlayer instanceof AIClass){
+                    ((AIClass) turnOfPlayer).play(this);
+                    endPhase();
+                }
+                else {
+                    drawPhase();
+                }
             }
         } catch (Exception e) {
             System.out.println("I have caught an exception");
             e.printStackTrace();
         }
+    }
+
+    public void setSelectedPosition(Position selectedPosition) {
+        this.selectedPosition = selectedPosition;
+    }
+
+    public void setSelectedCardHand(Card selectedCardHand) {
+        this.selectedCardHand = selectedCardHand;
+    }
+
+    public Card getSelectedCardHand() {
+        return selectedCardHand;
     }
 
     public void setPhase(Phase phase) {
@@ -282,8 +300,8 @@ public class Game {
     }
 
     public void setPlayersLp() {
-        player.setLP(1000);
-        player2.setLP(1000);
+        player.setLP(8000);
+        player2.setLP(8000);
     }
 
     public void setPlayersDeckOnBoard() {
