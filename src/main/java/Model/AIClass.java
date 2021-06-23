@@ -46,12 +46,27 @@ public class AIClass extends Player {
         }
 
         game.showBoard();
+        System.out.println("thinking...");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         game.setPhase(Phase.BATTLE);
         if (game.getOpposition().getBoard().isMonsterZoneEmpty()) {
-            game.setSelectedPosition(this.getBoard().getMonsterCards().get(Game.convertIndex(1)));
+            selectAttackMonster(game);
             game.directAttack();
         }
+        else{
+            selectAttackMonster(game);
+            game.attackToMonster(selectOpponentMonster(game));
+        }
         game.showBoard();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void chooseBestCardInHand(Game game) {
@@ -93,6 +108,14 @@ public class AIClass extends Player {
         } else {
             return (getBoard().cardsInMonsterZone() >= 2);
         }
+    }
+
+    public int selectOpponentMonster(Game game){
+        return game.getOpposition().getBoard().getMinimumAttackPosition();
+    }
+
+    public void selectAttackMonster(Game game){
+        game.setSelectedPosition(getBoard().getMaximumPuver());
     }
 
 }

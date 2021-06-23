@@ -114,18 +114,43 @@ public class Board {
     public int getMinimumAttackPosition(){
         int min = 4000;
         int index = 0;
+        int cardForce;
         for (int i = 0; i < monsterCards.size(); i++) {
             Position position = monsterCards.get(i);
             if(!position.getStatus().equals(StatusOfPosition.EMPTY)) {
-                int cardAttack = ((MonsterCard) position.getCard()).getAttack();
-                if (cardAttack < min) {
-                    min = cardAttack;
+
+                if(position.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)){
+                    cardForce = ((MonsterCard) position.getCard()).getAttack();
+                }
+                else{
+                    cardForce = ((MonsterCard) position.getCard()).getDefense();
+                }
+                if (cardForce < min) {
+                    min = cardForce;
                     index = i;
                 }
             }
         }
         return index;
     }
+
+    public Position getMaximumPuver(){
+        int max = 0;
+        int cardAttack;
+        Position bestPosition = monsterCards.get(0);
+        for (int i = 0; i < monsterCards.size(); i++) {
+            Position position = monsterCards.get(i);
+            if(position.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)){
+                cardAttack = ((MonsterCard)position.getCard()).getAttack();
+                if(cardAttack >= max){
+                    bestPosition = position;
+                }
+            }
+        }
+        return bestPosition;
+    }
+
+
 
     public void removeForTribute(int index){
         addToGraveyard(getMonsterCards().get(index).getCard());
