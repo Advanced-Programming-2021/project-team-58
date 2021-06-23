@@ -144,6 +144,7 @@ public class Board {
                 cardAttack = ((MonsterCard)position.getCard()).getAttack();
                 if(cardAttack >= max){
                     bestPosition = position;
+                    max = cardAttack;
                 }
             }
         }
@@ -152,7 +153,7 @@ public class Board {
 
 
 
-    public void removeForTribute(int index){
+    public void removeCard(int index){
         addToGraveyard(getMonsterCards().get(index).getCard());
         getMonsterCards().get(index).setCard(null);
         getMonsterCards().get(index).setStatus(StatusOfPosition.EMPTY);

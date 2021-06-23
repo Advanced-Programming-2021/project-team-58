@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.*;
-import View.*;
 
 import java.util.*;
 import java.util.regex.*;
@@ -135,7 +134,8 @@ public class Game {
             } else if (input.equals("surrender")) {
                 surrender();
             } else {
-                System.out.println("invalid command");
+                if (!cheat(input))
+                    System.out.println("invalid command");
             }
             if (!isSurrendered)
                 showBoard();
@@ -261,7 +261,10 @@ public class Game {
                 System.out.println(phase);
             else if (input.equals("surrender"))
                 surrender();
-            else System.out.println("invalid command for this phase");
+            else {
+                if (!cheat(input))
+                    System.out.println("invalid command for this phase");
+            }
 
             showBoard();
             if (isAnyoneWin()) {
@@ -570,14 +573,14 @@ public class Game {
                     System.out.println("there no monsters one this address");
                 } else {
 //                    System.out.println("I have got number: " + a);
-                    turnOfPlayer.getBoard().removeForTribute(b);
+                    turnOfPlayer.getBoard().removeCard(b);
                     numOfCardsTributed++;
                 }
             }
         } else {
             for (int i = 0; i < numberOfCards; i++) {
                 int index = turnOfPlayer.getBoard().getMinimumAttackPosition();
-                turnOfPlayer.getBoard().removeForTribute(index);
+                turnOfPlayer.getBoard().removeCard(index);
             }
         }
         return true;
@@ -1007,8 +1010,38 @@ public class Game {
         }
     }
 
-    public void Cheat(String cheatCode){
-        ;
+    public boolean cheat(String cheatCode) {
+        if (cheatCode.equals("0051iPl")) {
+            turnOfPlayer.increaseLP(1500);
+            System.out.println("cheat activated:\n" +
+                    "1500 LP was added to you");
+            return true;
+        } else if (cheatCode.equals("bAcOo")) {
+            if (!getOpposition().getBoard().getMonsterCards().isEmpty()){
+            getOpposition().getBoard().removeCard(getOpposition().getBoard().getMaximumPuver().getIndex());
+            System.out.println("cheat activated:\n" +
+                    "you removed the most powerful monster of your opponent");
+            return true;}
+        } else if (cheatCode.equals("12yBdB")) {
+            if (selectedPosition == null)
+                return false;
+            else {
+                if (attackedCards.contains(selectedPosition)) {
+                    attackedCards.remove(selectedPosition);
+                    System.out.println("cheat activated:\n" +
+                            "now you can attack again with your card");
+                    return true;
+                }
+            }
+        } else if (cheatCode.equals("hPoSt2")) {
+            isAnyCardSummoned = false;
+            System.out.println("cheat activated:\n" +
+                    "you can now summon or set another card");
+            return true;
+        } else if (cheatCode.equals("pUvEr")) {
+
+        }
+        return false;
     }
 
     public static Matcher getCommandMatcher(String input, String regex) {
