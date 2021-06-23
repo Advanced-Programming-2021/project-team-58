@@ -23,6 +23,8 @@ public class Shop {
                 buy(getCommandMatcher(input, "shop buy (.+)"));
             else if(input.equals("show money"))
                 System.out.println(LoginMenu.getLoggedInPlayer().getMoney());
+            else if (input.equals("--help"))
+                help();
             else System.out.println("invalid command");
         }
         try {
@@ -31,6 +33,14 @@ public class Shop {
             e.printStackTrace();
         }
         MainMenu.run();
+    }
+
+    private static void help() {
+        System.out.println("menu exit\n" +
+                "menu show-current\n" +
+                "shop show --all\n" +
+                "shop buy (card name)\n" +
+                "show money");
     }
 
     public static void buy(Matcher matcher) {

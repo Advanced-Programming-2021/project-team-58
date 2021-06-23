@@ -62,8 +62,27 @@ public class DeckMenu {
                 showMainDeck(getCommandMatcher(input, "^(?i)(deck show --deck-name (.+))$"));
             else if (input.trim().matches("^(?i)(deck show --cards)$"))
                 showAllCards();
+            else if (input.equals("--help"))
+                help();
             else System.out.println("invalid command");
         }
+    }
+
+    private static void help() {
+        System.out.println("menu exit\n" +
+                "menu-show current\n" +
+                "card show (card name)\n" +
+                "deck create (deck name)\n" +
+                "deck delete (deck name)\n" +
+                "deck set-activate (deck name)\n" +
+                "deck add-card --card (card name) --deck (deck name)\n" +
+                "deck add-card --card (card name) --deck (deck name) --side\n" +
+                "deck rm-card --card (card name) --deck (deck name)\n" +
+                "deck rm-card --card (card name) --deck (deck name) --side\n" +
+                "deck show --all\n" +
+                "deck show --deck-name (deck name)\n" +
+                "deck show --deck-name (deck name) --side\n" +
+                "deck show --cards");
     }
 
     private static void showMenuName() {

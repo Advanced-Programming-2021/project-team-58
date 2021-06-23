@@ -31,9 +31,20 @@ public class MainMenu {
                 startAGame(getCommandMatcher(input, "duel --second-player (.+) --rounds (.+) --new"));
             else if(input.matches("duel --new --ai --rounds (.*)")){
                 startAGameWithAI(getCommandMatcher(input , "duel --new --ai --rounds (.*)"));
-            }
+            } else if (input.equals("--help"))
+                help();
             else System.out.println("invalid command");
         }
+    }
+
+    private static void help() {
+        System.out.println("menu exit\n" +
+                "menu enter (menu name)\n" +
+                "menu show-current\n" +
+                "user logout\n" +
+                "scoreboard show\n" +
+                "duel --second-player (second-player name) --rounds (number of rounds) --new\n" +
+                "duel --new --ai --rounds (number of rounds)");
     }
 
     private static void startAGameWithAI(Matcher matcher) {

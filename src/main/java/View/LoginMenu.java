@@ -71,8 +71,17 @@ public class LoginMenu {
                 return;
             } else if (input.equals("menu show-current")) {
                 System.out.println("Login Menu");
+            } else if (input.equals("--help")) {
+                help();
             } else System.out.println("invalid command");
         }
+    }
+
+    private static void help() {
+        System.out.println("menu exit\n" +
+                "menu show-current\n" +
+                "user create username (username) password (password) nickname (nickname)\n" +
+                "user login username (username) password (password)");
     }
 
     public static void logInPlayer(String username, String password) {
