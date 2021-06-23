@@ -38,6 +38,13 @@ public class Player {
         this.board = new Board();
         allPlayers.add(this);
     }
+    public Player(){
+
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 
     public void setUsername(String username) {
         this.username = username;

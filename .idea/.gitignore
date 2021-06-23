@@ -2,6 +2,7 @@
 /shelf/
 /workspace.xml
 # Datasource local storage ignored files
+/../../../../../../:\Users\ASUS\Desktop\AITesting\.idea/dataSources/
 /../../../../../../:\Users\Marzie\IdeaProjects\AGoodProject\.idea/dataSources/
 /dataSources.local.xml
 # Editor-based HTTP Client requests

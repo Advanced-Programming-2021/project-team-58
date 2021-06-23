@@ -3,6 +3,7 @@ package View;
 import Controller.*;
 import Model.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -11,11 +12,12 @@ import java.util.regex.*;
 
 public class DuelMenu {
 
-//    private int round;
+    //    private int round;
     private static Player winnerPlayer;
     private static Player loserPlayer;
 
     private static Player matchWinner;
+    private static Player matchLoser;
 
     private static Player firstPlayer;
     private static Player secondPlayer;
@@ -36,7 +38,7 @@ public class DuelMenu {
 
         for (int i = 1; i <= round; i++) {
             System.out.println("Round " + i + " started!\n");
-            setPlayers(i , player1 , player2);
+            setPlayers(i, player1, player2);
             Game game = new Game(firstPlayer, secondPlayer);
             game.run();
             endOfTheRoundSet(player1, player2, game);
@@ -48,27 +50,25 @@ public class DuelMenu {
     }
 
     private static void setPlayers(int i, Player player1, Player player2) {
-        if(i==1){
+        if (i == 1) {
             Random rand = new Random();
             int coin = rand.nextInt(2);
-            System.out.println(player1.getNickname() + "'s bet is head and " + player2.getNickname() + "'s is tail" );
+            System.out.println(player1.getNickname() + "'s bet is head and " + player2.getNickname() + "'s is tail");
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(coin == 0){
+            if (coin == 0) {
                 System.out.println(player1.getNickname() + " goes first!");
                 firstPlayer = player1;
                 secondPlayer = player2;
-            }
-            else{
+            } else {
                 System.out.println(player2.getNickname() + " goes first!");
                 firstPlayer = player2;
                 secondPlayer = player1;
             }
-        }
-        else{
+        } else {
             firstPlayer = winnerPlayer;
             secondPlayer = loserPlayer;
             System.out.println(firstPlayer.getNickname() + " goes first!");
@@ -106,14 +106,17 @@ public class DuelMenu {
         if (round == 3) {
             if (player1SetsWin == 2) {
                 setMatchWinner(player1);
+                setMatchLoser(player2);
                 maxLpWinner = Collections.max(LPsPlayer1);
 
             } else {
                 setMatchWinner(player2);
+                setMatchLoser(player1);
                 maxLpWinner = Collections.max(LPsPlayer2);
             }
         } else {
             setMatchWinner(winnerPlayer);
+            setMatchLoser(loserPlayer);
             if (winnerPlayer.equals(player1)) {
                 maxLpWinner = Collections.max(LPsPlayer1);
             } else {
@@ -122,8 +125,18 @@ public class DuelMenu {
         }
         matchWinner.increaseScore(round * 1000);
         matchWinner.increaseMoney(round * (1000 + maxLpWinner));
+        matchLoser.increaseMoney(100 * round);
         System.out.println(matchWinner.getNickname() + " won the whole match with score: "
                 + player1SetsWin + " - " + player2SetsWin);
+        try {
+            jsonSaveAndLoad.save(Player.getAllPlayers());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setMatchLoser(Player matchLoser) {
+        DuelMenu.matchLoser = matchLoser;
     }
 
     public static void setLoserPlayer(Player loserPlayer) {
