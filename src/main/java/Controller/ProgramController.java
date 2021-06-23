@@ -22,6 +22,7 @@ public class ProgramController {
                 e.printStackTrace();
             }
         }
+        LoginMenu.addCards();
 //        Deck deck = new Deck("firstAndOnlyDeck");
 //        for (int i = 0; i < 3; i++) {
 //            deck.addCardToMainDeck(Card.getCardByName("Battle OX"));
@@ -30,10 +31,10 @@ public class ProgramController {
 //            deck.addCardToMainDeck(Card.getCardByName("Silver Fang"));
 //        }
 //        for (int i = 0; i < 3; i++) {
-//            deck.addCardToMainDeck(Card.getCardByName("Yomi Ship"));
+//            deck.addCardToMainDeck(Card.getCardByName("Trap Hole"));
 //        }
 //        for (int i = 0; i < 3; i++) {
-//            deck.addCardToMainDeck(Card.getCardByName("Wattkid"));
+//            deck.addCardToMainDeck(Card.getCardByName("Suijin"));
 //        }
 //        ArrayList<Deck> x = new ArrayList<>();
 //        x.add(deck);
@@ -46,7 +47,7 @@ public class ProgramController {
 //            e.printStackTrace();
 //        }
 
-        LoginMenu.addCards();
+
 //        try {
 //            FileWriter writer = new FileWriter("CardsDatabase.txt");
 //            writer.write(new YaGson().toJson(Card.getAllCards()));

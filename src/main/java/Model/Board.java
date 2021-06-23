@@ -110,4 +110,26 @@ public class Board {
             position.setCard(null);
         }
     }
+
+    public int getMinimumAttackPosition(){
+        int min = 4000;
+        int index = 0;
+        for (int i = 0; i < monsterCards.size(); i++) {
+            Position position = monsterCards.get(i);
+            if(!position.getStatus().equals(StatusOfPosition.EMPTY)) {
+                int cardAttack = ((MonsterCard) position.getCard()).getAttack();
+                if (cardAttack < min) {
+                    min = cardAttack;
+                    index = i;
+                }
+            }
+        }
+        return index;
+    }
+
+    public void removeForTribute(int index){
+        addToGraveyard(getMonsterCards().get(index).getCard());
+        getMonsterCards().get(index).setCard(null);
+        getMonsterCards().get(index).setStatus(StatusOfPosition.EMPTY);
+    }
 }

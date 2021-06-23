@@ -30,19 +30,19 @@ public class Game {
         drawAtFirstTurn(player2);
     }
 
-    public void startOfGameSettings(){
+    public void startOfGameSettings() {
         setPlayersLp();
         clearHand();
         clearBoardGame();
         setPlayersDeckOnBoard();
     }
 
-    public void clearHand(){
+    public void clearHand() {
         player.getHand().clear();
         player2.getHand().clear();
     }
 
-    public void clearBoardGame(){
+    public void clearBoardGame() {
         player.getBoard().clearBoard();
         player2.getBoard().clearBoard();
     }
@@ -54,11 +54,10 @@ public class Game {
                 isAnyCardSummoned = false;
                 setAllPositionsChangeStatus(); //SETS CHANGING IN STATUS TO FALSE IN NEW TURN
                 System.out.println("It's " + turnOfPlayer.getNickname() + "’s turn");
-                if(turnOfPlayer instanceof AIClass){
+                if (turnOfPlayer instanceof AIClass) {
                     ((AIClass) turnOfPlayer).play(this);
                     endPhase();
-                }
-                else {
+                } else {
                     drawPhase();
                 }
             }
@@ -139,7 +138,7 @@ public class Game {
                 System.out.println("invalid command");
             }
             if (!isSurrendered)
-            showBoard();
+                showBoard();
             if (isAnyoneWin()) {
                 return;
             }
@@ -350,6 +349,7 @@ public class Game {
     public void surrender() {
         isSurrendered = true;
     }
+
     public boolean isSurrendered() {
         return isSurrendered;
     }
@@ -544,24 +544,30 @@ public class Game {
 
     private boolean tribute(int numberOfCards) {
         int numOfCardsTributed = 0;
-        while (numOfCardsTributed != numberOfCards) {
-            System.out.println("Please enter the index of the monster that you want to tribute");
-            String a = scanner.nextLine();
-            int b = 0;
-            try {
-                b = convertIndex(Integer.parseInt(a));
-            } catch (Exception e) {
-                System.out.println("Please enter an integer");
-                continue;
+
+        if (!(turnOfPlayer instanceof AIClass)) {
+            while (numOfCardsTributed != numberOfCards) {
+                System.out.println("Please enter the index of the monster that you want to tribute");
+                String a = scanner.nextLine();
+                int b = 0;
+                try {
+                    b = convertIndex(Integer.parseInt(a));
+                } catch (Exception e) {
+                    System.out.println("Please enter an integer");
+                    continue;
+                }
+                if (turnOfPlayer.getBoard().getMonsterCards().get(b).getStatus().equals(StatusOfPosition.EMPTY)) {
+                    System.out.println("there no monsters one this address");
+                } else {
+//                    System.out.println("I have got number: " + a);
+                    turnOfPlayer.getBoard().removeForTribute(b);
+                    numOfCardsTributed++;
+                }
             }
-            if (turnOfPlayer.getBoard().getMonsterCards().get(b).getStatus().equals(StatusOfPosition.EMPTY)) {
-                System.out.println("there no monsters one this address");
-            } else {
-                System.out.println("I have got number: " + a);
-                turnOfPlayer.getBoard().addToGraveyard(turnOfPlayer.getBoard().getMonsterCards().get(b).getCard());
-                turnOfPlayer.getBoard().getMonsterCards().get(b).setCard(null);
-                turnOfPlayer.getBoard().getMonsterCards().get(b).setStatus(StatusOfPosition.EMPTY);
-                numOfCardsTributed++;
+        } else {
+            for (int i = 0; i < numberOfCards; i++) {
+                int index = turnOfPlayer.getBoard().getMinimumAttackPosition();
+                turnOfPlayer.getBoard().removeForTribute(index);
             }
         }
         return true;
