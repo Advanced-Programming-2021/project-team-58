@@ -27,6 +27,7 @@ public class LoginMenu {
     public static void addCards() {
         MonsterCard.addMonster();
         TrapAndSpellCard.addTrapAndSpell();
+        TrapAndSpellCard.setEffects();
     }
 
     public static void run() {
@@ -38,15 +39,18 @@ public class LoginMenu {
 
             Matcher matchChangeMenu = getCommandMatcher(input, "^(?i)(menu enter (Main|Duel|Deck|Scoreboard|Profile|Shop))$");
 
-            Matcher matchLogin1 = getCommandMatcher(input, "^user login username ([a-zA-Z0-9]+) password ([a-zA-Z0-9]+)$");
-            Matcher matchLogin2 = getCommandMatcher(input, "^user login password ([a-zA-Z0-9]+) username ([a-zA-Z0-9]+)$");
+            Matcher matchLogin1 = getCommandMatcher(input, "^user login username (.+) password (.+)$");
+            Matcher matchLogin2 = getCommandMatcher(input, "^user login password (.+) username (.+)$");
+            Matcher matchLogin3 = getCommandMatcher(input, "^user login -p (.+) -u (.+)$");
+            Matcher matchLogin4 = getCommandMatcher(input, "^user login -u (.+) -p (.+)$");
 
-            Matcher matchRegister1 = getCommandMatcher(input, "^user create username ([a-zA-Z0-9]+) nickname ([a-zA-Z0-9]+) password ([a-zA-Z0-9]+)$");
-            Matcher matchRegister2 = getCommandMatcher(input, "^user create username ([a-zA-Z0-9]+) password ([a-zA-Z0-9]+) nickname ([a-zA-Z0-9]+)$");
-            Matcher matchRegister3 = getCommandMatcher(input, "^user create nickname ([a-zA-Z0-9]+) username ([a-zA-Z0-9]+) password ([a-zA-Z0-9]+)$");
-            Matcher matchRegister4 = getCommandMatcher(input, "^user create nickname ([a-zA-Z0-9]+) password ([a-zA-Z0-9]+) username ([a-zA-Z0-9]+)$");
-            Matcher matchRegister5 = getCommandMatcher(input, "^user create password ([a-zA-Z0-9]+) nickname ([a-zA-Z0-9]+) username ([a-zA-Z0-9]+)$");
-            Matcher matchRegister6 = getCommandMatcher(input, "^user create password ([a-zA-Z0-9]+) username ([a-zA-Z0-9]+) nickname ([a-zA-Z0-9]+)$");
+            Matcher matchRegister1 = getCommandMatcher(input, "^user create username (.+) nickname (.+) password (.+)$");
+            Matcher matchRegister2 = getCommandMatcher(input, "^user create username (.+) password (.+) nickname (.+)$");
+            Matcher matchRegister3 = getCommandMatcher(input, "^user create nickname (.+) username (.+) password (.+)$");
+            Matcher matchRegister4 = getCommandMatcher(input, "^user create nickname (.+) password (.+) username (.+)$");
+            Matcher matchRegister5 = getCommandMatcher(input, "^user create password (.+) nickname (.+) username (.+)$");
+            Matcher matchRegister6 = getCommandMatcher(input, "^user create password (.+) username (.+) nickname (.+)$");
+
 
             if (matchRegister1.find()) {
                 registerPlayer(matchRegister1.group(1), matchRegister1.group(3), matchRegister1.group(2));
@@ -64,6 +68,10 @@ public class LoginMenu {
                 logInPlayer(matchLogin1.group(1), matchLogin1.group(2));
             } else if (matchLogin2.find()) {
                 logInPlayer(matchLogin2.group(2), matchLogin2.group(1));
+            } else if (matchLogin3.find()) {
+                logInPlayer(matchLogin3.group(1), matchLogin3.group(2));
+            } else if (matchLogin4.find()) {
+                logInPlayer(matchLogin4.group(2), matchLogin4.group(1));
             } else if (matchChangeMenu.find()) {
                 System.out.println("please login first");
             } else if (input.equals("menu exit")) {

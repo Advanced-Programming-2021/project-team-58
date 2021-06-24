@@ -27,11 +27,14 @@ public class MainMenu {
                 return;
             } else if (input.trim().matches("^(?i)(scoreboard show)$"))
                 ScoreboardMenu.run();
-            else if (input.matches("duel --second-player (.+) --rounds (.+) --new"))
+            else if (input.matches("duel --second-player (.+) --rounds (.+) --new")||
+            input.matches("duel --s-p (.+) --r (.+) --n"))
                 startAGame(getCommandMatcher(input, "duel --second-player (.+) --rounds (.+) --new"));
-            else if(input.matches("duel --new --ai --rounds (.*)")){
+            else if(input.matches("duel --new --ai --rounds (.*)")) {
                 startAGameWithAI(getCommandMatcher(input , "duel --new --ai --rounds (.*)"));
-            } else if (input.equals("--help"))
+            } else if (input.matches("duel --n --ai --r (.*)")) {
+                startAGameWithAI(getCommandMatcher(input,"duel --n --ai --r (.*)"));
+            }else if (input.equals("--help"))
                 help();
             else System.out.println("invalid command");
         }

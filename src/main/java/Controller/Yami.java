@@ -1,12 +1,11 @@
 package Controller;
 
 import Model.*;
-import View.*;
 
 
-
-public class YamiEffect {
-    public static void activate(Game game){
+public class Yami extends Effect{
+    @Override
+    public void activate(Game game){
         for (Position position: game.getTurnOfPlayer().getBoard().getMonsterCards()) {
             if (position.getCard() instanceof MonsterCard) {
                 if (((MonsterCard) position.getCard()).getMonsterType().equals("Fiend")||
@@ -20,5 +19,10 @@ public class YamiEffect {
                 }
             }
         }
+    }
+    @Override
+    public boolean isSuitableForActivate(Game game){
+
+        return false;
     }
 }

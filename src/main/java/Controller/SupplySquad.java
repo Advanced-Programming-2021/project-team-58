@@ -5,7 +5,7 @@ import View.*;
 
 import java.util.Random;
 
-public class addCardToHandEffect extends Effect {
+public class SupplySquad extends Effect {
 //Effect of supply squad
     public void activate(Game game){
         int mainDeckSize = game.getTurnOfPlayer().getBoard().getMainDeck().size();

@@ -70,5 +70,4 @@ public abstract class Card implements Comparable<Card> {
     public int compareTo(Card anotherCard) {
         return this.getCardName().compareTo(anotherCard.getCardName());
     }
-
 }

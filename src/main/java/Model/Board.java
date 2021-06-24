@@ -1,14 +1,11 @@
 package Model;
 
-import Controller.*;
-import View.*;
-
 import java.util.ArrayList;
 
 public class Board {
     private ArrayList<Card> graveYard = new ArrayList<Card>();
     private ArrayList<Position> monsterCards = new ArrayList<Position>();
-    private ArrayList<Position> trapAndSpellCard = new ArrayList<Position>();
+    private ArrayList<Position> trapAndSpellCards = new ArrayList<Position>();
     private ArrayList<Card> mainDeck = new ArrayList<>();
 
     public Board() {
@@ -20,8 +17,8 @@ public class Board {
         return monsterCards;
     }
 
-    public ArrayList<Position> getTrapAndSpellCard() {
-        return trapAndSpellCard;
+    public ArrayList<Position> getTrapAndSpellCards() {
+        return trapAndSpellCards;
     }
 
     public void createMonsterCardPosition() {
@@ -34,7 +31,7 @@ public class Board {
     public void createSpellCardPosition() {
         for (int i = 0; i < 5; i++) {
             Position x = new Position(StatusOfPosition.EMPTY, i);
-            trapAndSpellCard.add(x);
+            trapAndSpellCards.add(x);
         }
     }
 
@@ -47,7 +44,7 @@ public class Board {
         return true;
     }
 
-    public boolean isMonsterZoneEmpty(){
+    public boolean isMonsterZoneEmpty() {
         for (Position position : monsterCards) {
             if (!position.getStatus().equals(StatusOfPosition.EMPTY)) {
                 return false;
@@ -66,9 +63,28 @@ public class Board {
         return i;
     }
 
+    public int cardsInTrapAndSpellZone() {
+        int i = 0;
+        for (Position position : trapAndSpellCards) {
+            if (!position.getStatus().equals(StatusOfPosition.EMPTY)) {
+                i++;
+            }
+        }
+        return i;
+    }
+
     public boolean isTrapAndSpellZoneFull() {
-        for (Position position : trapAndSpellCard) {
+        for (Position position : trapAndSpellCards) {
             if (position.getStatus().equals(StatusOfPosition.EMPTY)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isTrapAndSpellZoneEmpty() {
+        for (Position position : trapAndSpellCards) {
+            if (!position.getStatus().equals(StatusOfPosition.EMPTY)) {
                 return false;
             }
         }
@@ -92,37 +108,36 @@ public class Board {
     }
 
     public void setMainDeck(ArrayList<Card> mainDeck) {
-         this.mainDeck = mainDeck;
+        this.mainDeck = mainDeck;
     }
 
     public ArrayList<Card> getGraveYard() {
         return graveYard;
     }
 
-    public void clearBoard(){
+    public void clearBoard() {
         graveYard.clear();
         for (Position position : monsterCards) {
             position.setStatus(StatusOfPosition.EMPTY);
             position.setCard(null);
         }
-        for (Position position : trapAndSpellCard) {
+        for (Position position : trapAndSpellCards) {
             position.setStatus(StatusOfPosition.EMPTY);
             position.setCard(null);
         }
     }
 
-    public int getMinimumAttackPosition(){
+    public int getMinimumAttackPosition() {
         int min = 4000;
         int index = 0;
         int cardForce;
         for (int i = 0; i < monsterCards.size(); i++) {
             Position position = monsterCards.get(i);
-            if(!position.getStatus().equals(StatusOfPosition.EMPTY)) {
+            if (!position.getStatus().equals(StatusOfPosition.EMPTY)) {
 
-                if(position.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)){
+                if (position.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) {
                     cardForce = ((MonsterCard) position.getCard()).getAttack();
-                }
-                else{
+                } else {
                     cardForce = ((MonsterCard) position.getCard()).getDefense();
                 }
                 if (cardForce < min) {
@@ -134,15 +149,15 @@ public class Board {
         return index;
     }
 
-    public Position getMaximumPuver(){
+    public Position getMaximumPuver() {
         int max = 0;
         int cardAttack;
         Position bestPosition = monsterCards.get(0);
         for (int i = 0; i < monsterCards.size(); i++) {
             Position position = monsterCards.get(i);
-            if(position.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)){
-                cardAttack = ((MonsterCard)position.getCard()).getAttack();
-                if(cardAttack >= max){
+            if (position.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) {
+                cardAttack = ((MonsterCard) position.getCard()).getAttack();
+                if (cardAttack >= max) {
                     bestPosition = position;
                     max = cardAttack;
                 }
@@ -152,10 +167,26 @@ public class Board {
     }
 
 
+    public void removeCardFromMonsterCards(int index) {
+        Position position = getMonsterCards().get(index);
+        if (!(position.getStatus().equals(StatusOfPosition.EMPTY))) {
+            addToGraveyard(getMonsterCards().get(index).getCard());
+            getMonsterCards().get(index).setCard(null);
+            getMonsterCards().get(index).setStatus(StatusOfPosition.EMPTY);
+        }
+    }
 
-    public void removeCard(int index){
-        addToGraveyard(getMonsterCards().get(index).getCard());
-        getMonsterCards().get(index).setCard(null);
-        getMonsterCards().get(index).setStatus(StatusOfPosition.EMPTY);
+    public void removeCardFromSpellAndTrapCards(int index) {
+        addToGraveyard(getTrapAndSpellCards().get(index).getCard());
+        getTrapAndSpellCards().get(index).setCard(null);
+        getTrapAndSpellCards().get(index).setStatus(StatusOfPosition.EMPTY);
+    }
+
+    public boolean isMonsterInGraveYard() {
+        for (Card card : graveYard) {
+            if (card instanceof MonsterCard)
+                return true;
+        }
+        return false;
     }
 }

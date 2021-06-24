@@ -4,12 +4,14 @@ import Controller.*;
 import View.*;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class TrapAndSpellCard extends Card {
 
     private TrapOrSpellTypes cardType;
     private TrapOrSpellIcons cardIcon;
     private TrapAndSpellStatus cardStatus;
+    private Effect effect;
     private static ArrayList<TrapAndSpellCard> allSpellOrTrapCards = new ArrayList<TrapAndSpellCard>();
 
     public TrapAndSpellStatus getCardStatus() {
@@ -24,6 +26,17 @@ public class TrapAndSpellCard extends Card {
         allCards.add(this);
     }
 
+    public void setEffect(Effect effect) {
+        this.effect = effect;
+    }
+
+    public Effect getEffect() {
+        return effect;
+    }
+
+    public static void setEffects(){
+        ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Dark Hole"))).setEffect(new DarkHole());
+    }
     public void setCardStatus(TrapAndSpellStatus cardStatus) {
         this.cardStatus = cardStatus;
     }

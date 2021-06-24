@@ -5,7 +5,7 @@ import View.*;
 
 
 
-public class UMIIRUKAEffect {
+public class Umiiruka {
 
     public static void activate(Game game) {
         for (Position position : game.getTurnOfPlayer().getBoard().getMonsterCards())

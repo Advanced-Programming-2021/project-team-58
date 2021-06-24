@@ -17,8 +17,10 @@ public class Game {
     private Position selectedPosition = null;
     private Card selectedCardHand;
     private boolean isAnyCardSummoned;
+    private int cheatCounter;
     static Scanner scanner = new Scanner(System.in);
     List<Position> attackedCards = new ArrayList<Position>();
+    List<Position> activatedSpells = new ArrayList<>();
 
     public Game(Player player1, Player player2) {
         setPlayer1(player1);
@@ -29,11 +31,20 @@ public class Game {
         drawAtFirstTurn(player2);
     }
 
+    public void setCheatCounter() {
+        this.cheatCounter = 0;
+    }
+
+    public void increaseCheatCounter() {
+        this.cheatCounter++;
+    }
+
     public void startOfGameSettings() {
         setPlayersLp();
         clearHand();
         clearBoardGame();
         setPlayersDeckOnBoard();
+        setCheatCounter();
     }
 
     public void clearHand() {
@@ -133,6 +144,8 @@ public class Game {
                 System.out.println(phase);
             } else if (input.equals("surrender")) {
                 surrender();
+            } else if (input.equals("activate effect")) {
+                activateSpell();
             } else {
                 if (!cheat(input))
                     System.out.println("invalid command");
@@ -169,10 +182,10 @@ public class Game {
             }
         } else if ((matcher.group(1).equals("spell")) && (matcher.group(2) == null)) {
             if ((number >= 1) && (number <= 5)) {
-                if (turnOfPlayer.getBoard().getTrapAndSpellCard().get(convertIndex(number)).getCard() == null) {
+                if (turnOfPlayer.getBoard().getTrapAndSpellCards().get(convertIndex(number)).getCard() == null) {
                     System.out.println("no card found in the given position");
                 } else {
-                    selectedPosition = turnOfPlayer.getBoard().getTrapAndSpellCard().get(convertIndex(number));
+                    selectedPosition = turnOfPlayer.getBoard().getTrapAndSpellCards().get(convertIndex(number));
                     System.out.println("card selected");
                 }
             } else {
@@ -198,10 +211,10 @@ public class Game {
             }
         } else if ((matcher.group(1).equals("spell")) && (matcher.group(2).equals("--opponent "))) {
             if ((number >= 1) && (number <= 5)) {
-                if (getOpposition().getBoard().getTrapAndSpellCard().get(convertIndex(number)).getCard() == null) {
+                if (getOpposition().getBoard().getTrapAndSpellCards().get(convertIndex(number)).getCard() == null) {
                     System.out.println("no card found in the given position");
                 } else {
-                    selectedPosition = getOpposition().getBoard().getTrapAndSpellCard().get(convertIndex(number));
+                    selectedPosition = getOpposition().getBoard().getTrapAndSpellCards().get(convertIndex(number));
                     System.out.println("card selected");
                 }
             } else {
@@ -410,7 +423,7 @@ public class Game {
         String result = "";
         String character = "";
         for (int i = 4; i >= 0; i--) {
-            character = convertStatusToChar(player.getBoard().getTrapAndSpellCard().get(i).getStatus());
+            character = convertStatusToChar(player.getBoard().getTrapAndSpellCards().get(i).getStatus());
             result = result + character + "    ";
         }
         return result;
@@ -434,7 +447,7 @@ public class Game {
         String result = "";
         String character = "";
         for (int i = 0; i < 5; i++) {
-            character = convertStatusToChar(player.getBoard().getTrapAndSpellCard().get(i).getStatus());
+            character = convertStatusToChar(player.getBoard().getTrapAndSpellCards().get(i).getStatus());
             result = result + character + "    ";
         }
         return result;
@@ -573,14 +586,14 @@ public class Game {
                     System.out.println("there no monsters one this address");
                 } else {
 //                    System.out.println("I have got number: " + a);
-                    turnOfPlayer.getBoard().removeCard(b);
+                    turnOfPlayer.getBoard().removeCardFromMonsterCards(b);
                     numOfCardsTributed++;
                 }
             }
         } else {
             for (int i = 0; i < numberOfCards; i++) {
                 int index = turnOfPlayer.getBoard().getMinimumAttackPosition();
-                turnOfPlayer.getBoard().removeCard(index);
+                turnOfPlayer.getBoard().removeCardFromMonsterCards(index);
             }
         }
         return true;
@@ -699,8 +712,7 @@ public class Game {
     }
 
     public boolean hasCardAttackedInThisPhase(Position position) {
-        if (attackedCards.contains(position)) return true;
-        return false;
+        return attackedCards.contains(position);
     }
 
     public void clearAttackedCardsArrayList() {
@@ -727,7 +739,7 @@ public class Game {
             if (statusOfOpposition.equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) {
                 if (selectedCardAttack > oppositionCardAttack) {
                     int damage = selectedCardAttack - oppositionCardAttack;
-                    sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
+                    sendToGraveyard(oppositionCardPosition, getOpposition());
                     oppositionCardPosition.setCard(null);
                     oppositionCardPosition.setStatus(StatusOfPosition.EMPTY);
                     getOpposition().decreaseLP(damage);
@@ -735,15 +747,15 @@ public class Game {
                             + damage + " battle damage");
                 } else if (selectedCardAttack < oppositionCardAttack) {
                     int damage = oppositionCardAttack - selectedCardAttack;
-                    sendToGraveyard(oppositionCardPosition.getCard(), turnOfPlayer);
+                    sendToGraveyard(oppositionCardPosition, turnOfPlayer);
                     selectedPosition.setCard(null);
                     selectedPosition.setStatus(StatusOfPosition.EMPTY);
                     turnOfPlayer.decreaseLP(damage);
                     System.out.println("Your monster card is destroyed and you received " + damage +
                             " battle damage");
                 } else {
-                    sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
-                    sendToGraveyard(selectedPosition.getCard(), turnOfPlayer);
+                    sendToGraveyard(oppositionCardPosition, getOpposition());
+                    sendToGraveyard(selectedPosition, turnOfPlayer);
                     selectedPosition.setCard(null);
                     selectedPosition.setStatus(StatusOfPosition.EMPTY);
                     oppositionCardPosition.setCard(null);
@@ -753,7 +765,7 @@ public class Game {
                 }
             } else if (statusOfOpposition.equals(StatusOfPosition.DEFENSIVE_OCCUPIED)) {
                 if (selectedCardAttack > oppositionCardDefense) {
-                    sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
+                    sendToGraveyard(oppositionCardPosition, getOpposition());
                     oppositionCardPosition.setCard(null);
                     oppositionCardPosition.setStatus(StatusOfPosition.EMPTY);
                     System.out.println("the defense position monster is destroyed");
@@ -767,7 +779,7 @@ public class Game {
             } else if (statusOfOpposition.equals(StatusOfPosition.DEFENSIVE_HIDDEN)) {
                 String cardName = oppositionCardPosition.getCard().getCardName();
                 if (selectedCardAttack > oppositionCardDefense) {
-                    sendToGraveyard(oppositionCardPosition.getCard(), getOpposition());
+                    sendToGraveyard(oppositionCardPosition, getOpposition());
                     System.out.println("opponent’s monster card was " + cardName +
                             " and the defense position monster is destroyed");
                     oppositionCardPosition.setCard(null);
@@ -830,8 +842,10 @@ public class Game {
 //    --------------------------------------------------------------------------------------------------------
 //    --------------------------------------------------------------------------------------------------------
 
-    public void sendToGraveyard(Card card, Player player) {
-        player.getBoard().addToGraveyard(card);
+    public void sendToGraveyard(Position position, Player player) {
+        player.getBoard().addToGraveyard(position.getCard());
+        attackedCards.remove(position);
+        activatedSpells.remove(position);
     }
 
     public void setTrapSpellOnBoard() {
@@ -844,10 +858,10 @@ public class Game {
         } else if (turnOfPlayer.getBoard().isTrapAndSpellZoneFull()) {
             System.out.println("spell card zone is full");
         } else {
-            int i = firstEmptyIndex(turnOfPlayer.getBoard().getTrapAndSpellCard());
-            turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setStatus(StatusOfPosition.SPELL_OR_TRAP_HIDDEN);
-            turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setStatusChanged(true);
-            turnOfPlayer.getBoard().getTrapAndSpellCard().get(i).setCard(selectedCardHand);
+            int i = firstEmptyIndex(turnOfPlayer.getBoard().getTrapAndSpellCards());
+            turnOfPlayer.getBoard().getTrapAndSpellCards().get(i).setStatus(StatusOfPosition.SPELL_OR_TRAP_HIDDEN);
+            turnOfPlayer.getBoard().getTrapAndSpellCards().get(i).setStatusChanged(true);
+            turnOfPlayer.getBoard().getTrapAndSpellCards().get(i).setCard(selectedCardHand);
             turnOfPlayer.getHand().remove(selectedCardHand);
             selectedCardHandNulling();
             System.out.println("set successfully");
@@ -874,17 +888,28 @@ public class Game {
     private void specialSummonHelping(ArrayList<Card> array) {
         int n = 0;
         while (n == 0) {
-            int number = scanner.nextInt();
-            if (number > array.size()) {
+            int intNumber = 0;
+            while (true) {
+                System.out.println("Please enter an index");
+                String number = scanner.nextLine();
+                try {
+                    intNumber = Integer.parseInt(number);
+                    break;
+                } catch (Exception e) {
+                    System.out.println("The index must be only an integer");
+                }
+            }
+            if (intNumber > array.size()) {
                 System.out.println("given number is greater than number of cards");
-            } else if (!(array.get(number) instanceof MonsterCard)) {
+            } else if (!(array.get(intNumber) instanceof MonsterCard)) {
                 System.out.println("you can't summon this card");
             } else {
                 int i = firstEmptyIndex(turnOfPlayer.getBoard().getMonsterCards());
                 turnOfPlayer.getBoard().getMonsterCards().get(i).setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
-                turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(array.get(number));
-                array.remove(number);
+                turnOfPlayer.getBoard().getMonsterCards().get(i).setCard(array.get(intNumber));
+                array.remove(intNumber);
                 System.out.println("special summoned successfully");
+                n = 1;
             }
         }
     }
@@ -966,34 +991,50 @@ public class Game {
         }
     }
 
-    public void activateSpell(TrapAndSpellCard spell) {
-
+    public void activateSpell() {
+        if (selectedPosition == null) {
+            System.out.println("no card is selected yet");
+        } else if (!(selectedPosition.getCard() instanceof TrapAndSpellCard) ||
+                !((TrapAndSpellCard) selectedPosition.getCard()).getTrapOrSpellTypes().equals(TrapOrSpellTypes.SPELL_CARD)) {
+            System.out.println("activate effect is only for spell cards.");
+        } else if (!getPhase().equals(Phase.MAIN)) {
+            System.out.println("you can’t activate an effect on this turn");
+        } else if (activatedSpells.contains(selectedPosition)) {
+            System.out.println("you have already activated this card");
+        } else {
+//            if (((TrapAndSpellCard) selectedPosition.getCard()) == null)
+//                System.out.println("1");
+//            if (((TrapAndSpellCard) selectedPosition.getCard()).getEffect() == null)
+//                System.out.println(2);
+//            if (((TrapAndSpellCard) selectedPosition.getCard()).getEffect().isSuitableForActivate(this))
+//                System.out.println("true");
+            if (!((TrapAndSpellCard) selectedPosition.getCard()).getEffect().isSuitableForActivate(this)) {
+                System.out.println("preparations of this spell are not done yet");
+            } else {
+                activatedSpells.add(selectedPosition);
+                System.out.println("spell activated");
+                ((TrapAndSpellCard) selectedPosition.getCard()).getEffect().activate(this);
+            }
+        }
     }
+
 
     public void activateTrap(TrapAndSpellCard trap) {
 
     }
 
     public void activateEffect() {
-
     }
 
     private boolean isPositionInOpponentsBoard() {
         if (getOpposition().getBoard().getMonsterCards().contains(selectedPosition)) {
             return true;
-        } else if (getOpposition().getBoard().getTrapAndSpellCard().contains(selectedPosition)) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return getOpposition().getBoard().getTrapAndSpellCards().contains(selectedPosition);
     }
 
     private boolean isPositionHidden() {
-        if ((selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_HIDDEN)) ||
-                (selectedPosition.getStatus().equals(StatusOfPosition.SPELL_OR_TRAP_HIDDEN))) {
-            return true;
-        }
-        return false;
+        return (selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_HIDDEN)) ||
+                (selectedPosition.getStatus().equals(StatusOfPosition.SPELL_OR_TRAP_HIDDEN));
     }
 
     public void showCard() {
@@ -1011,43 +1052,59 @@ public class Game {
     }
 
     public boolean cheat(String cheatCode) {
-        if (cheatCode.equals("0051iPl")) {
-            turnOfPlayer.increaseLP(1500);
-            System.out.println("cheat activated:\n" +
-                    "1500 LP was added to you");
-            return true;
-        } else if (cheatCode.equals("bAcOo")) {
-            if (!getOpposition().getBoard().getMonsterCards().isEmpty()){
-            getOpposition().getBoard().removeCard(getOpposition().getBoard().getMaximumPuver().getIndex());
-            System.out.println("cheat activated:\n" +
-                    "you removed the most powerful monster of your opponent");
-            return true;}
-        } else if (cheatCode.equals("12yBdB")) {
-            if (selectedPosition == null)
-                return false;
-            else {
-                if (attackedCards.contains(selectedPosition)) {
-                    attackedCards.remove(selectedPosition);
+        if (getCheatCounter() < 3) {
+            if (cheatCode.equals("0051iPl")) {
+                turnOfPlayer.increaseLP(1500);
+                System.out.println("cheat activated:\n" +
+                        "1500 LP was added to you");
+                increaseCheatCounter();
+                return true;
+            } else if (cheatCode.equals("bAcOo")) {
+                if (!getOpposition().getBoard().getMonsterCards().isEmpty()) {
+                    getOpposition().getBoard().removeCardFromMonsterCards(getOpposition().getBoard().getMaximumPuver().getIndex());
                     System.out.println("cheat activated:\n" +
-                            "now you can attack again with your card");
+                            "you removed the most powerful monster of your opponent");
+                    increaseCheatCounter();
                     return true;
                 }
+            } else if (cheatCode.equals("12yBdB")) {
+                if (selectedPosition == null)
+                    return false;
+                else {
+                    if (attackedCards.contains(selectedPosition)) {
+                        attackedCards.remove(selectedPosition);
+                        System.out.println("cheat activated:\n" +
+                                "now you can attack again with your card");
+                        increaseCheatCounter();
+                        return true;
+                    }
+                }
+            } else if (cheatCode.equals("hPoSt2")) {
+                isAnyCardSummoned = false;
+                System.out.println("cheat activated:\n" +
+                        "you can now summon or set another card");
+                increaseCheatCounter();
+                return true;
+            } else if (cheatCode.equals("pUvEr")) {
+                System.out.println("puver activated:\n" +
+                        "now you win the round");
+                turnOfPlayer = getOpposition();
+                increaseCheatCounter();
+                surrender();
+                return true;
             }
-        } else if (cheatCode.equals("hPoSt2")) {
-            isAnyCardSummoned = false;
-            System.out.println("cheat activated:\n" +
-                    "you can now summon or set another card");
-            return true;
-        } else if (cheatCode.equals("pUvEr")) {
-
+            return false;
         }
+        System.out.println("You can't use more cheats");
         return false;
+    }
+
+    private int getCheatCounter() {
+        return this.cheatCounter;
     }
 
     public static Matcher getCommandMatcher(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(input);
     }
-
-
 }
