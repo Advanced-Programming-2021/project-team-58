@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Objects;
 
 public class AIClass extends Player {
 
@@ -44,6 +45,10 @@ public class AIClass extends Player {
             else
                 game.set();
         }
+        chooseAndSetSpellCard(game);
+        activatePotOfGreed(game);
+        activateRaigeki(game);
+        activateDarkHole(game);
 
         game.showBoard();
         System.out.println("Thinking...");
@@ -115,4 +120,106 @@ public class AIClass extends Player {
         game.setSelectedPosition(getBoard().getMaximumPuver());
     }
 
+    public boolean isPotOfGreedExistsInHand() {
+        return getHand().contains(Card.getCardByName("Pot of Greed"));
+    }
+
+    public boolean isRaigekiExistsInHand() {
+        return getHand().contains(Card.getCardByName("Raigeki"));
+    }
+
+    public boolean isDarkHoleExistsInHand() {
+        return getHand().contains(Card.getCardByName("Dark Hole"));
+    }
+
+    public void chooseAndSetSpellCard(Game game) {
+        if (isPotOfGreedExistsInHand()) {
+            for (int i = 0; i < getHand().size(); i++) {
+                if (getHand().get(i).getCardName().equals("Pot of Greed")) {
+                    game.setSelectedCardHand(getHand().get(i));
+                    break;
+                }
+            }
+            game.set();
+            game.selectedCardHandNulling();
+        }
+        if (isRaigekiExistsInHand()) {
+            for (int i = 0; i < getHand().size(); i++) {
+                if (getHand().get(i).getCardName().equals("Raigeki")) {
+                    game.setSelectedCardHand(getHand().get(i));
+                    break;
+                }
+            }
+            game.set();
+            game.selectedCardHandNulling();
+        }
+        if (isRaigekiExistsInHand()) {
+            for (int i = 0; i < getHand().size(); i++) {
+                if (getHand().get(i).getCardName().equals("Raigeki")) {
+                    game.setSelectedCardHand(getHand().get(i));
+                    break;
+                }
+            }
+            game.set();
+            game.selectedCardHandNulling();
+        }
+        if (isDarkHoleExistsInHand()) {
+            for (int i = 0; i < getHand().size(); i++) {
+                if (getHand().get(i).getCardName().equals("Dark Hole")) {
+                    game.setSelectedCardHand(getHand().get(i));
+                    break;
+                }
+            }
+            game.set();
+            game.selectedCardHandNulling();
+        }
+    }
+
+    public void activatePotOfGreed(Game game){
+        for (int i = 0; i < 5; i++) {
+            Position position = getBoard().getTrapAndSpellCards().get(i);
+            if(position.getCard().getCardName().equals("Pot of Greed")){
+                game.setSelectedPosition(position);
+                break;
+            }
+        }
+        if(game.getSelectedPosition() != null){
+            TrapAndSpellCard potOfGreed = ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Pot of Greed")));
+            if(potOfGreed.getEffect().isSuitableForActivate(game))
+                potOfGreed.getEffect().activate(game);
+        }
+        game.selectedPositionNulling();
+    }
+
+    public void activateRaigeki(Game game){
+        for (int i = 0; i < 5; i++) {
+            Position position = getBoard().getTrapAndSpellCards().get(i);
+            if(position.getCard().getCardName().equals("Raigeki")){
+                game.setSelectedPosition(position);
+                break;
+            }
+        }
+        if(game.getSelectedPosition() != null){
+            TrapAndSpellCard raigeki = ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Raigeki")));
+            if(raigeki.getEffect().isSuitableForActivate(game))
+                raigeki.getEffect().activate(game);
+        }
+        game.selectedPositionNulling();
+    }
+
+    public void activateDarkHole(Game game){
+        for (int i = 0; i < 5; i++) {
+            Position position = getBoard().getTrapAndSpellCards().get(i);
+            if(position.getCard().getCardName().equals("Dark Hole")){
+                game.setSelectedPosition(position);
+                break;
+            }
+        }
+        if(game.getSelectedPosition() != null){
+            if(getBoard().cardsInMonsterZone() > game.getOpposition().getBoard().cardsInMonsterZone()){
+                ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Dark Hole"))).getEffect().activate(game);
+            }
+        }
+        game.selectedPositionNulling();
+    }
 }
