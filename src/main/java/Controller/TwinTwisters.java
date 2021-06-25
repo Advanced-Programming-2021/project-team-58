@@ -12,27 +12,33 @@ public class TwinTwisters extends Effect {
         System.out.println("Please select a card in your hand");
         Scanner scanner = new Scanner(System.in);
         while (true) {
+            game.selectedCardHandNulling();
             String input = scanner.nextLine();
             Matcher matchSelect = getCommandMatcher(input, "^select --(hand) (--opponent )*([0-9]+)$");
             if (matchSelect.find()) {
                 game.select(matchSelect);
-                game.getTurnOfPlayer().getHand().remove(game.getSelectedCardHand());
-                game.getTurnOfPlayer().getBoard().addToGraveyard(game.getSelectedCardHand());
-                break;
+                if(game.getSelectedCardHand() != null) {
+                    game.getTurnOfPlayer().getHand().remove(game.getSelectedCardHand());
+                    game.getTurnOfPlayer().getBoard().addToGraveyard(game.getSelectedCardHand());
+                    break;
+                }
             } else System.out.println("invalid command");
         }
         int num = 0;
         while (num < 2) {
+            game.selectedPositionNulling();
             System.out.println("Please select a spell or trap card in the game mat");
             String input = scanner.nextLine();
             Matcher matchSelect = getCommandMatcher(input, "^select --(spell) (--opponent )*([0-9]+)$");
             if (matchSelect.find()) {
                 game.select(matchSelect);
-                if (matchSelect.group(2).equals("--opponent "))
-                    game.sendToGraveyard(game.getSelectedPosition(),game.getOpposition());
-                else
-                    game.sendToGraveyard(game.getSelectedPosition(),game.getTurnOfPlayer());
-                num++;
+                if(game.getSelectedPosition() != null) {
+                    if (matchSelect.group(2) == null)
+                        game.sendToGraveyard(game.getSelectedPosition(), game.getTurnOfPlayer());
+                    else
+                        game.sendToGraveyard(game.getSelectedPosition(), game.getOpposition());
+                    num++;
+                }
             } else System.out.println("invalid command");
         }
     }
