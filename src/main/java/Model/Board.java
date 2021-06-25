@@ -166,22 +166,6 @@ public class Board {
         return bestPosition;
     }
 
-
-    public void removeCardFromMonsterCards(int index) {
-        Position position = getMonsterCards().get(index);
-        if (!(position.getStatus().equals(StatusOfPosition.EMPTY))) {
-            addToGraveyard(getMonsterCards().get(index).getCard());
-            getMonsterCards().get(index).setCard(null);
-            getMonsterCards().get(index).setStatus(StatusOfPosition.EMPTY);
-        }
-    }
-
-    public void removeCardFromSpellAndTrapCards(int index) {
-        addToGraveyard(getTrapAndSpellCards().get(index).getCard());
-        getTrapAndSpellCards().get(index).setCard(null);
-        getTrapAndSpellCards().get(index).setStatus(StatusOfPosition.EMPTY);
-    }
-
     public boolean isMonsterInGraveYard() {
         for (Card card : graveYard) {
             if (card instanceof MonsterCard)

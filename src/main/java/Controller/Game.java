@@ -129,13 +129,7 @@ public class Game {
             } else if (matchSelectField.find()) {
 
             } else if (input.equals("select -d")) {
-                if ((selectedPosition == null) && (selectedCardHand == null)) {
-                    System.out.println("no card is selected yet!");
-                } else {
-                    selectedPositionNulling();
-                    selectedCardHandNulling();
-                }
-
+                deSelect();
             } else if (input.equals("card show selected")) {
                 showCard();
             } else if (input.equals("show graveyard")) {
@@ -163,6 +157,15 @@ public class Game {
             battlePhase();
         } else {
             endPhase();
+        }
+    }
+
+    private void deSelect() {
+        if ((selectedPosition == null) && (selectedCardHand == null)) {
+            System.out.println("no card is selected yet!");
+        } else {
+            selectedPositionNulling();
+            selectedCardHandNulling();
         }
     }
 
@@ -582,18 +585,19 @@ public class Game {
                     System.out.println("Please enter an integer");
                     continue;
                 }
-                if (turnOfPlayer.getBoard().getMonsterCards().get(b).getStatus().equals(StatusOfPosition.EMPTY)) {
+                Position position = turnOfPlayer.getBoard().getMonsterCards().get(b);
+                if (position.getStatus().equals(StatusOfPosition.EMPTY)) {
                     System.out.println("there no monsters one this address");
                 } else {
-//                    System.out.println("I have got number: " + a);
-                    turnOfPlayer.getBoard().removeCardFromMonsterCards(b);
+                    sendToGraveyard(position,turnOfPlayer);
                     numOfCardsTributed++;
                 }
             }
         } else {
             for (int i = 0; i < numberOfCards; i++) {
                 int index = turnOfPlayer.getBoard().getMinimumAttackPosition();
-                turnOfPlayer.getBoard().removeCardFromMonsterCards(index);
+                Position position = turnOfPlayer.getBoard().getMonsterCards().get(index);
+                sendToGraveyard(position,turnOfPlayer);
             }
         }
         return true;
@@ -843,9 +847,13 @@ public class Game {
 //    --------------------------------------------------------------------------------------------------------
 
     public void sendToGraveyard(Position position, Player player) {
-        player.getBoard().addToGraveyard(position.getCard());
-        attackedCards.remove(position);
-        activatedSpells.remove(position);
+        if (!(position.getStatus().equals(StatusOfPosition.EMPTY))) {
+            player.getBoard().addToGraveyard(position.getCard());
+            position.setCard(null);
+            position.setStatus(StatusOfPosition.EMPTY);
+            attackedCards.remove(position);
+            activatedSpells.remove(position);
+        }
     }
 
     public void setTrapSpellOnBoard() {
@@ -1008,12 +1016,14 @@ public class Game {
 //                System.out.println(2);
 //            if (((TrapAndSpellCard) selectedPosition.getCard()).getEffect().isSuitableForActivate(this))
 //                System.out.println("true");
-            if (!((TrapAndSpellCard) selectedPosition.getCard()).getEffect().isSuitableForActivate(this)) {
+            if (!((TrapAndSpellCard) Objects.requireNonNull(getSelectedPosition().getCard())).getEffect().isSuitableForActivate(this)) {
                 System.out.println("preparations of this spell are not done yet");
             } else {
                 activatedSpells.add(selectedPosition);
                 System.out.println("spell activated");
-                ((TrapAndSpellCard) selectedPosition.getCard()).getEffect().activate(this);
+                ((TrapAndSpellCard) Objects.requireNonNull(getSelectedPosition().getCard())).getEffect().activate(this);
+                selectedCardHandNulling();
+                selectedPositionNulling();
             }
         }
     }
@@ -1061,7 +1071,7 @@ public class Game {
                 return true;
             } else if (cheatCode.equals("bAcOo")) {
                 if (!getOpposition().getBoard().getMonsterCards().isEmpty()) {
-                    getOpposition().getBoard().removeCardFromMonsterCards(getOpposition().getBoard().getMaximumPuver().getIndex());
+                    sendToGraveyard(getOpposition().getBoard().getMaximumPuver(),getOpposition());
                     System.out.println("cheat activated:\n" +
                             "you removed the most powerful monster of your opponent");
                     increaseCheatCounter();

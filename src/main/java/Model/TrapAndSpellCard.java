@@ -36,6 +36,11 @@ public class TrapAndSpellCard extends Card {
 
     public static void setEffects(){
         ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Dark Hole"))).setEffect(new DarkHole());
+        ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Harpie's Feather Duster"))).setEffect(new HarpieFeatherDuster());
+        ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Monster Reborn"))).setEffect(new MonsterReborn());
+        ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Pot of Greed"))).setEffect(new PotOfGreed());
+        ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Raigeki"))).setEffect(new Raigeki());
+        ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Twin Twisters"))).setEffect(new TwinTwisters());
     }
     public void setCardStatus(TrapAndSpellStatus cardStatus) {
         this.cardStatus = cardStatus;

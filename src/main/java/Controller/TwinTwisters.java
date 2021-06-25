@@ -27,9 +27,12 @@ public class TwinTwisters extends Effect {
             String input = scanner.nextLine();
             Matcher matchSelect = getCommandMatcher(input, "^select --(spell) (--opponent )*([0-9]+)$");
             if (matchSelect.find()) {
-               game.select(matchSelect);
-               game.getTurnOfPlayer().getBoard().removeCardFromSpellAndTrapCards(game.getSelectedPosition().getIndex());
-               num++;
+                game.select(matchSelect);
+                if (matchSelect.group(2).equals("--opponent "))
+                    game.sendToGraveyard(game.getSelectedPosition(),game.getOpposition());
+                else
+                    game.sendToGraveyard(game.getSelectedPosition(),game.getTurnOfPlayer());
+                num++;
             } else System.out.println("invalid command");
         }
     }

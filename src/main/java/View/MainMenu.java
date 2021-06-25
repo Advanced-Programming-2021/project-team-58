@@ -75,9 +75,7 @@ public class MainMenu {
                 AIClass aiPlayer = new AIClass();
                 DuelMenu.run(LoginMenu.getLoggedInPlayer(), aiPlayer, numOfRounds);
             }
-
         }
-
     }
 
     private static void enterAMenu(Matcher matcher) {

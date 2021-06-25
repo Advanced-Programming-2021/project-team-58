@@ -16,8 +16,6 @@ public class PotOfGreed extends Effect {
 
     @Override
     public boolean isSuitableForActivate(Game game) {
-        if (game.getTurnOfPlayer().getBoard().getMainDeck().size()>=2)
-            return true;
-        return false;
+        return  game.getTurnOfPlayer().getBoard().getMainDeck().size()>=2;
     }
 }

@@ -29,7 +29,7 @@ public class Deck implements Comparable<Deck>, Cloneable {
     }
 
     public boolean isValid() {
-        if (this.mainDeck.size() >= 10 && this.mainDeck.size() <= 15 && this.sideDeck.size() <= 15) return true;
+        if (this.mainDeck.size() >= 20 && this.mainDeck.size() <= 60 && this.sideDeck.size() <= 15) return true;
         return false;
     }
 
@@ -98,5 +98,21 @@ public class Deck implements Comparable<Deck>, Cloneable {
             System.err.println("hi");
         }
         return null;
+    }
+
+    public boolean hasACardInMainDeck(Card card) {
+        for (Card c: mainDeck) {
+            if (c.getCardName().equals(card.getCardName()))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean hasACardInSideDeck(Card card) {
+        for (Card c: sideDeck) {
+            if (c.getCardName().equals(card.getCardName()))
+                return true;
+        }
+        return false;
     }
 }
