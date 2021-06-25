@@ -35,6 +35,10 @@ public class Game {
         this.cheatCounter = 0;
     }
 
+    public void setTurnOfPlayer(Player turnOfPlayer) {
+        this.turnOfPlayer = turnOfPlayer;
+    }
+
     public void increaseCheatCounter() {
         this.cheatCounter++;
     }
@@ -142,9 +146,8 @@ public class Game {
                 activateSpell();
             } else if (input.equals("show hand")) {
                 showHand();
-            } else {
-                if (!cheat(input))
-                    System.out.println("invalid command");
+            } else if (!cheat(input)) {
+                System.out.println("invalid command");
             }
             if (!isSurrendered)
                 showBoard();
@@ -161,6 +164,7 @@ public class Game {
             endPhase();
         }
     }
+
 
     private void deSelect() {
         if ((selectedPosition == null) && (selectedCardHand == null)) {
@@ -250,6 +254,10 @@ public class Game {
         }
     }
 
+    public void setAnyCardSummoned(boolean anyCardSummoned) {
+        isAnyCardSummoned = anyCardSummoned;
+    }
+
     public void drawPhase() {
         setPhase(Phase.DRAW);
         if (isAnyoneWin()) return;
@@ -258,6 +266,7 @@ public class Game {
     }
 
     public void battlePhase() {
+
         System.out.println("phase : battle phase");
         setPhase(Phase.BATTLE);
         String input;
@@ -656,15 +665,11 @@ public class Game {
         } else if (selectedPosition.getIsStatusChanged()) {
             System.out.println("you already changed this card position in this turn");
         } else {
-            if (selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED)) {
-                System.out.println(selectedPosition.getStatus());
+            if (selectedPosition.getStatus().equals(StatusOfPosition.OFFENSIVE_OCCUPIED))
                 selectedPosition.setStatus(StatusOfPosition.DEFENSIVE_OCCUPIED);
-                System.out.println(selectedPosition.getStatus());
-            } else if (selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_OCCUPIED)) {
-                System.out.println(selectedPosition.getStatus());
+            else if (selectedPosition.getStatus().equals(StatusOfPosition.DEFENSIVE_OCCUPIED))
                 selectedPosition.setStatus(StatusOfPosition.OFFENSIVE_OCCUPIED);
-                System.out.println(selectedPosition.getStatus());
-            }
+
             System.out.println("monster card position changed successfully");
             selectedPosition.setStatusChanged(true);
             selectedPositionNulling();
@@ -1017,7 +1022,7 @@ public class Game {
                 activatedSpells.add(selectedPosition);
                 System.out.println("spell activated");
                 ((TrapAndSpellCard) Objects.requireNonNull(getSelectedPosition().getCard())).getEffect().activate(this);
-                sendToGraveyard(selectedPosition , turnOfPlayer);
+                sendToGraveyard(selectedPosition, turnOfPlayer);
                 selectedCardHandNulling();
                 selectedPositionNulling();
             }
@@ -1058,14 +1063,18 @@ public class Game {
     }
 
     public boolean cheat(String cheatCode) {
-        if (getCheatCounter() < 3) {
-            if (cheatCode.equals("0051iPl")) {
+        if (cheatCode.equals("0051iPl")) {
+            if (cheatCounter < 3) {
                 turnOfPlayer.increaseLP(1500);
                 System.out.println("cheat activated:\n" +
                         "1500 LP was added to you");
                 increaseCheatCounter();
-                return true;
-            } else if (cheatCode.equals("bAcOo")) {
+            } else {
+                System.out.println("you can't use cheats anymore");
+            }
+            return true;
+        } else if (cheatCode.equals("bAcOo")) {
+            if (cheatCounter < 3) {
                 if (!getOpposition().getBoard().getMonsterCards().isEmpty()) {
                     sendToGraveyard(getOpposition().getBoard().getMaximumPuver(), getOpposition());
                     System.out.println("cheat activated:\n" +
@@ -1073,35 +1082,49 @@ public class Game {
                     increaseCheatCounter();
                     return true;
                 }
-            } else if (cheatCode.equals("12yBdB")) {
+            } else {
+                System.out.println("you can't use cheats anymore");
+                return false;
+            }
+            return true;
+
+        } else if (cheatCode.equals("12yBdB")) {
+            if (cheatCounter < 3) {
                 if (selectedPosition == null)
-                    return false;
+                    System.out.println("selected position is null");
                 else {
                     if (attackedCards.contains(selectedPosition)) {
                         attackedCards.remove(selectedPosition);
                         System.out.println("cheat activated:\n" +
                                 "now you can attack again with your card");
                         increaseCheatCounter();
-                        return true;
                     }
                 }
-            } else if (cheatCode.equals("hPoSt2")) {
+            } else
+                System.out.println("you can't use cheats anymore");
+
+            return true;
+        } else if (cheatCode.equals("hPoSt2")) {
+            if (cheatCounter < 3) {
                 isAnyCardSummoned = false;
                 System.out.println("cheat activated:\n" +
                         "you can now summon or set another card");
                 increaseCheatCounter();
-                return true;
-            } else if (cheatCode.equals("pUvEr")) {
+            } else
+                System.out.println("you can't use cheats anymore");
+
+            return true;
+        } else if (cheatCode.equals("pUvEr")) {
+            if (cheatCounter < 3) {
                 System.out.println("puver activated:\n" +
                         "now you win the round");
                 turnOfPlayer = getOpposition();
                 increaseCheatCounter();
                 surrender();
-                return true;
-            }
-            return false;
+            } else
+                System.out.println("you can't use cheats anymore");
+            return true;
         }
-        System.out.println("You can't use more cheats");
         return false;
     }
 

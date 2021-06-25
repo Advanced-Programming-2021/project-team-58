@@ -10,81 +10,79 @@ import java.util.regex.*;
 public class ProfileMenu {
     public static void run() {
         Scanner scan = new Scanner(System.in);
-        String input = scan.nextLine();
-        if (input.trim().equalsIgnoreCase("menu exit")) {
-            try {
-                jsonSaveAndLoad.save(Player.getAllPlayers());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            MainMenu.run();}
-        else while (!input.trim().equalsIgnoreCase("menu exit")) {
-            if (getCommandMatcher(input.trim(), "^ [ ]+ menu enter [A-Za-z]+ [ ]+ $").find())
+        String input = "";
+        while (!(input = scan.nextLine()).equals("menu exit")) {
+
+            Matcher nicknameMatcher = getCommandMatcher(input.trim(), "^profile change --nickname ([A-Za-z]+)$");
+            Matcher passwordMatcher1 = getCommandMatcher(input.trim(), "^profile change --password --current ([A-Za-z0-9]+) --new ([A-Za-z0-9]+)$");
+            Matcher passwordMatcher2 = getCommandMatcher(input.trim(), "^profile change --password --new ([A-Za-z0-9]+) --current ([A-Za-z0-9]+)$");
+            Matcher passwordMatcher3 = getCommandMatcher(input.trim(), "^profile change --current ([A-Za-z0-9]+) --password --new ([A-Za-z0-9]+)$");
+            Matcher passwordMatcher4 = getCommandMatcher(input.trim(), "^profile change --current ([A-Za-z0-9]+) --new ([A-Za-z0-9]+) --password $");
+            Matcher passwordMatcher5 = getCommandMatcher(input.trim(), "^profile change --new ([A-Za-z0-9]+) --password --current ([A-Za-z0-9]+)$");
+            Matcher passwordMatcher6 = getCommandMatcher(input.trim(), "^profile change --new ([A-Za-z0-9]+) --current ([A-Za-z0-9]+) --password$");
+
+
+            if (input.matches("menu enter [A-Za-z ]+"))
                 System.out.println("menu navigation is not possible");
-
-            if (input.trim().equalsIgnoreCase("menu show-current")) System.out.println("ProfileMenu");
-            //nickname changing
-            if (getCommandMatcher(input.trim(), "^[ ]+ profile change nickname ([A-Za-z]+) [ ]+ $").find()) {
-                if (getCommandMatcher(input.trim(), "^[ ]+ profile change nickname ([A-Za-z]+) [ ]+ $").group(1).equals(LoginMenu.getLoggedInPlayer().getNickname()))
-                    System.out.println("user with nickname " + getCommandMatcher(input.trim(), "^[ ]+ profile change nickname ([A-Za-z]+) [ ]+ $").group(1) + " already exists");
+            else if (input.equals("menu show-current"))
+                System.out.println("Profile Menu");
+            else if (nicknameMatcher.find()) {
+                if (nicknameMatcher.group(1).equals(LoginMenu.getLoggedInPlayer().getNickname()))
+                    System.out.println("user with nickname " + nicknameMatcher.group(1) + " already exists");
                 else {
-                    changeNickName(getCommandMatcher(input.trim(), "^[ ]+ profile change nickname ([A-Za-z]+) [ ]+ $").group(1));
+                    changeNickName(nicknameMatcher.group(1));
                     System.out.println("nickname changed successfully!");
                 }
-            } else if (getCommandMatcher(input.trim(), "^[ ]+ profile change ([A-Za-z]+) nickname [ ]+ $").find()) {
-                if (getCommandMatcher(input.trim(), "^[ ]+ profile change ([A-Za-z]+) nickname [ ]+ $").group(1).equals(LoginMenu.getLoggedInPlayer().getNickname()))
-                    System.out.println("user with nickname " + getCommandMatcher(input.trim(), "^[ ]+ profile change ([A-Za-z]+) nickname [ ]+ $").group(1) + " already exists");
-                else {
-                    changeNickName(getCommandMatcher(input.trim(), "^[ ]+ profile change ([A-Za-z]+) nickname [ ]+ $").group(1));
-                    System.out.println("nickname changed successfully!");
-                }
-            }
-
-
-            //password changing  q p j
-            if (getCommandMatcher(input.trim(), "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").find()) {
-                if (getCommandMatcher(input.trim(), "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(1).equals(getCommandMatcher(input.trim(), "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(0)))
+            } else if (passwordMatcher3.find()) {
+                if (passwordMatcher3.group(1).equals(passwordMatcher3.group(2)))
                     System.out.println("please enter a new password");
-                else if (getCommandMatcher(input.trim(), "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(1)
-                        .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
-                    changePassword(getCommandMatcher(input.trim(), "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(2));
-                    System.out.println("password changed successfully!");
-                } else if (getCommandMatcher(input.trim(), "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(2)
-                        .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
-                    changePassword(getCommandMatcher(input.trim(), "^[ ]+ profile change ([A-Za-z]+) password ([A-Za-z]+) [ ]+ $").group(1));
+                else if (passwordMatcher3.group(1).equals(LoginMenu.getLoggedInPlayer().getPassword())) {
+                    changePassword(passwordMatcher3.group(2));
                     System.out.println("password changed successfully!");
                 } else System.out.println("current password is invalid");
-            }
-            //q j p
-            if (getCommandMatcher(input.trim(), "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").find()) {
-                if (getCommandMatcher(input.trim(), "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(0).equals(getCommandMatcher(input.trim(), "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(1)))
+            } else if (passwordMatcher1.find()) {
+                if (passwordMatcher1.group(1).equals(passwordMatcher1.group(2)))
                     System.out.println("please enter a new password");
-                else if (getCommandMatcher(input.trim(), "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(1)
-                        .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
-                    changePassword(getCommandMatcher(input.trim(), "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(2));
-                    System.out.println("password changed successfully!");
-                } else if (getCommandMatcher(input.trim(), "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(2)
-                        .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
-                    changePassword(getCommandMatcher(input.trim(), "^ [ ]+ profile change ([A-Za-z]+) ([A-Za-z]+) password [ ]+ $").group(1));
+                else if (passwordMatcher1.group(1).equals(LoginMenu.getLoggedInPlayer().getPassword())) {
+                    changePassword(passwordMatcher1.group(2));
                     System.out.println("password changed successfully!");
                 } else System.out.println("current password is invalid");
-            }
-            //p q j
-            if (getCommandMatcher(input.trim(), "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").find()) {
-                if (getCommandMatcher(input.trim(), "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(1).equals(getCommandMatcher(input.trim(), "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(0)))
+            } else if (passwordMatcher4.find()) {
+                if (passwordMatcher4.group(1).equals(passwordMatcher4.group(2)))
                     System.out.println("please enter a new password");
-                else if (getCommandMatcher(input.trim(), "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(1)
-                        .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
-                    changePassword(getCommandMatcher(input.trim(), "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(2));
-                    System.out.println("password changed successfully!");
-                } else if (getCommandMatcher(input.trim(), "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(2)
-                        .equals(LoginMenu.getLoggedInPlayer().getPassword())) {
-                    changePassword(getCommandMatcher(input.trim(), "^ [ ]+ profile change password ([A-Za-z]+) ([A-Za-z]+) [ ]+ $").group(1));
+                else if (passwordMatcher4.group(1).equals(LoginMenu.getLoggedInPlayer().getPassword())) {
+                    changePassword(passwordMatcher4.group(2));
                     System.out.println("password changed successfully!");
                 } else System.out.println("current password is invalid");
-            }
-            input = scan.nextLine();
+            } else if (passwordMatcher2.find()) {
+                if (passwordMatcher2.group(1).equals(passwordMatcher2.group(2)))
+                    System.out.println("please enter a new password");
+                else if (passwordMatcher2.group(2).equals(LoginMenu.getLoggedInPlayer().getPassword())) {
+                    changePassword(passwordMatcher2.group(1));
+                    System.out.println("password changed successfully!");
+                } else System.out.println("current password is invalid");
+            } else if (passwordMatcher6.find()) {
+                if (passwordMatcher6.group(1).equals(passwordMatcher6.group(2)))
+                    System.out.println("please enter a new password");
+                else if (passwordMatcher6.group(2).equals(LoginMenu.getLoggedInPlayer().getPassword())) {
+                    changePassword(passwordMatcher6.group(1));
+                    System.out.println("password changed successfully!");
+                } else System.out.println("current password is invalid");
+            } else if (passwordMatcher5.find()) {
+                if (passwordMatcher5.group(1).equals(passwordMatcher5.group(2)))
+                    System.out.println("please enter a new password");
+                else if (passwordMatcher5.group(2).equals(LoginMenu.getLoggedInPlayer().getPassword())) {
+                    changePassword(passwordMatcher5.group(1));
+                    System.out.println("password changed successfully!");
+                } else System.out.println("current password is invalid");
+            } else System.out.println("invalid command");
         }
+        try {
+            jsonSaveAndLoad.save(Player.getAllPlayers());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        MainMenu.run();
     }
 
     public static void changePassword(String newPassword) {
@@ -99,5 +97,4 @@ public class ProfileMenu {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(input);
     }
-
 }
