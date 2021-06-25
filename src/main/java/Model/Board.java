@@ -7,6 +7,7 @@ public class Board {
     private ArrayList<Position> monsterCards = new ArrayList<Position>();
     private ArrayList<Position> trapAndSpellCards = new ArrayList<Position>();
     private ArrayList<Card> mainDeck = new ArrayList<>();
+    private Position fieldZone = new Position(StatusOfPosition.EMPTY);
 
     public Board() {
         createMonsterCardPosition();
@@ -23,14 +24,14 @@ public class Board {
 
     public void createMonsterCardPosition() {
         for (int i = 0; i < 5; i++) {
-            Position x = new Position(StatusOfPosition.EMPTY, i);
+            Position x = new Position(StatusOfPosition.EMPTY);
             monsterCards.add(x);
         }
     }
 
     public void createSpellCardPosition() {
         for (int i = 0; i < 5; i++) {
-            Position x = new Position(StatusOfPosition.EMPTY, i);
+            Position x = new Position(StatusOfPosition.EMPTY);
             trapAndSpellCards.add(x);
         }
     }
@@ -82,26 +83,9 @@ public class Board {
         return true;
     }
 
-    public boolean isTrapAndSpellZoneEmpty() {
-        for (Position position : trapAndSpellCards) {
-            if (!position.getStatus().equals(StatusOfPosition.EMPTY)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public void addToGraveyard(Card card) {
         graveYard.add(card);
     }
-
-//    public void setDeck(Deck deck) {
-//        this.deck = deck;
-//    }
-//
-//    public Deck getDeck() {
-//        return deck;
-//    }
 
     public ArrayList<Card> getMainDeck() {
         return this.mainDeck;
@@ -172,5 +156,9 @@ public class Board {
                 return true;
         }
         return false;
+    }
+
+    public Position getFieldZone() {
+        return this.fieldZone;
     }
 }

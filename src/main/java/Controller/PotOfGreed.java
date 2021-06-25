@@ -1,10 +1,6 @@
 package Controller;
 
 import Model.*;
-import View.*;
-
-
-import java.util.Random;
 
 public class PotOfGreed extends Effect {
     @Override
@@ -16,6 +12,6 @@ public class PotOfGreed extends Effect {
 
     @Override
     public boolean isSuitableForActivate(Game game) {
-        return  game.getTurnOfPlayer().getBoard().getMainDeck().size()>=2;
+        return game.getTurnOfPlayer().getBoard().getMainDeck().size() >= 2;
     }
 }

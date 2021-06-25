@@ -1,10 +1,7 @@
 package Controller;
 
 import Model.*;
-import View.*;
 
-
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MonsterReborn extends Effect {
@@ -34,10 +31,7 @@ public class MonsterReborn extends Effect {
 
     @Override
     public boolean isSuitableForActivate(Game game) {
-        if (game.getTurnOfPlayer().getBoard().isMonsterInGraveYard() ||
-                game.getOpposition().getBoard().isMonsterInGraveYard()) {
-            return true;
-        }
-        return false;
+        return (game.getTurnOfPlayer().getBoard().isMonsterInGraveYard() ||
+                game.getOpposition().getBoard().isMonsterInGraveYard());
     }
 }

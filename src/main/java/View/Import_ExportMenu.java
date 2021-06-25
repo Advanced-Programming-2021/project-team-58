@@ -1,6 +1,5 @@
 package View;
 
-import Controller.*;
 import Model.*;
 import com.gilecode.yagson.YaGson;
 import com.google.gson.reflect.TypeToken;
@@ -34,6 +33,12 @@ public class Import_ExportMenu {
                 System.out.println("Import-Export Menu");
             } else if (input.matches("menu enter [A-Za-z ]+")) {
                 System.out.println("menu navigation is not possible");
+            } else if (input.equals("--help")) {
+                System.out.println("menu exit\n" +
+                        "menu enter (menu name)\n" +
+                        "menu show-current\n" +
+                        "import card (card name)\n" +
+                        "export card (card name)");
             } else {
                 System.out.println("invalid command");
             }

@@ -1,7 +1,6 @@
 package Model;
 
 import Controller.*;
-import View.*;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -13,10 +12,6 @@ public class TrapAndSpellCard extends Card {
     private TrapAndSpellStatus cardStatus;
     private Effect effect;
     private static ArrayList<TrapAndSpellCard> allSpellOrTrapCards = new ArrayList<TrapAndSpellCard>();
-
-    public TrapAndSpellStatus getCardStatus() {
-        return cardStatus;
-    }
 
     public TrapAndSpellCard(String cardName, TrapOrSpellTypes cardType, TrapOrSpellIcons cardIcon, String cardDescription, TrapAndSpellStatus status, int price) {
         super(cardName, cardDescription, price);
@@ -34,7 +29,7 @@ public class TrapAndSpellCard extends Card {
         return effect;
     }
 
-    public static void setEffects(){
+    public static void setEffects() {
         ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Dark Hole"))).setEffect(new DarkHole());
         ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Harpie's Feather Duster"))).setEffect(new HarpieFeatherDuster());
         ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Monster Reborn"))).setEffect(new MonsterReborn());
@@ -42,6 +37,7 @@ public class TrapAndSpellCard extends Card {
         ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Raigeki"))).setEffect(new Raigeki());
         ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Twin Twisters"))).setEffect(new TwinTwisters());
     }
+
     public void setCardStatus(TrapAndSpellStatus cardStatus) {
         this.cardStatus = cardStatus;
     }
@@ -52,10 +48,6 @@ public class TrapAndSpellCard extends Card {
 
     public void setCardType(TrapOrSpellTypes cardType) {
         this.cardType = cardType;
-    }
-
-    public TrapOrSpellIcons getCardIcon() {
-        return cardIcon;
     }
 
     public void setCardIcon(TrapOrSpellIcons cardIcon) {
@@ -76,7 +68,7 @@ public class TrapAndSpellCard extends Card {
         }
     }
 
-    public static void addTrapAndSpell(){
+    public static void addTrapAndSpell() {
         allSpellOrTrapCards.add(new TrapAndSpellCard("Trap Hole", TrapOrSpellTypes.TRAP_CARD, TrapOrSpellIcons.NORMAL,
                 "When your opponent Normal or Flip Summons 1 monster with 1000 or more ATK: Target that " +
                         "monster; destroy that target.", TrapAndSpellStatus.UNLIMITED, 2000));
@@ -175,5 +167,4 @@ public class TrapAndSpellCard extends Card {
                         "Monsters from your Deck to the Graveyard whose total Levels equal the Level of that Ritual " +
                         "Monster.", TrapAndSpellStatus.UNLIMITED, 3000));
     }
-
 }

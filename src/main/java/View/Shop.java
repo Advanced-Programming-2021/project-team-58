@@ -21,18 +21,29 @@ public class Shop {
             else if (input.matches("shop show --all")) showAllCards();
             else if (input.matches("shop buy (.+)"))
                 buy(getCommandMatcher(input, "shop buy (.+)"));
-            else if(input.equals("show money"))
+            else if (input.equals("show money"))
                 System.out.println(LoginMenu.getLoggedInPlayer().getMoney());
             else if (input.equals("--help"))
                 help();
+            else if (input.matches("card show (.+)"))
+                showCard(getCommandMatcher(input, "card show (.+)"));
             else System.out.println("invalid command");
         }
         try {
-            jsonSaveAndLoad.save(Player.getAllPlayers());
+            jsonSaveAndLoad.save();
         } catch (IOException e) {
             e.printStackTrace();
         }
         MainMenu.run();
+    }
+
+    private static void showCard(Matcher matcher) {
+        if (matcher.find()) {
+            String cardName = matcher.group(1);
+            if (Card.getCardByName(cardName) == null)
+                System.out.println("No card with this name was found!");
+            else Objects.requireNonNull(Card.getCardByName(cardName)).showCard();
+        }
     }
 
     private static void help() {
@@ -40,7 +51,8 @@ public class Shop {
                 "menu show-current\n" +
                 "shop show --all\n" +
                 "shop buy (card name)\n" +
-                "show money");
+                "show money\n" +
+                "card show (card name)");
     }
 
     public static void buy(Matcher matcher) {
@@ -49,10 +61,10 @@ public class Shop {
             String cardName = matcher.group(1);
             if (Card.getCardByName(cardName) == null)
                 System.out.println("there is no card with this name");
-            else if (player.getMoney() < Card.getCardByName(cardName).getPrice())
+            else if (player.getMoney() < Objects.requireNonNull(Card.getCardByName(cardName)).getPrice())
                 System.out.println("not enough money");
             else {
-                player.decreaseMoney(Card.getCardByName(cardName).getPrice());
+                player.decreaseMoney(Objects.requireNonNull(Card.getCardByName(cardName)).getPrice());
                 player.getAllCards().add(Card.getCardByName(cardName));
                 System.out.println("Card with name " + cardName + " was bought successfully!");
             }

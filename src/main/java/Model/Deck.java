@@ -6,7 +6,6 @@ public class Deck implements Comparable<Deck>, Cloneable {
 
     private static ArrayList<Deck> allDecks = new ArrayList<Deck>();
     private String deckName;
-    private boolean isValid;
     private ArrayList<Card> allCards = new ArrayList<Card>();
     private ArrayList<Card> mainDeck = new ArrayList<Card>();
     private ArrayList<Card> sideDeck = new ArrayList<Card>();
@@ -15,10 +14,6 @@ public class Deck implements Comparable<Deck>, Cloneable {
         setDeckName(deckName);
         allDecks.add(this);
     }
-
-//    public static void addDeckToAllDecks(Deck deck) {
-//        allDecks.add(deck);
-//    }
 
     public void setDeckName(String deckName) {
         this.deckName = deckName;
@@ -29,12 +24,8 @@ public class Deck implements Comparable<Deck>, Cloneable {
     }
 
     public boolean isValid() {
-        if (this.mainDeck.size() >= 20 && this.mainDeck.size() <= 60 && this.sideDeck.size() <= 15) return true;
+        if (this.mainDeck.size() >= 40 && this.mainDeck.size() <= 60 && this.sideDeck.size() <= 15) return true;
         return false;
-    }
-
-    public int getDeckSize() {
-        return this.allCards.size();
     }
 
     public int getMainDeckSize() {
@@ -101,15 +92,7 @@ public class Deck implements Comparable<Deck>, Cloneable {
     }
 
     public boolean hasACardInMainDeck(Card card) {
-        for (Card c: mainDeck) {
-            if (c.getCardName().equals(card.getCardName()))
-                return true;
-        }
-        return false;
-    }
-
-    public boolean hasACardInSideDeck(Card card) {
-        for (Card c: sideDeck) {
+        for (Card c : mainDeck) {
             if (c.getCardName().equals(card.getCardName()))
                 return true;
         }

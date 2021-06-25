@@ -144,6 +144,8 @@ public class Game {
                 surrender();
             } else if (input.equals("activate effect")) {
                 activateSpell();
+            } else if (input.matches("card show (.+)")) {
+                cardShow(getCommandMatcher(input, "card show (.+)"));
             } else if (input.equals("show hand")) {
                 showHand();
             } else if (!cheat(input)) {
@@ -295,6 +297,8 @@ public class Game {
                 surrender();
             else if (input.equals("card show selected")) {
                 showCard();
+            } else if (input.matches("card show (.+)")) {
+                cardShow(getCommandMatcher(input, "card show (.+)"));
             } else {
                 if (!cheat(input))
                     System.out.println("invalid command for this phase");
@@ -490,16 +494,22 @@ public class Game {
         System.out.println(getOpposition().getBoard().getMainDeck().size());
         System.out.println("     " + printOpponentSpellCardsOnBoard(getOpposition()));
         System.out.println("     " + printOpponentMonsterOnBoard(getOpposition()));
-        System.out.println(getOpposition().getBoard().getGraveYard().size());
+        System.out.println(getOpposition().getBoard().getGraveYard().size() +
+                "                            " + showFieldZone(getOpposition()));
         System.out.println();
         System.out.println("-------------------------------");
         System.out.println();
-        System.out.println("                             " + turnOfPlayer.getBoard().getGraveYard().size());
+        System.out.println(showFieldZone(turnOfPlayer)+
+                "                            " + turnOfPlayer.getBoard().getGraveYard().size());
         System.out.println("     " + printMonsterCardOnBoard(turnOfPlayer));
         System.out.println("     " + printSpellCardsOnBoard(turnOfPlayer));
         System.out.println("                             " + turnOfPlayer.getBoard().getMainDeck().size());
         System.out.println(printCardsOnBoard(turnOfPlayer));
         System.out.println(turnOfPlayer.getNickname() + " : " + turnOfPlayer.getLP());
+    }
+
+    private String showFieldZone(Player player) {
+            return convertStatusToChar(player.getBoard().getFieldZone().getStatus());
     }
 
     public void selectedPositionNulling() {
@@ -857,12 +867,13 @@ public class Game {
     public void setTrapSpellOnBoard() {
         if ((selectedCardHand == null) && (selectedPosition == null)) {
             System.out.println("no card is selected yet");
-        } else if ((selectedCardHand == null) && (selectedPosition != null)) {
+        } else if ((selectedCardHand == null)) {
             System.out.println("you can’t set this card");
         } else if (!this.phase.equals(Phase.MAIN)) {
             System.out.println("you can’t do this action in this phase");
         } else if (turnOfPlayer.getBoard().isTrapAndSpellZoneFull()) {
             System.out.println("spell card zone is full");
+            setCardToFieldZone(selectedCardHand);
         } else {
             int i = firstEmptyIndex(turnOfPlayer.getBoard().getTrapAndSpellCards());
             turnOfPlayer.getBoard().getTrapAndSpellCards().get(i).setStatus(StatusOfPosition.SPELL_OR_TRAP_HIDDEN);
@@ -872,14 +883,6 @@ public class Game {
             selectedCardHandNulling();
             System.out.println("set successfully");
         }
-    }
-
-    public void activateTrapInOpponentTurn(TrapAndSpellCard trap) {
-
-    }
-
-    public void activateSpellInOpponentTurn(TrapAndSpellCard trap) {
-
     }
 
     private boolean isAnyMonsterInArray(ArrayList<Card> array) {
@@ -1029,14 +1032,6 @@ public class Game {
         }
     }
 
-
-    public void activateTrap(TrapAndSpellCard trap) {
-
-    }
-
-    public void activateEffect() {
-    }
-
     private boolean isPositionInOpponentsBoard() {
         if (getOpposition().getBoard().getMonsterCards().contains(selectedPosition)) {
             return true;
@@ -1062,9 +1057,18 @@ public class Game {
         }
     }
 
+    public void cardShow(Matcher matcher) {
+        if (matcher.find()) {
+            String cardName = matcher.group(1);
+            if (Card.getCardByName(cardName) == null)
+                System.out.println("No card with this name was found!");
+            else Objects.requireNonNull(Card.getCardByName(cardName)).showCard();
+        }
+    }
+
     public boolean cheat(String cheatCode) {
         if (cheatCode.equals("0051iPl")) {
-            if (cheatCounter < 3) {
+            if (getCheatCounter() < 3) {
                 turnOfPlayer.increaseLP(1500);
                 System.out.println("cheat activated:\n" +
                         "1500 LP was added to you");
@@ -1074,7 +1078,7 @@ public class Game {
             }
             return true;
         } else if (cheatCode.equals("bAcOo")) {
-            if (cheatCounter < 3) {
+            if (getCheatCounter() < 3) {
                 if (!getOpposition().getBoard().getMonsterCards().isEmpty()) {
                     sendToGraveyard(getOpposition().getBoard().getMaximumPuver(), getOpposition());
                     System.out.println("cheat activated:\n" +
@@ -1089,7 +1093,7 @@ public class Game {
             return true;
 
         } else if (cheatCode.equals("12yBdB")) {
-            if (cheatCounter < 3) {
+            if (getCheatCounter() < 3) {
                 if (selectedPosition == null)
                     System.out.println("selected position is null");
                 else {
@@ -1105,7 +1109,7 @@ public class Game {
 
             return true;
         } else if (cheatCode.equals("hPoSt2")) {
-            if (cheatCounter < 3) {
+            if (getCheatCounter() < 3) {
                 isAnyCardSummoned = false;
                 System.out.println("cheat activated:\n" +
                         "you can now summon or set another card");
@@ -1115,7 +1119,7 @@ public class Game {
 
             return true;
         } else if (cheatCode.equals("pUvEr")) {
-            if (cheatCounter < 3) {
+            if (getCheatCounter() < 3) {
                 System.out.println("puver activated:\n" +
                         "now you win the round");
                 turnOfPlayer = getOpposition();
@@ -1139,6 +1143,13 @@ public class Game {
             turnOfPlayer.getHand().get(i).showCard();
             System.out.println();
         }
+    }
+    public void setCardToFieldZone(Card card) {
+        if (turnOfPlayer.getBoard().getFieldZone().getCard()!=null) {
+            sendToGraveyard(turnOfPlayer.getBoard().getFieldZone(),turnOfPlayer);
+        }
+        turnOfPlayer.getBoard().getFieldZone().setCard(card);
+        turnOfPlayer.getBoard().getFieldZone().setStatus(StatusOfPosition.SPELL_OR_TRAP_OCCUPIED);
     }
 
     public static Matcher getCommandMatcher(String input, String regex) {

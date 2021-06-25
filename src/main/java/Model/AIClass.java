@@ -38,7 +38,7 @@ public class AIClass extends Player {
         game.draw();
         game.setPhase(Phase.MAIN);
         chooseBestCardInHand(game);
-        if(game.getSelectedCardHand() != null) {
+        if (game.getSelectedCardHand() != null) {
             if (game.getSelectedCardHand() instanceof MonsterCard)
                 game.summon();
             else
@@ -46,7 +46,7 @@ public class AIClass extends Player {
         }
 
         game.showBoard();
-        System.out.println("thinking...");
+        System.out.println("Thinking...");
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -56,8 +56,7 @@ public class AIClass extends Player {
         if (game.getOpposition().getBoard().isMonsterZoneEmpty()) {
             selectAttackMonster(game);
             game.directAttack();
-        }
-        else{
+        } else {
             selectAttackMonster(game);
             game.attackToMonster(selectOpponentMonster(game));
         }
@@ -85,16 +84,14 @@ public class AIClass extends Player {
             }
         });
         for (int i = 0; i < getHand().size(); i++) {
-            if(getHand().get(i) instanceof TrapAndSpellCard){
+            if (getHand().get(i) instanceof TrapAndSpellCard) {
                 game.setSelectedCardHand(getHand().get(i));
                 break;
-            }
-            else{
-                if(((MonsterCard) getHand().get(i)).getCardLevel() < 5){
+            } else {
+                if (((MonsterCard) getHand().get(i)).getCardLevel() < 5) {
                     game.setSelectedCardHand(getHand().get(i));
                     break;
-                }
-                else if (isSuitableForTribute((MonsterCard) getHand().get(i))) {
+                } else if (isSuitableForTribute((MonsterCard) getHand().get(i))) {
                     game.setSelectedCardHand(getHand().get(i));
                     break;
                 }
@@ -110,11 +107,11 @@ public class AIClass extends Player {
         }
     }
 
-    public int selectOpponentMonster(Game game){
+    public int selectOpponentMonster(Game game) {
         return game.getOpposition().getBoard().getMinimumAttackPosition();
     }
 
-    public void selectAttackMonster(Game game){
+    public void selectAttackMonster(Game game) {
         game.setSelectedPosition(getBoard().getMaximumPuver());
     }
 

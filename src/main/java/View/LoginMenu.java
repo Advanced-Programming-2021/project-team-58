@@ -24,6 +24,7 @@ public class LoginMenu {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(input);
     }
+
     public static void addCards() {
         MonsterCard.addMonster();
         TrapAndSpellCard.addTrapAndSpell();
@@ -69,9 +70,9 @@ public class LoginMenu {
             } else if (matchLogin2.find()) {
                 logInPlayer(matchLogin2.group(2), matchLogin2.group(1));
             } else if (matchLogin3.find()) {
-                logInPlayer(matchLogin3.group(1), matchLogin3.group(2));
+                logInPlayer(matchLogin3.group(2), matchLogin3.group(1));
             } else if (matchLogin4.find()) {
-                logInPlayer(matchLogin4.group(2), matchLogin4.group(1));
+                logInPlayer(matchLogin4.group(1), matchLogin4.group(2));
             } else if (matchChangeMenu.find()) {
                 System.out.println("please login first");
             } else if (input.equals("menu exit")) {
@@ -115,9 +116,9 @@ public class LoginMenu {
             if (Player.isNicknameExists(nickname)) {
                 System.out.println("user with nickname " + nickname + " already exists");
             } else {
-                Player player = new Player(username, password, nickname);
+                new Player(username, password, nickname);
                 try {
-                    jsonSaveAndLoad.save(Player.getAllPlayers());
+                    jsonSaveAndLoad.save();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

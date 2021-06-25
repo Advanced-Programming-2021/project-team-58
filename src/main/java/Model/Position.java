@@ -1,21 +1,12 @@
 package Model;
 
-import Controller.*;
-import View.*;
-
-import java.util.ArrayList;
-
 public class Position {
-    public static ArrayList<Position> allPositions = new ArrayList<Position>();
     private StatusOfPosition status;
     private Card card;
-    private int index;
     private boolean isStatusChanged;
 
-    public Position(StatusOfPosition status, int index) {
+    public Position(StatusOfPosition status) {
         setStatus(status);
-        setIndex(index);
-        allPositions.add(this);
     }
 
     public StatusOfPosition getStatus() {
@@ -24,14 +15,6 @@ public class Position {
 
     public void setStatus(StatusOfPosition status) {
         this.status = status;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public int getIndex() {
-        return index;
     }
 
     public Card getCard() {
@@ -46,14 +29,7 @@ public class Position {
         isStatusChanged = statusChanged;
     }
 
-    public boolean getIsStatusChanged(){
+    public boolean getIsStatusChanged() {
         return isStatusChanged;
-    }
-
-    public static Position getPositionByIndex(int index){
-        for (Position position: allPositions)
-            if (position.getIndex()==index)
-                return position;
-        return null;
     }
 }

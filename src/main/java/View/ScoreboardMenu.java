@@ -1,10 +1,8 @@
 package View;
 
-import Controller.*;
 import Model.*;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class ScoreboardMenu {
     private static ArrayList<Player> playersSort = Player.getAllPlayers();
@@ -23,7 +21,7 @@ public class ScoreboardMenu {
                 if (playersSort.get(i - 1).getScore() != playersSort.get(i).getScore()) {
                     rank = i + 1;
                 }
-                System.out.println(rank +"- "+ playersSort.get(i).getNickname() + ": " + playersSort.get(i).getScore());
+                System.out.println(rank + "- " + playersSort.get(i).getNickname() + ": " + playersSort.get(i).getScore());
             }
         }
     }
@@ -54,5 +52,4 @@ public class ScoreboardMenu {
             }
         }
     }
-
 }

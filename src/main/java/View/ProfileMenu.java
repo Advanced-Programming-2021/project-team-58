@@ -13,7 +13,7 @@ public class ProfileMenu {
         String input = "";
         while (!(input = scan.nextLine()).equals("menu exit")) {
 
-            Matcher nicknameMatcher = getCommandMatcher(input.trim(), "^profile change --nickname ([A-Za-z]+)$");
+            Matcher nicknameMatcher = getCommandMatcher(input.trim(), "^profile change --nickname (.+)$");
             Matcher passwordMatcher1 = getCommandMatcher(input.trim(), "^profile change --password --current ([A-Za-z0-9]+) --new ([A-Za-z0-9]+)$");
             Matcher passwordMatcher2 = getCommandMatcher(input.trim(), "^profile change --password --new ([A-Za-z0-9]+) --current ([A-Za-z0-9]+)$");
             Matcher passwordMatcher3 = getCommandMatcher(input.trim(), "^profile change --current ([A-Za-z0-9]+) --password --new ([A-Za-z0-9]+)$");
@@ -27,12 +27,9 @@ public class ProfileMenu {
             else if (input.equals("menu show-current"))
                 System.out.println("Profile Menu");
             else if (nicknameMatcher.find()) {
-                if (nicknameMatcher.group(1).equals(LoginMenu.getLoggedInPlayer().getNickname()))
+                if (Player.getPlayerByNickName(nicknameMatcher.group(1)) != null)
                     System.out.println("user with nickname " + nicknameMatcher.group(1) + " already exists");
-                else {
-                    changeNickName(nicknameMatcher.group(1));
-                    System.out.println("nickname changed successfully!");
-                }
+                else changeNickName(nicknameMatcher.group(1));
             } else if (passwordMatcher3.find()) {
                 if (passwordMatcher3.group(1).equals(passwordMatcher3.group(2)))
                     System.out.println("please enter a new password");
@@ -75,10 +72,16 @@ public class ProfileMenu {
                     changePassword(passwordMatcher5.group(1));
                     System.out.println("password changed successfully!");
                 } else System.out.println("current password is invalid");
-            } else System.out.println("invalid command");
+            } else if (input.equals("--help"))
+                System.out.println("menu exit\n" +
+                        "menu enter (menu name)\n" +
+                        "menu show-current\n" +
+                        "profile change --nickname (new nickname)\n" +
+                        "profile change --password --current (current password) --new (new password)");
+            else System.out.println("invalid command");
         }
         try {
-            jsonSaveAndLoad.save(Player.getAllPlayers());
+            jsonSaveAndLoad.save();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,6 +94,7 @@ public class ProfileMenu {
 
     public static void changeNickName(String newNickName) {
         LoginMenu.getLoggedInPlayer().setNickname(newNickName);
+        System.out.println("nickname changed successfully!");
     }
 
     public static Matcher getCommandMatcher(String input, String regex) {

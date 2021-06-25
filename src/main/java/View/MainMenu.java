@@ -1,8 +1,8 @@
 package View;
 
-import Controller.*;
 import Model.*;
 
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.*;
 
@@ -27,14 +27,15 @@ public class MainMenu {
                 return;
             } else if (input.trim().matches("^(?i)(scoreboard show)$"))
                 ScoreboardMenu.run();
-            else if (input.matches("duel --second-player (.+) --rounds (.+) --new")||
-            input.matches("duel --s-p (.+) --r (.+) --n"))
+            else if (input.matches("duel --second-player (.+) --rounds (.+) --new"))
                 startAGame(getCommandMatcher(input, "duel --second-player (.+) --rounds (.+) --new"));
-            else if(input.matches("duel --new --ai --rounds (.*)")) {
-                startAGameWithAI(getCommandMatcher(input , "duel --new --ai --rounds (.*)"));
+            else if (input.matches("duel --s-p (.+) --r (.+) --n"))
+                startAGame(getCommandMatcher(input, "duel --s-p (.+) --r (.+) --n"));
+            else if (input.matches("duel --new --ai --rounds (.*)")) {
+                startAGameWithAI(getCommandMatcher(input, "duel --new --ai --rounds (.*)"));
             } else if (input.matches("duel --n --ai --r (.*)")) {
-                startAGameWithAI(getCommandMatcher(input,"duel --n --ai --r (.*)"));
-            }else if (input.equals("--help"))
+                startAGameWithAI(getCommandMatcher(input, "duel --n --ai --r (.*)"));
+            } else if (input.equals("--help"))
                 help();
             else System.out.println("invalid command");
         }
@@ -55,8 +56,7 @@ public class MainMenu {
             int numOfRounds = 0;
             try {
                 numOfRounds = Integer.parseInt(matcher.group(1));
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("please enter an integer");
                 return;
             }
@@ -109,7 +109,7 @@ public class MainMenu {
     public static void startAGame(Matcher matcher) {
         if (matcher.find()) {
             int numOfRounds = Integer.parseInt(matcher.group(2));
-            String opponentName = Player.getPlayerByUsername(matcher.group(1)).getNickname();
+            String opponentName = matcher.group(1);
             Player loggedInPlayer = LoginMenu.getLoggedInPlayer();
 
             if (Player.getPlayerByUsername(opponentName) == null)
@@ -119,17 +119,18 @@ public class MainMenu {
                 System.out.println("You can't play with yourself. Please choose another player");
             else if (loggedInPlayer.getActiveDeck() == null)
                 System.out.println(loggedInPlayer.getUsername() + " has no activated deck");
-            else if (Player.getPlayerByUsername(opponentName).getActiveDeck() == null)
+            else if (Objects.requireNonNull(Player.getPlayerByUsername(opponentName)).getActiveDeck() == null)
                 System.out.println(opponentName + " has no activated deck");
             else if (!loggedInPlayer.getActiveDeck().isValid())
                 System.out.println(loggedInPlayer.getUsername() + "'s deck is invalid");
-            else if (!Player.getPlayerByUsername(opponentName).getActiveDeck().isValid())
+            else if (!Objects.requireNonNull(Player.getPlayerByUsername(opponentName)).getActiveDeck().isValid())
                 System.out.println(opponentName + "'s deck is invalid");
             else if (numOfRounds != 1 && numOfRounds != 3)
                 System.out.println("number of rounds is not supported");
             else {
+                String opponentNickName = Objects.requireNonNull(Player.getPlayerByUsername(opponentName)).getNickname();
                 System.out.println("New game started between " + LoginMenu.getLoggedInPlayer().getNickname() +
-                        " and " + opponentName + "!\n");
+                        " and " + opponentNickName + "!\n");
                 DuelMenu.run(LoginMenu.getLoggedInPlayer(), Player.getPlayerByUsername(opponentName), numOfRounds);
             }
         }

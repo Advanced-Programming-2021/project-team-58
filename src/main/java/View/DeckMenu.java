@@ -4,10 +4,7 @@ import Controller.*;
 import Model.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +19,7 @@ public class DeckMenu {
         setPlayer(LoginMenu.getLoggedInPlayer());
         handleInput();
         try {
-            jsonSaveAndLoad.save(Player.getAllPlayers());
+            jsonSaveAndLoad.save();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,7 +75,7 @@ public class DeckMenu {
             String cardName = matcher.group(2);
             if (Card.getCardByName(cardName) == null)
                 System.out.println("No card with this name was found!");
-            else Card.getCardByName(cardName).showCard();
+            else Objects.requireNonNull(Card.getCardByName(cardName)).showCard();
         }
     }
 
@@ -112,7 +109,7 @@ public class DeckMenu {
 
     private static void giveBackCards(Deck deck) {
         ArrayList<Card> mainDeck = deck.getMainDeck();
-        ArrayList<Card> sideDeck = deck.getMainDeck();
+        ArrayList<Card> sideDeck = deck.getSideDeck();
         for (Card card : mainDeck) {
             player.getAllCards().add(card);
         }
@@ -205,20 +202,15 @@ public class DeckMenu {
             else {
                 player.getDeckByName(deckName).addCardToMainDeck(Card.getCardByName(cardName));
                 player.removeCardFromAllCards(Card.getCardByName(cardName));
-//                try {
-//                    jsonSaveAndLoad.save(Player.getAllPlayers());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
                 System.out.println("card added to deck successfully");
             }
         }
     }
 
     public static void removeCardFromSideDeck(String input) {
-            String cardName = null;
-            String deckName = null;
-            boolean isInSideDeck = false;
+        String cardName = null;
+        String deckName = null;
+        boolean isInSideDeck = false;
 
         Matcher matcher = getCommandMatcher(input, "deck rm-card (--.+) (--.+) (--.+)");
         if (matcher.find()) {
@@ -240,21 +232,21 @@ public class DeckMenu {
             }
         }
 
-            if (cardName != null && deckName != null && isInSideDeck) {
-                if (!player.hasADeck(player.getDeckByName(deckName)))
-                    System.out.println("deck with name " + deckName + " does not exist");
+        if (cardName != null && deckName != null && isInSideDeck) {
+            if (!player.hasADeck(player.getDeckByName(deckName)))
+                System.out.println("deck with name " + deckName + " does not exist");
+            else {
+                Card card = Card.getCardByName(cardName);
+                boolean isCardInSideDeckExists = player.getDeckByName(deckName).getSideDeck().contains(card);
+                if (card == null || !isCardInSideDeckExists)
+                    System.out.println("card with name " + cardName + " does not exist in side deck");
                 else {
-                    Card card = Card.getCardByName(cardName);
-                    boolean isCardInSideDeckExists = player.getDeckByName(deckName).getSideDeck().contains(card);
-                    if (card == null || !isCardInSideDeckExists)
-                        System.out.println("card with name " + cardName + " does not exist in side deck");
-                    else {
-                        player.getDeckByName(deckName).removeCardFromSideDeck(card);
-                        player.getAllCards().add(Card.getCardByName(cardName));
-                        System.out.println("card removed form deck successfully");
-                    }
+                    player.getDeckByName(deckName).removeCardFromSideDeck(card);
+                    player.getAllCards().add(Card.getCardByName(cardName));
+                    System.out.println("card removed form deck successfully");
                 }
-            } else System.out.println("invalid command");
+            }
+        } else System.out.println("invalid command");
     }
 
     public static void removeCardFromMainDeck(Matcher matcher) {

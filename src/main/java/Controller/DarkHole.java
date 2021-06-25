@@ -2,13 +2,12 @@ package Controller;
 
 import Model.*;
 
-
 public class DarkHole extends Effect {
     @Override
     public void activate(Game game) {
         for (int i = 0; i < 5; i++) {
-            game.sendToGraveyard(game.getTurnOfPlayer().getBoard().getMonsterCards().get(i),game.getTurnOfPlayer());
-            game.sendToGraveyard(game.getOpposition().getBoard().getMonsterCards().get(i),game.getOpposition());
+            game.sendToGraveyard(game.getTurnOfPlayer().getBoard().getMonsterCards().get(i), game.getTurnOfPlayer());
+            game.sendToGraveyard(game.getOpposition().getBoard().getMonsterCards().get(i), game.getOpposition());
         }
     }
 

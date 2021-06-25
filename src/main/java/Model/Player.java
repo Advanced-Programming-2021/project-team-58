@@ -1,9 +1,5 @@
 package Model;
 
-import Controller.*;
-import View.*;
-
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -26,6 +22,14 @@ public class Player {
         allPlayers = players;
     }
 
+    public static Player getPlayerByNickName(String nickname) {
+        for (Player player : allPlayers) {
+            if (player.getNickname().equals(nickname))
+                return player;
+        }
+        return null;
+    }
+
     public ArrayList<Card> getAllCards() {
         return this.allCards;
     }
@@ -34,11 +38,12 @@ public class Player {
         setUsername(username);
         setPassword(password);
         setNickname(nickname);
-        setMoney(100000);
+        setMoney(1000000);
         this.board = new Board();
         allPlayers.add(this);
     }
-    public Player(){
+
+    public Player() {
 
     }
 
@@ -75,7 +80,7 @@ public class Player {
     }
 
     public int getLP() {
-        if(this.LP < 0){
+        if (this.LP < 0) {
             return 0;
         }
         return this.LP;
@@ -97,20 +102,12 @@ public class Player {
         return this.activeDeck;
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public int getScore() {
         return this.score;
     }
 
     public void increaseScore(int score) {
         this.score += score;
-    }
-
-    public void decreaseScore(int score) {
-        this.score -= score;
     }
 
     public void increaseMoney(int money) {
@@ -148,10 +145,6 @@ public class Player {
         return null;
     }
 
-    public void addDeckToAllDecks(Deck deck) {
-        this.decks.add(deck);
-    }
-
     public void addCardToHand(Card card) {
         this.hand.add(card);
     }
@@ -177,7 +170,7 @@ public class Player {
         return false;
     }
 
-    public boolean hasACard(Card card){
+    public boolean hasACard(Card card) {
         if (card == null) return false;
         for (Card c : allCards) {
             if (c.getCardName().equals(card.getCardName()))
@@ -193,7 +186,7 @@ public class Player {
         return null;
     }
 
-    public void removeCardFromAllCards(Card card){
+    public void removeCardFromAllCards(Card card) {
         this.allCards.remove(card);
     }
 

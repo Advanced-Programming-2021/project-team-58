@@ -1,9 +1,5 @@
 package Model;
 
-import Controller.*;
-import View.*;
-
-
 public enum StatusOfPosition {
     EMPTY,
     DEFENSIVE_OCCUPIED,
@@ -11,8 +7,4 @@ public enum StatusOfPosition {
     OFFENSIVE_OCCUPIED,
     SPELL_OR_TRAP_HIDDEN,
     SPELL_OR_TRAP_OCCUPIED;
-
-    StatusOfPosition() {
-    }
-    private String valueString;
 }

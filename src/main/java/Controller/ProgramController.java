@@ -24,29 +24,27 @@ public class ProgramController {
             }
         }
         LoginMenu.addCards();
-//        Deck deck = new Deck("firstAndOnlyDeck");
-//        for (int i = 0; i < 3; i++) {
-//            deck.addCardToMainDeck(Card.getCardByName("Battle OX"));
-//        }
-//        for (int i = 0; i < 3; i++) {
-//            deck.addCardToMainDeck(Card.getCardByName("Silver Fang"));
-//        }
-//        for (int i = 0; i < 3; i++) {
-//            deck.addCardToMainDeck(Card.getCardByName("Trap Hole"));
-//        }
-//        for (int i = 0; i < 3; i++) {
-//            deck.addCardToMainDeck(Card.getCardByName("Suijin"));
-//        }
-//        ArrayList<Deck> x = new ArrayList<>();
-//        x.add(deck);
-//        try {
-//            FileWriter writer = new FileWriter("AIDeck.txt");
-//            writer.write(new YaGson().toJson(x));
-//            writer.close();
-//        }
-//        catch(Exception e){
-//            e.printStackTrace();
-//        }
+        Deck deck = new Deck("firstAndOnlyDeck");
+        for (int i = 0; i < 3; i++) {
+            deck.addCardToMainDeck(Card.getCardByName("Battle OX"));
+            deck.addCardToMainDeck(Card.getCardByName("Silver Fang"));
+            deck.addCardToMainDeck(Card.getCardByName("Suijin"));
+            deck.addCardToMainDeck(Card.getCardByName("Suijin"));
+            deck.addCardToMainDeck(Card.getCardByName("Suijin"));
+            deck.addCardToMainDeck(Card.getCardByName("Suijin"));
+
+
+        }
+        ArrayList<Deck> x = new ArrayList<>();
+        x.add(deck);
+        try {
+            FileWriter writer = new FileWriter("AIDeck.txt");
+            writer.write(new YaGson().toJson(x));
+            writer.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
 
 
 //        try {

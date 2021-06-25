@@ -7,12 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.Scanner;
-import java.util.regex.*;
 
 public class DuelMenu {
 
-    //    private int round;
     private static Player winnerPlayer;
     private static Player loserPlayer;
 
@@ -96,10 +93,18 @@ public class DuelMenu {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
-            System.out.println("I have caught an exception in sleeping");
             e.printStackTrace();
         }
+//        System.out.println("Do you want to manage your main deck?(type y to confirm)");
+//        Scanner scanner = new Scanner(System.in);
+//        String input = scanner.nextLine();
+//        if (input.equals("y")){
+//            manageDeck();
+//        } else return;
     }
+
+//    private static void manageDeck() {
+//    }
 
     public static void endOfTheMatch(Player player1, Player player2, int round) {
         Integer maxLpWinner;
@@ -129,7 +134,7 @@ public class DuelMenu {
         System.out.println(matchWinner.getNickname() + " won the whole match with score: "
                 + player1SetsWin + " - " + player2SetsWin);
         try {
-            jsonSaveAndLoad.save(Player.getAllPlayers());
+            jsonSaveAndLoad.save();
         } catch (IOException e) {
             e.printStackTrace();
         }

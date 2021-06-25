@@ -17,7 +17,7 @@ public class TwinTwisters extends Effect {
             Matcher matchSelect = getCommandMatcher(input, "^select --(hand) (--opponent )*([0-9]+)$");
             if (matchSelect.find()) {
                 game.select(matchSelect);
-                if(game.getSelectedCardHand() != null) {
+                if (game.getSelectedCardHand() != null) {
                     game.getTurnOfPlayer().getHand().remove(game.getSelectedCardHand());
                     game.getTurnOfPlayer().getBoard().addToGraveyard(game.getSelectedCardHand());
                     break;
@@ -32,7 +32,7 @@ public class TwinTwisters extends Effect {
             Matcher matchSelect = getCommandMatcher(input, "^select --(spell) (--opponent )*([0-9]+)$");
             if (matchSelect.find()) {
                 game.select(matchSelect);
-                if(game.getSelectedPosition() != null) {
+                if (game.getSelectedPosition() != null) {
                     if (matchSelect.group(2) == null)
                         game.sendToGraveyard(game.getSelectedPosition(), game.getTurnOfPlayer());
                     else
