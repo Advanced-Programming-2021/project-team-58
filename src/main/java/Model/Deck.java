@@ -81,7 +81,7 @@ public class Deck implements Comparable<Deck>, Cloneable {
     public int getNumOfCardInDeck(Card card) {
         int counter = 0;
         for (Card c : allCards)
-            if (c == card)
+            if (c.getCardName().equals(card.getCardName()))
                 counter++;
         return counter;
     }
