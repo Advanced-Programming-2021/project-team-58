@@ -46,6 +46,8 @@ public class AIClass extends Player {
                 game.set();
         }
         chooseAndSetSpellCard(game);
+        game.showBoard();
+
         activatePotOfGreed(game);
         activateRaigeki(game);
         activateDarkHole(game);
@@ -121,15 +123,30 @@ public class AIClass extends Player {
     }
 
     public boolean isPotOfGreedExistsInHand() {
-        return getHand().contains(Card.getCardByName("Pot of Greed"));
+        for (int i = 0; i < getHand().size(); i++) {
+            if(getHand().get(i).getCardName().equals("Pot of Greed")){
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isRaigekiExistsInHand() {
-        return getHand().contains(Card.getCardByName("Raigeki"));
+        for (int i = 0; i < getHand().size(); i++) {
+            if(getHand().get(i).getCardName().equals("Raigeki")){
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isDarkHoleExistsInHand() {
-        return getHand().contains(Card.getCardByName("Dark Hole"));
+        for (int i = 0; i < getHand().size(); i++) {
+            if(getHand().get(i).getCardName().equals("Dark Hole")){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void chooseAndSetSpellCard(Game game) {
@@ -141,7 +158,9 @@ public class AIClass extends Player {
                 }
             }
             game.set();
-            game.selectedCardHandNulling();
+        }
+        else{
+            System.out.println("nabood pot");
         }
         if (isRaigekiExistsInHand()) {
             for (int i = 0; i < getHand().size(); i++) {
@@ -151,17 +170,9 @@ public class AIClass extends Player {
                 }
             }
             game.set();
-            game.selectedCardHandNulling();
         }
-        if (isRaigekiExistsInHand()) {
-            for (int i = 0; i < getHand().size(); i++) {
-                if (getHand().get(i).getCardName().equals("Raigeki")) {
-                    game.setSelectedCardHand(getHand().get(i));
-                    break;
-                }
-            }
-            game.set();
-            game.selectedCardHandNulling();
+        else{
+            System.out.println("raigeki nbood");
         }
         if (isDarkHoleExistsInHand()) {
             for (int i = 0; i < getHand().size(); i++) {
@@ -171,22 +182,28 @@ public class AIClass extends Player {
                 }
             }
             game.set();
-            game.selectedCardHandNulling();
+        }
+        else{
+            System.out.println("dark hole nabood");
         }
     }
 
     public void activatePotOfGreed(Game game){
         for (int i = 0; i < 5; i++) {
             Position position = getBoard().getTrapAndSpellCards().get(i);
-            if(position.getCard().getCardName().equals("Pot of Greed")){
-                game.setSelectedPosition(position);
-                break;
+            if(!position.getStatus().equals(StatusOfPosition.EMPTY)) {
+                if (position.getCard().getCardName().equals("Pot of Greed")) {
+                    game.setSelectedPosition(position);
+                    break;
+                }
             }
         }
         if(game.getSelectedPosition() != null){
             TrapAndSpellCard potOfGreed = ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Pot of Greed")));
-            if(potOfGreed.getEffect().isSuitableForActivate(game))
+            if(potOfGreed.getEffect().isSuitableForActivate(game)) {
                 potOfGreed.getEffect().activate(game);
+                game.sendToGraveyard(game.getSelectedPosition() , game.getTurnOfPlayer());
+            }
         }
         game.selectedPositionNulling();
     }
@@ -194,15 +211,19 @@ public class AIClass extends Player {
     public void activateRaigeki(Game game){
         for (int i = 0; i < 5; i++) {
             Position position = getBoard().getTrapAndSpellCards().get(i);
-            if(position.getCard().getCardName().equals("Raigeki")){
-                game.setSelectedPosition(position);
-                break;
+            if(!position.getStatus().equals(StatusOfPosition.EMPTY)) {
+                if (position.getCard().getCardName().equals("Raigeki")) {
+                    game.setSelectedPosition(position);
+                    break;
+                }
             }
         }
         if(game.getSelectedPosition() != null){
             TrapAndSpellCard raigeki = ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Raigeki")));
-            if(raigeki.getEffect().isSuitableForActivate(game))
+            if(raigeki.getEffect().isSuitableForActivate(game)) {
                 raigeki.getEffect().activate(game);
+                game.sendToGraveyard(game.getSelectedPosition() , game.getTurnOfPlayer());
+            }
         }
         game.selectedPositionNulling();
     }
@@ -210,14 +231,17 @@ public class AIClass extends Player {
     public void activateDarkHole(Game game){
         for (int i = 0; i < 5; i++) {
             Position position = getBoard().getTrapAndSpellCards().get(i);
-            if(position.getCard().getCardName().equals("Dark Hole")){
-                game.setSelectedPosition(position);
-                break;
+            if(!position.getStatus().equals(StatusOfPosition.EMPTY)) {
+                if (position.getCard().getCardName().equals("Dark Hole")) {
+                    game.setSelectedPosition(position);
+                    break;
+                }
             }
         }
         if(game.getSelectedPosition() != null){
-            if(getBoard().cardsInMonsterZone() > game.getOpposition().getBoard().cardsInMonsterZone()){
+            if(getBoard().cardsInMonsterZone() < game.getOpposition().getBoard().cardsInMonsterZone()){
                 ((TrapAndSpellCard) Objects.requireNonNull(Card.getCardByName("Dark Hole"))).getEffect().activate(game);
+                game.sendToGraveyard(game.getSelectedPosition() , game.getTurnOfPlayer());
             }
         }
         game.selectedPositionNulling();

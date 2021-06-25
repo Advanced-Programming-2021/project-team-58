@@ -7,6 +7,7 @@ import java.util.regex.*;
 
 public class Game {
     private static int nextPhaseCheck;
+    static Scanner scanner = new Scanner(System.in);
 
     private Player player;
     private Player player2;
@@ -18,7 +19,7 @@ public class Game {
     private Card selectedCardHand;
     private boolean isAnyCardSummoned;
     private int cheatCounter;
-    static Scanner scanner = new Scanner(System.in);
+
     List<Position> attackedCards = new ArrayList<Position>();
     List<Position> activatedSpells = new ArrayList<>();
 
@@ -66,7 +67,7 @@ public class Game {
             while (!isAnyoneWin()) {
                 nextPhaseCheck = 0;
                 isAnyCardSummoned = false;
-                setAllPositionsChangeStatus(); //SETS CHANGING IN STATUS TO FALSE IN NEW TURN
+                setAllPositionsChangeStatus();
                 System.out.println("It's " + turnOfPlayer.getNickname() + "’s turn");
                 if (turnOfPlayer instanceof AIClass) {
                     ((AIClass) turnOfPlayer).play(this);
@@ -131,7 +132,7 @@ public class Game {
             } else if (matchSelect.find()) {
                 select(matchSelect);
             } else if (matchSelectField.find()) {
-
+                System.out.println("sorry for ignoring you :)))))))");
             } else if (input.equals("select -d")) {
                 deSelect();
             } else if (input.equals("card show selected")) {
@@ -264,7 +265,7 @@ public class Game {
         setPhase(Phase.DRAW);
         if (isAnyoneWin()) return;
         draw();
-        mainPhase();
+        standbyPhase();
     }
 
     public void battlePhase() {
@@ -309,12 +310,12 @@ public class Game {
                 return;
             }
         }
-//        In the end of this phase we call this method:
         clearAttackedCardsArrayList();
         mainPhase();
     }
 
     public void standbyPhase() {
+        System.out.println("phase: standby phase");
         setPhase(Phase.STANDBY);
         mainPhase();
     }
@@ -368,7 +369,6 @@ public class Game {
             int mainDeckSize = player.getBoard().getMainDeck().size();
 
             if (mainDeckSize == 0) {
-//                System.out.println("You don't have any other card to draw and you lost!!!");
                 return;
             }
             Random rand = new Random();
@@ -383,11 +383,6 @@ public class Game {
 
     public void draw() {
         int mainDeckSize = turnOfPlayer.getBoard().getMainDeck().size();
-        //Adding the following in order to avoid Exception for the random method
-//        if (mainDeckSize == 0) {
-//            System.out.println("You don't have any other card to draw and you lost!!!");
-//            return;
-//        }
         Random rand = new Random();
         int index = rand.nextInt(mainDeckSize);
         turnOfPlayer.addCardToHand(turnOfPlayer.getBoard().getMainDeck().get(index));
@@ -399,17 +394,6 @@ public class Game {
 
     public void surrender() {
         isSurrendered = true;
-    }
-
-    public boolean isSurrendered() {
-        return isSurrendered;
-    }
-
-    public static Player winner;
-    public static Player loser;
-
-    public void endGame() {
-        System.out.println(winner + " won the game and the score is: " + (winner.getScore() - loser.getScore()));
     }
 
     private String convertStatusToChar(StatusOfPosition status) {
@@ -487,7 +471,6 @@ public class Game {
         return result;
     }
 
-    //field zone hasn't added in this
     public void showBoard() {
         System.out.println(getOpposition().getNickname() + " : " + getOpposition().getLP());
         System.out.println("     " + printCardsOnBoard(getOpposition()));
@@ -499,7 +482,7 @@ public class Game {
         System.out.println();
         System.out.println("-------------------------------");
         System.out.println();
-        System.out.println(showFieldZone(turnOfPlayer)+
+        System.out.println(showFieldZone(turnOfPlayer) +
                 "                            " + turnOfPlayer.getBoard().getGraveYard().size());
         System.out.println("     " + printMonsterCardOnBoard(turnOfPlayer));
         System.out.println("     " + printSpellCardsOnBoard(turnOfPlayer));
@@ -509,7 +492,7 @@ public class Game {
     }
 
     private String showFieldZone(Player player) {
-            return convertStatusToChar(player.getBoard().getFieldZone().getStatus());
+        return convertStatusToChar(player.getBoard().getFieldZone().getStatus());
     }
 
     public void selectedPositionNulling() {
@@ -542,13 +525,13 @@ public class Game {
         }
     }
 
-    //changed firstEmptyIndex: maybe it has error!
+
     public boolean summonMonsterOnBoard() {
         boolean isTributeSucceeds = false;
         if ((selectedCardHand == null) && (selectedPosition == null)) {
             System.out.println("no card is selected yet");
             return false;
-        } else if (((selectedCardHand == null) && (selectedPosition != null)) || !(selectedCardHand instanceof MonsterCard)) {
+        } else if (selectedCardHand == null || !(selectedCardHand instanceof MonsterCard)) {
             System.out.println("you can’t summon this card");
             return false;
         } else if (!this.phase.equals(Phase.MAIN)) {
@@ -747,8 +730,6 @@ public class Game {
         attackedCards.clear();
     }
 
-    //2.generate new methods to make it smaller
-
     public void attackToMonster(int index) {
 
         if (isConditionsUnsuitableForAttack())
@@ -828,8 +809,6 @@ public class Game {
             return;
         if (!isOpponentMonsterZoneEmpty())
             System.out.println("you can’t attack the opponent directly");
-//        else if (there are some other reasons that we can't attack and we may find them later)
-//            System.out.println("you can't attack the opponent directly");
         else {
             int damage = ((MonsterCard) selectedPosition.getCard()).getAttack();
             getOpposition().decreaseLP(damage);
@@ -956,7 +935,7 @@ public class Game {
                     specialSummonHelping(getOpposition().getBoard().getGraveYard());
                 }
             }
-        } else {      //grave
+        } else {
             if (!isAnyMonsterInArray(turnOfPlayer.getBoard().getGraveYard())) {
                 System.out.println("there is no way you could special summon a monster");
             } else {
@@ -967,10 +946,6 @@ public class Game {
                 }
             }
         }
-    }
-
-    public void ritualSummon(MonsterCard monsterCard) {
-
     }
 
     public void flipSummon() {
@@ -1013,12 +988,6 @@ public class Game {
         } else if (activatedSpells.contains(selectedPosition)) {
             System.out.println("you have already activated this card");
         } else {
-//            if (((TrapAndSpellCard) selectedPosition.getCard()) == null)
-//                System.out.println("1");
-//            if (((TrapAndSpellCard) selectedPosition.getCard()).getEffect() == null)
-//                System.out.println(2);
-//            if (((TrapAndSpellCard) selectedPosition.getCard()).getEffect().isSuitableForActivate(this))
-//                System.out.println("true");
             if (!((TrapAndSpellCard) Objects.requireNonNull(getSelectedPosition().getCard())).getEffect().isSuitableForActivate(this)) {
                 System.out.println("preparations of this spell are not done yet");
             } else {
@@ -1144,9 +1113,10 @@ public class Game {
             System.out.println();
         }
     }
+
     public void setCardToFieldZone(Card card) {
-        if (turnOfPlayer.getBoard().getFieldZone().getCard()!=null) {
-            sendToGraveyard(turnOfPlayer.getBoard().getFieldZone(),turnOfPlayer);
+        if (turnOfPlayer.getBoard().getFieldZone().getCard() != null) {
+            sendToGraveyard(turnOfPlayer.getBoard().getFieldZone(), turnOfPlayer);
         }
         turnOfPlayer.getBoard().getFieldZone().setCard(card);
         turnOfPlayer.getBoard().getFieldZone().setStatus(StatusOfPosition.SPELL_OR_TRAP_OCCUPIED);

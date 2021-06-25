@@ -1,17 +1,8 @@
 package Controller;
 
-import Model.Card;
-import Model.Deck;
-import Model.Player;
 import View.*;
-import com.gilecode.yagson.YaGson;
-
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
-
 
 public class ProgramController {
     public static void main(String[] args) {
@@ -24,37 +15,6 @@ public class ProgramController {
             }
         }
         LoginMenu.addCards();
-        Deck deck = new Deck("firstAndOnlyDeck");
-        for (int i = 0; i < 3; i++) {
-            deck.addCardToMainDeck(Card.getCardByName("Battle OX"));
-            deck.addCardToMainDeck(Card.getCardByName("Silver Fang"));
-            deck.addCardToMainDeck(Card.getCardByName("Suijin"));
-            deck.addCardToMainDeck(Card.getCardByName("Suijin"));
-            deck.addCardToMainDeck(Card.getCardByName("Suijin"));
-            deck.addCardToMainDeck(Card.getCardByName("Suijin"));
-
-
-        }
-        ArrayList<Deck> x = new ArrayList<>();
-        x.add(deck);
-        try {
-            FileWriter writer = new FileWriter("AIDeck.txt");
-            writer.write(new YaGson().toJson(x));
-            writer.close();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-
-
-//        try {
-//            FileWriter writer = new FileWriter("CardsDatabase.txt");
-//            writer.write(new YaGson().toJson(Card.getAllCards()));
-//            writer.close();
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//        }
         LoginMenu.run();
     }
 }

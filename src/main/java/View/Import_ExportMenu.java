@@ -63,7 +63,7 @@ public class Import_ExportMenu {
                 System.out.println("there is no card with this name!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
@@ -85,7 +85,7 @@ public class Import_ExportMenu {
                 System.out.println("Card " + cardName + " exported successfully!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 

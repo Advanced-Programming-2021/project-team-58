@@ -77,7 +77,7 @@ public class LoginMenu {
                 System.out.println("please login first");
             } else if (input.equals("menu exit")) {
                 System.out.println("You Exited The Game Successfully!");
-                return;
+                System.exit(0);
             } else if (input.equals("menu show-current")) {
                 System.out.println("Login Menu");
             } else if (input.equals("--help")) {
