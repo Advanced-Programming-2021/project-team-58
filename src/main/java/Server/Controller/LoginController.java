@@ -41,5 +41,6 @@ public class LoginController {
         else if(message.startsWith("Logout")){
             dataOutputStream.writeUTF(logout(message.substring(6)));
         }
+        dataOutputStream.flush();
     }
 }

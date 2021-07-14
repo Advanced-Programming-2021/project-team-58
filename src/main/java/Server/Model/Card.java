@@ -7,6 +7,7 @@ public abstract class Card implements Comparable<Card> {
     private String cardName;
     private String cardDescription;
     private int price;
+    private int numberOfCardInShop;
     protected static ArrayList<Card> allCards = new ArrayList<Card>();
     private String imageSrc;
     private String folder = "/Images/";
@@ -15,8 +16,24 @@ public abstract class Card implements Comparable<Card> {
         setCardName(cardName);
         setCardDescription(cardDescription);
         setPrice(price);
-
+        setNumberOfCardInShop(7);
         setImageSrc(folder + imageSrc);
+    }
+
+    public void setNumberOfCardInShop(int numberOfCardInShop) {
+        this.numberOfCardInShop = numberOfCardInShop;
+    }
+
+    public int getNumberOfCardInShop() {
+        return numberOfCardInShop;
+    }
+
+    public void increaseNumberOfCardInShop(){
+        numberOfCardInShop++;
+    }
+
+    public void decreaseNumberOfCardInShop(){
+        numberOfCardInShop--;
     }
 
     private void setImageSrc(String imageSrc) {

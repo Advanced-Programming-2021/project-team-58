@@ -150,5 +150,6 @@ public class ProfileController {
                 standbyToken = "";
             }
         }
+        dataOutputStream.flush();
     }
 }
