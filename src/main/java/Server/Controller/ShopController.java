@@ -42,8 +42,21 @@ public class ShopController {
             sellCard(message.substring(9));
         } else if (message.startsWith("Shop forbid")){
             forbidCard(message.substring(11));
+        } else if (message.startsWith("Shop decrease shop card")){
+            decreaseShopCard(message.substring(23));
+        } else if (message.startsWith("Shop increase shop card")){
+            increaseShopCard(message.substring(23));
+
         }
         dataOutputStream.flush();
+    }
+
+    private static void increaseShopCard(String cardName) {
+        Card.getCardByName(cardName).increaseNumberOfCardInShop();
+    }
+
+    private static void decreaseShopCard(String cardName) {
+        Card.getCardByName(cardName).decreaseNumberOfCardInShop();
     }
 
     private static void sellCard(String str) {
