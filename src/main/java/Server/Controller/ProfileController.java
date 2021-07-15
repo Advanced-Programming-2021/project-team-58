@@ -81,6 +81,10 @@ public class ProfileController {
         return allLoggedInPlayers.get(token).getNickname();
     }
 
+    public static String getPassword(String token) {
+        return allLoggedInPlayers.get(token).getPassword();
+    }
+
     public static String getMoney(String token) {
         return String.valueOf(allLoggedInPlayers.get(token).getMoney());
     }
@@ -97,18 +101,18 @@ public class ProfileController {
         return String.valueOf(allLoggedInPlayers.get(token).getWinMatches());
     }
 
-    public static String getLoseMatches(String token){
+    public static String getLoseMatches(String token) {
         return String.valueOf(allLoggedInPlayers.get(token).getLoseMatches());
     }
 
     public static String getActiveDeckName(String token) {
-        if(allLoggedInPlayers.get(token).getActiveDeck() == null){
+        if (allLoggedInPlayers.get(token).getActiveDeck() == null) {
             return "Not set yet";
         }
         return allLoggedInPlayers.get(token).getActiveDeck().getDeckName();
     }
 
-    public static void processInput(String message , DataOutputStream dataOutputStream) throws IOException {
+    public static void processInput(String message, DataOutputStream dataOutputStream) throws IOException {
         if (message.startsWith("Profile change nickname")) {
             dataOutputStream.writeUTF(changeNickname(message.substring(23)));
         } else if (message.startsWith("Profile change password")) {
@@ -119,6 +123,8 @@ public class ProfileController {
             dataOutputStream.writeUTF(getUsername(message.substring(16)));
         } else if (message.startsWith("Profile nickname")) {
             dataOutputStream.writeUTF(getNickname(message.substring(16)));
+        } else if (message.startsWith("Profile password")) {
+            dataOutputStream.writeUTF(getPassword(message.substring(16)));
         } else if (message.startsWith("Profile money")) {
             dataOutputStream.writeUTF(getMoney(message.substring(13)));
         } else if (message.startsWith("Profile score")) {

@@ -13,11 +13,17 @@ import java.util.HashMap;
 
 public class ShopController {
 
+    private static ArrayList<Card> forbiddenCardsShop = new ArrayList<>();
+
     private static HashMap<String, Player> allLoggedInPlayers = Server.getAllLoggedInPlayers();
 
     public static void processInput(String message, DataOutputStream dataOutputStream) throws IOException {
         if (message.equals("Shop get cards")) {
             dataOutputStream.writeUTF(getAllCardsName());
+            forbiddenCardsShop.add(Card.getCardByName("Battle OX"));
+            forbiddenCardsShop.add(Card.getCardByName("Bitron"));
+            forbiddenCardsShop.add(Card.getCardByName("Silver Fang"));
+            forbiddenCardsShop.add(Card.getCardByName("Yomi Ship"));
         } else if (message.startsWith("Shop get card")) {
             dataOutputStream.writeUTF(handleCardInfo(message.substring(13)));
         } else if (message.startsWith("Shop num of card")) {
@@ -28,6 +34,10 @@ public class ShopController {
             dataOutputStream.writeUTF(showInfo(message.substring(14)));
         } else if (message.startsWith("Shop number of card")) {
             dataOutputStream.writeUTF(numberOfCardsInShop(message.substring(19)));
+        } else if (message.startsWith("Shop is card forbidden")) {
+            dataOutputStream.writeUTF(isCardForbidden(message.substring(22)));
+        } else if (message.startsWith("Shop forbid card")) {
+            forbidCard(message.substring(16));
         }
         dataOutputStream.flush();
     }
@@ -108,6 +118,14 @@ public class ShopController {
         player.decreaseMoney(card.getPrice());
         player.getAllCards().add(card);
         card.decreaseNumberOfCardInShop();
+    }
+
+    private static String isCardForbidden(String cardName) {
+        return String.valueOf(forbiddenCardsShop.contains(Card.getCardByName(cardName)));
+    }
+
+    private static void forbidCard(String cardName) {
+        forbiddenCardsShop.add(Card.getCardByName(cardName));
     }
 }
 
