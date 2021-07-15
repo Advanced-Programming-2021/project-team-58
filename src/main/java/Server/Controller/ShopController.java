@@ -40,6 +40,8 @@ public class ShopController {
             forbidCard(message.substring(16));
         } else if (message.startsWith("Shop sell")){
             sellCard(message.substring(9));
+        } else if (message.startsWith("Shop forbid")){
+            forbidCard(message.substring(11));
         }
         dataOutputStream.flush();
     }
