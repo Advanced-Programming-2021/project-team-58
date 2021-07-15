@@ -38,8 +38,19 @@ public class ShopController {
             dataOutputStream.writeUTF(isCardForbidden(message.substring(22)));
         } else if (message.startsWith("Shop forbid card")) {
             forbidCard(message.substring(16));
+        } else if (message.startsWith("Shop sell")){
+            sellCard(message.substring(9));
         }
         dataOutputStream.flush();
+    }
+
+    private static void sellCard(String str) {
+        String[] tmp = str.split("#");
+        String cardName = tmp[0];
+        String token = tmp[1];
+        allLoggedInPlayers.get(token).getAllCards().remove(Card.getCardByName(cardName));
+        allLoggedInPlayers.get(token).increaseMoney(Card.getCardByName(cardName).getPrice());
+        Card.getCardByName(cardName).increaseNumberOfCardInShop();
     }
 
     private static String numberOfCardsInShop(String cardName) {
