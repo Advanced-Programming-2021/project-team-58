@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class ShopController {
 
@@ -122,16 +123,17 @@ public class ShopController {
             return getCardPrice(cardName);
         } else if (info.equals("imageSrc")) {
             return getCardSrc(cardName);
+        } else {
+            return "";
         }
-        return "";
     }
 
     private static String getCardSrc(String cardName) {
-        return Card.getCardByName(cardName).getImageSrc();
+        return Objects.requireNonNull(Card.getCardByName(cardName)).getImageSrc();
     }
 
     private static String getCardPrice(String cardName) {
-        return String.valueOf(Card.getCardByName(cardName).getPrice());
+        return String.valueOf(Objects.requireNonNull(Card.getCardByName(cardName)).getPrice());
     }
 
     private static void buyCard(String str) {

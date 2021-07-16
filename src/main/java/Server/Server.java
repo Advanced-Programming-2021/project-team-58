@@ -73,7 +73,9 @@ public class Server {
                 } else if (message.startsWith("Profile")) {
                     ProfileController.processInput(message, dataOutputStream);
                 } else if (message.startsWith("Shop")) {
-                    ShopController.processInput(message , dataOutputStream);
+                    ShopController.processInput(message, dataOutputStream);
+                } else if (message.startsWith("Deck")) {
+                    DeckController.processInput(message , dataOutputStream);
                 } else if (message.equals("end")) {
                     break;
                 }
