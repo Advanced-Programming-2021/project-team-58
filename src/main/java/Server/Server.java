@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Server {
@@ -19,6 +20,8 @@ public class Server {
     private static DataInputStream dataInputStream;
 
     private static HashMap<String, Player> allLoggedInPlayers = new HashMap<>();
+    private static ArrayList<String> messages = new ArrayList<>();
+    private static ArrayList<Socket> allActiveSockets = new ArrayList<>();
 
     public static void main(String[] args) {
         MonsterCard.addMonster();
@@ -43,18 +46,16 @@ public class Server {
         }
     }
 
-    public static HashMap<String, Player> getAllLoggedInPlayers() {
-        return allLoggedInPlayers;
-    }
-
     private static void makeNewThread(Socket socket) {
         new Thread(() -> {
             try {
+                allActiveSockets.add(socket);
                 DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
                 DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 processInput(dataInputStream, dataOutputStream);
                 dataInputStream.close();
                 socket.close();
+                allActiveSockets.remove(socket);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -75,7 +76,9 @@ public class Server {
                 } else if (message.startsWith("Shop")) {
                     ShopController.processInput(message, dataOutputStream);
                 } else if (message.startsWith("Deck")) {
-                    DeckController.processInput(message , dataOutputStream);
+                    DeckController.processInput(message, dataOutputStream);
+                } else if (message.startsWith("Chat")) {
+                    ChatRoomController.processInput(message, dataOutputStream);
                 } else if (message.equals("end")) {
                     break;
                 }
@@ -84,6 +87,26 @@ public class Server {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static HashMap<String, Player> getAllLoggedInPlayers() {
+        return allLoggedInPlayers;
+    }
+
+    public static ArrayList<String> getMessages() {
+        return messages;
+    }
+
+    public static void sendMessageToAllClients(String message) {
+        try {
+            for (Socket socket : allActiveSockets) {
+                DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                dataOutputStream.writeUTF(message);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 
