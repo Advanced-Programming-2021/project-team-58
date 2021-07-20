@@ -79,6 +79,10 @@ public class Server {
                     DeckController.processInput(message, dataOutputStream);
                 } else if (message.startsWith("Chat")) {
                     ChatRoomController.processInput(message, dataOutputStream);
+                } else if (message.startsWith("Lobby")) {
+                    LobbyController.processInput(message);
+                } else if (message.startsWith("Scoreboard")) {
+                    ScoreBoardController.processInput(message, dataOutputStream);
                 } else if (message.equals("end")) {
                     break;
                 }
@@ -107,6 +111,10 @@ public class Server {
             e.printStackTrace();
         }
 
+    }
+
+    public static DataOutputStream getDataOutputStream() {
+        return dataOutputStream;
     }
 }
 
