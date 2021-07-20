@@ -4,7 +4,6 @@ import Server.Controller.*;
 import Server.Model.MonsterCard;
 import Server.Model.Player;
 import Server.Model.TrapAndSpellCard;
-import sun.rmi.runtime.Log;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -80,7 +79,7 @@ public class Server {
                 } else if (message.startsWith("Chat")) {
                     ChatRoomController.processInput(message, dataOutputStream);
                 } else if (message.startsWith("Lobby")) {
-                    LobbyController.processInput(message);
+                    LobbyController.processInput(message, dataOutputStream);
                 } else if (message.startsWith("Scoreboard")) {
                     ScoreBoardController.processInput(message, dataOutputStream);
                 } else if (message.equals("end")) {

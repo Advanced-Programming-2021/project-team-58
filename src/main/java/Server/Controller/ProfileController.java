@@ -46,13 +46,13 @@ public class ProfileController {
     }
 
     public static void changeProfile(String imageJson, String token) {
-        System.out.println(imageJson);
         Image image = new YaGson().fromJson(imageJson, new TypeToken<Image>() {
         }.getType());
         allLoggedInPlayers.get(token).setImage(image);
     }
 
     public static void sendImage(String token, DataOutputStream dataOutputStream) {
+        System.out.println("this is in sendImage method and the token is: "+token);
         Image image = allLoggedInPlayers.get(token).getImage();
         try {
             String imageJson = new YaGson().toJson(image);
@@ -137,6 +137,10 @@ public class ProfileController {
             dataOutputStream.writeUTF(getLoseMatches(message.substring(20)));
         } else if (message.startsWith("Profile active deck name")) {
             dataOutputStream.writeUTF(getActiveDeckName(message.substring(24)));
+        } else if (message.startsWith("Profile has active deck")) {
+            dataOutputStream.writeUTF(hasActiveDeck(message.substring(23)));
+        } else if (message.startsWith("Profile is active deck valid")) {
+            dataOutputStream.writeUTF(isActiveDeckValid(message.substring(28)));
         } else if (message.startsWith("Profile length")) {
             String str = message.substring(14);
             String[] info = str.split("#");
@@ -157,5 +161,17 @@ public class ProfileController {
             }
         }
         dataOutputStream.flush();
+    }
+
+    private static String isActiveDeckValid(String token) {
+        if (allLoggedInPlayers.get(token).getActiveDeck().isValid())
+            return "true";
+        return "false";
+    }
+
+    private static String hasActiveDeck(String token) {
+        if (allLoggedInPlayers.get(token).getActiveDeck() == null)
+            return "false";
+        return "true";
     }
 }
