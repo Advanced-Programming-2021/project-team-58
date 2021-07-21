@@ -116,9 +116,9 @@ public class ChatRoomController {
         String[] tmp = str.split("#");
         String message = tmp[0];
         String token = tmp[1];
-        Server.sendMessageToAllClients("Server load message");
         String senderUsername = allLoggedInPlayers.get(token).getUsername();
         String result = senderUsername + "@" + message;
         messages.add(result);
+        Server.sendMessageToAllClients("Server load message");
     }
 }

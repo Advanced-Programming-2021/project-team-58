@@ -36,9 +36,10 @@ public class Server {
         }
 
         try {
-            ServerSocket serverSocket = new ServerSocket(1234);
+            ServerSocket serverSocket = new ServerSocket(887);
             while (true) {
                 Socket socket = serverSocket.accept();
+                System.out.println("I have got another client :)");
                 makeNewThread(socket);
             }
         } catch (IOException e) {
