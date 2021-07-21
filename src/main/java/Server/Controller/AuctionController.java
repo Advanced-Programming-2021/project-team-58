@@ -5,6 +5,7 @@ import Server.Model.Card;
 import Server.Model.Player;
 import Server.Server;
 
+import javax.sql.rowset.serial.SerialStruct;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,10 +18,23 @@ public class AuctionController {
     public static void processInput(String message, DataOutputStream dataOutputStream) throws IOException {
         if (message.equals("Auction send data"))
             sendData(dataOutputStream);
-        else if (message.startsWith("Auction player cards data")) {
+        else if (message.startsWith("Auction player cards data"))
             dataOutputStream.writeUTF(sendPlayerCardsData(message.substring(25)));
-        }
+        else if(message.startsWith("Auction create new auction"))
+            createNewAuction(message.substring(26));
         dataOutputStream.flush();
+    }
+
+    private static void createNewAuction(String str) {
+        String[] tmp = str.split("#");
+        String token = tmp[0];
+        String cardName = tmp[1];
+        int basePrice = Integer.parseInt(tmp[2]);
+
+        Player player = allLoggedInPlayers.get(token);
+        Card card = Card.getCardByName(cardName);
+
+        new Auction(card.getImageSrc() , player , basePrice , card.getCardName());
     }
 
     private static String sendPlayerCardsData(String token) {
@@ -29,15 +43,14 @@ public class AuctionController {
         String result = "";
         for (int i = 0; i < allCards.size(); i++) {
             if (i == 0)
-                result = allCards.get(i).getImageSrc();
+                result = allCards.get(i).getImageSrc() + "#" + allCards.get(i).getCardName();
             else
-                result = result + "#" + allCards.get(i).getImageSrc();
+                result = result + "#" + allCards.get(i).getImageSrc() + "#" + allCards.get(i).getCardName();
         }
         return result;
     }
 
     private static void sendData(DataOutputStream dataOutputStream) throws IOException {
-        Auction auction = new Auction("/Images/Monster/BattleOx.jpg", Player.getPlayerByUsername("marzie"), 23555, "Battle OX");
         String result = "";
         ArrayList<Auction> allAuctions = Auction.getAllAuctions();
         for (int i = 0; i < allAuctions.size(); i++) {
