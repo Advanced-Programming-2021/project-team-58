@@ -29,9 +29,8 @@ public class LoginController {
         }
     }
 
-    public static String logout(String str) {
+    public static void logout(String str) {
         allLoggedInPlayers.remove(str);
-        return "logged out successfully";
     }
 
     public static void processInput(String message, DataOutputStream dataOutputStream) throws IOException {
@@ -39,7 +38,7 @@ public class LoginController {
             dataOutputStream.writeUTF(login(message.substring(5)));
         }
         else if(message.startsWith("Logout")){
-            dataOutputStream.writeUTF(logout(message.substring(6)));
+            logout(message.substring(6));
         }
         dataOutputStream.flush();
     }

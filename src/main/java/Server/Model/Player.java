@@ -37,7 +37,7 @@ public class Player {
         setNickname(nickname);
         setMoney(100000);
 
-        Image image = new Image(getClass().getResourceAsStream("/tmp.png"));
+        Image image = new Image(getClass().getResourceAsStream("/Characters/Chara001.dds0.png"));
         setImage(image);
         allPlayers.add(this);
     }
