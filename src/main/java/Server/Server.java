@@ -17,6 +17,7 @@ import java.util.HashMap;
 public class Server {
     private static DataOutputStream dataOutputStream;
     private static DataInputStream dataInputStream;
+    private static String pinnedMessage = "";
 
     private static HashMap<String, Player> allLoggedInPlayers = new HashMap<>();
     private static ArrayList<String> messages = new ArrayList<>();
@@ -114,6 +115,14 @@ public class Server {
 
     public static DataOutputStream getDataOutputStream() {
         return dataOutputStream;
+    }
+
+    public static String getPinnedMessage() {
+        return pinnedMessage;
+    }
+
+    public static void setPinnedMessage(String pinnedMessage) {
+        Server.pinnedMessage = pinnedMessage;
     }
 }
 
