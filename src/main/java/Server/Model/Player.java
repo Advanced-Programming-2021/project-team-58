@@ -151,6 +151,13 @@ public class Player {
         return null;
     }
 
+    public static Player getPlayerByNickname(String nickName) {
+        for (Player player : allPlayers)
+            if (player.getNickname().equals(nickName))
+                return player;
+        return null;
+    }
+
     public void addCardToHand(Card card) {
         this.hand.add(card);
     }

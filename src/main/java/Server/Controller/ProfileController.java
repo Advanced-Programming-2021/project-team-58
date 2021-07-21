@@ -52,24 +52,26 @@ public class ProfileController {
     }
 
     public static void sendImage(String token, DataOutputStream dataOutputStream) {
-        System.out.println("this is in sendImage method and the token is: "+token);
-        Image image = allLoggedInPlayers.get(token).getImage();
-        try {
-            String imageJson = new YaGson().toJson(image);
-            int x = imageJson.length() / 64000;
-            dataOutputStream.writeUTF(String.valueOf(x + 1));
-            dataOutputStream.flush();
-
-            for (int i = 0; i < x; i++) {
-                String tmp = imageJson.substring(0, 64000);
-                imageJson = imageJson.substring(64000);
-                dataOutputStream.writeUTF(tmp);
+        System.out.println("this is in sendImage method and the token is: " + token);
+        if (!token.startsWith("Server")) {
+            Image image = allLoggedInPlayers.get(token).getImage();
+            try {
+                String imageJson = new YaGson().toJson(image);
+                int x = imageJson.length() / 64000;
+                dataOutputStream.writeUTF(String.valueOf(x + 1));
                 dataOutputStream.flush();
+
+                for (int i = 0; i < x; i++) {
+                    String tmp = imageJson.substring(0, 64000);
+                    imageJson = imageJson.substring(64000);
+                    dataOutputStream.writeUTF(tmp);
+                    dataOutputStream.flush();
+                }
+                dataOutputStream.writeUTF(imageJson);
+                dataOutputStream.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            dataOutputStream.writeUTF(imageJson);
-            dataOutputStream.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
