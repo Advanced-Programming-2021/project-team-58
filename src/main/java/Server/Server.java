@@ -82,6 +82,8 @@ public class Server {
                     LobbyController.processInput(message, dataOutputStream);
                 } else if (message.startsWith("Scoreboard")) {
                     ScoreBoardController.processInput(message, dataOutputStream);
+                } else if (message.startsWith("Auction")) {
+                    AuctionController.processInput(message, dataOutputStream);
                 } else if (message.equals("end")) {
                     break;
                 }
