@@ -42,7 +42,7 @@ public class DeckController {
             addCardToMainDeck(message.substring(21));
         } else if (message.startsWith("Deck add card to side")) {
             addCardToSideDeck(message.substring(21));
-        } else if (message.startsWith("Deck set activate")){
+        } else if (message.startsWith("Deck set activate")) {
             setActivateDeck(message.substring(17));
         }
         dataOutputStream.flush();

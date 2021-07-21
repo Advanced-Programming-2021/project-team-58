@@ -34,7 +34,7 @@ public class ChatRoomController {
                 deleteMessage(message.substring(25));
             } else if (message.startsWith("Chat change message index")) {
                 changeMessage(message.substring(25));
-            } else if (message.startsWith("Chat get player info")){
+            } else if (message.startsWith("Chat get player info")) {
                 dataOutputStream.writeUTF(getInfo(message.substring(20)));
             }
             dataOutputStream.flush();
@@ -58,7 +58,7 @@ public class ChatRoomController {
         String[] tmp2 = targetMessage.split("@");
         String sender = tmp2[0];
         String result = sender + "@" + newMessage;
-        messages.set(index , result);
+        messages.set(index, result);
         Server.sendMessageToAllClients("Server load message");
     }
 
@@ -98,7 +98,6 @@ public class ChatRoomController {
         }
         return false;
     }
-
 
     private static String getAllMessages() {
         String result = "";

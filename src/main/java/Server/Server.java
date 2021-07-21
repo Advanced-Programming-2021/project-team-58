@@ -116,10 +116,6 @@ public class Server {
 
     }
 
-    public static DataOutputStream getDataOutputStream() {
-        return dataOutputStream;
-    }
-
     public static String getPinnedMessage() {
         return pinnedMessage;
     }

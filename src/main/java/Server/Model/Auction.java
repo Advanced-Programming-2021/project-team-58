@@ -4,9 +4,13 @@ import java.util.ArrayList;
 
 public class Auction {
     Player auctionOwner;
+    Player lastPriceOfferer;
     int lastPriceOffered;
     String auctionCardName;
     String auctionImgSrc;
+    int id;
+
+    static int counter = 1;
 
     static ArrayList<Auction> allAuctions = new ArrayList<>();
 
@@ -16,6 +20,12 @@ public class Auction {
         this.lastPriceOffered = lastPriceOffered;
         this.auctionCardName = auctionCardName;
         allAuctions.add(this);
+        id = counter;
+        counter++;
+    }
+
+    public void setLastPriceOfferer(Player lastPriceOfferer) {
+        this.lastPriceOfferer = lastPriceOfferer;
     }
 
     public void setAuctionCardName(String auctionCardName) {
@@ -52,5 +62,18 @@ public class Auction {
 
     public static ArrayList<Auction> getAllAuctions() {
         return allAuctions;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public static Auction getAuctionByID(int id) {
+        for (Auction auction : allAuctions) {
+            if(auction.getId() == id){
+                return auction;
+            }
+        }
+        return null;
     }
 }

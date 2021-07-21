@@ -5,7 +5,6 @@ import Server.Model.Card;
 import Server.Model.Player;
 import Server.Server;
 
-import javax.sql.rowset.serial.SerialStruct;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,9 +19,31 @@ public class AuctionController {
             sendData(dataOutputStream);
         else if (message.startsWith("Auction player cards data"))
             dataOutputStream.writeUTF(sendPlayerCardsData(message.substring(25)));
-        else if(message.startsWith("Auction create new auction"))
+        else if (message.startsWith("Auction create new auction"))
             createNewAuction(message.substring(26));
+        else if (message.startsWith("Auction offer bid")) {
+            setOffer(message.substring(17));
+        } else if (message.startsWith("Auction expire auction")) {
+            expireAuction(message.substring(22));
+        }
         dataOutputStream.flush();
+    }
+
+    private static void expireAuction(String str) {
+        int id = Integer.parseInt(str);
+        Auction auction = Auction.getAuctionByID(id);
+        Auction.getAllAuctions().remove(auction);
+    }
+
+    private static void setOffer(String str) {
+        String[] tmp = str.split("#");
+        int id = Integer.parseInt(tmp[0]);
+        String token = tmp[1];
+        int offeredPrice = Integer.parseInt(tmp[2]);
+        Player player = allLoggedInPlayers.get(token);
+        Auction auction = Auction.getAuctionByID(id);
+        auction.setLastPriceOfferer(player);
+        auction.setLastPriceOffered(offeredPrice);
     }
 
     private static void createNewAuction(String str) {
@@ -34,7 +55,7 @@ public class AuctionController {
         Player player = allLoggedInPlayers.get(token);
         Card card = Card.getCardByName(cardName);
 
-        new Auction(card.getImageSrc() , player , basePrice , card.getCardName());
+        new Auction(card.getImageSrc(), player, basePrice, card.getCardName());
     }
 
     private static String sendPlayerCardsData(String token) {
@@ -56,10 +77,10 @@ public class AuctionController {
         for (int i = 0; i < allAuctions.size(); i++) {
             if (i == 0) {
                 result = allAuctions.get(i).getAuctionImgSrc() + "#" + allAuctions.get(i).getAuctionOwner().getNickname() + "#" +
-                        allAuctions.get(i).getLastPriceOffered() + "#" + allAuctions.get(i).getAuctionCardName();
+                        allAuctions.get(i).getLastPriceOffered() + "#" + allAuctions.get(i).getAuctionCardName() + "#" + allAuctions.get(i).getId();
             } else
                 result = result + "#" + allAuctions.get(i).getAuctionImgSrc() + "#" + allAuctions.get(i).getAuctionOwner().getNickname() + "#" +
-                        allAuctions.get(i).getLastPriceOffered() + "#" + allAuctions.get(i).getAuctionCardName();
+                        allAuctions.get(i).getLastPriceOffered() + "#" + allAuctions.get(i).getAuctionCardName() + "#" + allAuctions.get(i).getId();
         }
         dataOutputStream.writeUTF(result);
         dataOutputStream.flush();
